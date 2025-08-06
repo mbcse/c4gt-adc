@@ -28,7 +28,66 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 
+import { useEffect, useState } from "react";
+import { courseAPI } from "../services/api";
+
 export default function Index() {
+  const [assignedCourses, setAssignedCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTopCourses() {
+      try {
+        setLoading(true);
+        const courses = await courseAPI.getAllCourses();
+
+        // Sort by progress descending, pick top 3, shape data for dashboard
+        const top3 = courses
+          .sort((a: any, b: any) => b.progress - a.progress)
+          .slice(0, 3)
+          .map((course: any) => ({
+            ...course,
+            color:
+              course.progress === 100
+                ? "from-emerald-100 to-green-100"
+                : course.progress > 0
+                ? "from-blue-100 to-indigo-100"
+                : "from-gray-100 to-slate-100",
+            image: course.thumbnailUrl ? (
+              <img
+                src={course.thumbnailUrl}
+                alt={course.title}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              "📚"
+            ),
+            instructor: course.creatorName || course.createdBy || "Unknown",
+            // You can customize timeLeft if you have watch-time tracking
+            timeLeft: "N/A",
+          }));
+
+        setAssignedCourses(top3);
+      } catch (error) {
+        console.error("Failed to fetch courses for dashboard", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchTopCourses();
+  }, []);
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="min-h-screen flex items-center justify-center p-6">
+          <span className="text-gray-600 text-lg">Loading courses...</span>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   // Top 3 most recent achievements (from achievements page)
   const recentAchievements = [
     {
@@ -58,72 +117,6 @@ export default function Index() {
       earnedDate: "2024-02-08",
       points: 75,
     },
-  ];
-
-  const assignedCourses = [
-    {
-    id: 1,
-    title: "Advanced React Development",
-    instructor: "Ananya Mehta",
-    instructorAvatar: "AM",
-    progress: 75,
-    totalLessons: 24,
-    completedLessons: 18,
-    timeLeft: "2h 30m left",
-    duration: "8 weeks",
-    difficulty: "Advanced",
-    rating: 4.8,
-    enrolledDate: "15 Jan 2024",
-    lastActivity: "2 hours ago",
-    color: "from-blue-100 to-indigo-100",
-    borderColor: "border-blue-200",
-    image: "💻",
-    tags: ["React", "JavaScript", "Frontend"],
-    status: "in-progress",
-    nextLesson: "State Management with Redux",
-  },
-  {
-    id: 2,
-    title: "UI/UX Design Fundamentals",
-    instructor: "Rohan Kapoor",
-    instructorAvatar: "RK",
-    progress: 60,
-    totalLessons: 16,
-    completedLessons: 10,
-    timeLeft: "3h 15m left",
-    duration: "6 weeks",
-    difficulty: "Beginner",
-    rating: 4.6,
-    enrolledDate: "01 Feb 2024",
-    lastActivity: "1 day ago",
-    color: "from-pink-100 to-rose-100",
-    borderColor: "border-pink-200",
-    image: "🎨",
-    tags: ["Design", "UX", "Figma"],
-    status: "in-progress",
-    nextLesson: "Color Theory Principles",
-  },
-  {
-    id: 3,
-    title: "Data Science with Python",
-    instructor: "Dr. Nisha Verma",
-    instructorAvatar: "NV",
-    progress: 45,
-    totalLessons: 32,
-    completedLessons: 14,
-    timeLeft: "5h 45m left",
-    duration: "12 weeks",
-    difficulty: "Intermediate",
-    rating: 4.9,
-    enrolledDate: "08 Jan 2024",
-    lastActivity: "3 days ago",
-    color: "from-green-100 to-emerald-100",
-    borderColor: "border-green-200",
-    image: "📊",
-    tags: ["Python", "Data Science", "ML"],
-    status: "in-progress",
-    nextLesson: "Pandas for Data Analysis",
-  },
   ];
 
   const weeklyProgress = {
@@ -257,38 +250,42 @@ export default function Index() {
 
         {/* Mixed Layout Section */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Courses Section - 4 columns */}
-          <div className="lg:col-span-4" id="courses-section">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-6 w-6 text-teal-500" />
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                  Continue Learning
-                </h2>
-              </div>
-              <Link
-                to="/courses"
-                className="text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
-              >
-                View All <ChevronRight className="h-4 w-4 ml-1" />
-              </Link>
+        {/* Courses Section - 4 columns */}
+        <div className="lg:col-span-4" id="courses-section">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-6 w-6 text-teal-500" />
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                Continue Learning
+              </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {assignedCourses.map((course) => (
+            <Link
+              to="/courses"
+              className="text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
+            >
+              View All <ChevronRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {assignedCourses.map((course) => (
+              <Link key={course.id} to={`/courses/${course.id}`}>
                 <Card
-                  key={course.id}
-                  className="bg-white border-2 border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2 hover:border-teal-200"
+                  className={`bg-white border-2 border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2 hover:border-teal-200`}
                 >
                   <CardContent className="p-0">
                     {/* Course Thumbnail */}
-                    <div className="relative">
-                      <div className={`w-full h-40 bg-gradient-to-br ${course.color} rounded-t-xl flex items-center justify-center relative overflow-hidden`}>
-                        <div className="text-6xl z-10">{course.image}</div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                        <div className="absolute top-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
-                            {course.progress}% Complete
-                          </div>
+                    <div className="relative w-full h-40 rounded-t-xl overflow-hidden">
+                      {typeof course.image === "string" ? (
+                        <div className="text-6xl flex items-center justify-center h-full">
+                          {course.image}
+                        </div>
+                      ) : (
+                        course.image
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute top-3 right-3">
+                        <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
+                          {course.progress}% Complete
                         </div>
                       </div>
                     </div>
@@ -296,7 +293,7 @@ export default function Index() {
                     {/* Course Content */}
                     <div className="p-6">
                       <div className="mb-4">
-                        <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-teal-700 transition-colors">
+                        <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-teal-700 transition-colors line-clamp-2">
                           {course.title}
                         </h3>
                         <p className="text-sm text-gray-600 flex items-center">
@@ -307,7 +304,12 @@ export default function Index() {
 
                       {/* Progress Section */}
                       <div className="space-y-3 mb-4">
-                        <Progress value={course.progress} className="h-2" />
+                        <Progress
+                          value={course.progress}
+                          className={`h-2 rounded-md ${
+                            course.progress === 0 ? "bg-gray-200" : "bg-teal-500"
+                          }`}
+                        />
                         <div className="flex justify-between text-xs text-gray-500">
                           <span className="flex items-center">
                             <BookOpen className="h-3 w-3 mr-1" />
@@ -321,16 +323,17 @@ export default function Index() {
                       </div>
 
                       {/* Action Button */}
-                      <Button className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-md hover:shadow-lg transition-all duration-300 py-2.5">
-                        <Play className="h-4 w-4 mr-2" />
+                      <Button className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-md hover:shadow-lg transition-all duration-300 py-2.5 flex items-center justify-center gap-2">
+                        <Play className="h-4 w-4" />
                         Resume
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              </Link>
+            ))}
           </div>
+        </div>
 
           {/* Side Panel - Weekly Progress */}
           <div className="space-y-4">

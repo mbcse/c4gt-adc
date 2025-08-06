@@ -2,7 +2,7 @@ const ROLES = require("../constants/roles");
 
 const requireRole = (allowedRoles)=>{
     return (req,res,next)=>{
-        const userRol=req.user?.role;
+        const userRole=req.user?.role;
 
         if (!userRole){
             return res.status(403).json({error: "User role not found."});
