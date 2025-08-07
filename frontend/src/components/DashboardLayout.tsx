@@ -24,6 +24,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -33,6 +35,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const notifications = [
     {
@@ -74,9 +79,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   const handleLogout = () => {
-    // Add logout logic here
-    console.log('Logging out...');
-    // You would typically clear user session, redirect to login, etc.
+    logout();
+    navigate("/login");
   };
 
   return (
