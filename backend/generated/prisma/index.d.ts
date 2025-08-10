@@ -2884,6 +2884,7 @@ export namespace Prisma {
     createdBy: string | null
     createdAt: Date | null
     thumbnailUrl: string | null
+    category: string | null
   }
 
   export type CourseMaxAggregateOutputType = {
@@ -2893,6 +2894,7 @@ export namespace Prisma {
     createdBy: string | null
     createdAt: Date | null
     thumbnailUrl: string | null
+    category: string | null
   }
 
   export type CourseCountAggregateOutputType = {
@@ -2902,6 +2904,7 @@ export namespace Prisma {
     createdBy: number
     createdAt: number
     thumbnailUrl: number
+    category: number
     _all: number
   }
 
@@ -2921,6 +2924,7 @@ export namespace Prisma {
     createdBy?: true
     createdAt?: true
     thumbnailUrl?: true
+    category?: true
   }
 
   export type CourseMaxAggregateInputType = {
@@ -2930,6 +2934,7 @@ export namespace Prisma {
     createdBy?: true
     createdAt?: true
     thumbnailUrl?: true
+    category?: true
   }
 
   export type CourseCountAggregateInputType = {
@@ -2939,6 +2944,7 @@ export namespace Prisma {
     createdBy?: true
     createdAt?: true
     thumbnailUrl?: true
+    category?: true
     _all?: true
   }
 
@@ -3035,6 +3041,7 @@ export namespace Prisma {
     createdBy: string | null
     createdAt: Date
     thumbnailUrl: string | null
+    category: string | null
     _count: CourseCountAggregateOutputType | null
     _avg: CourseAvgAggregateOutputType | null
     _sum: CourseSumAggregateOutputType | null
@@ -3063,6 +3070,7 @@ export namespace Prisma {
     createdBy?: boolean
     createdAt?: boolean
     thumbnailUrl?: boolean
+    category?: boolean
     assignments?: boolean | Course$assignmentsArgs<ExtArgs>
     courseVideos?: boolean | Course$courseVideosArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
@@ -3075,6 +3083,7 @@ export namespace Prisma {
     createdBy?: boolean
     createdAt?: boolean
     thumbnailUrl?: boolean
+    category?: boolean
   }, ExtArgs["result"]["course"]>
 
   export type CourseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3084,6 +3093,7 @@ export namespace Prisma {
     createdBy?: boolean
     createdAt?: boolean
     thumbnailUrl?: boolean
+    category?: boolean
   }, ExtArgs["result"]["course"]>
 
   export type CourseSelectScalar = {
@@ -3093,9 +3103,10 @@ export namespace Prisma {
     createdBy?: boolean
     createdAt?: boolean
     thumbnailUrl?: boolean
+    category?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdBy" | "createdAt" | "thumbnailUrl", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdBy" | "createdAt" | "thumbnailUrl" | "category", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assignments?: boolean | Course$assignmentsArgs<ExtArgs>
     courseVideos?: boolean | Course$courseVideosArgs<ExtArgs>
@@ -3117,6 +3128,7 @@ export namespace Prisma {
       createdBy: string | null
       createdAt: Date
       thumbnailUrl: string | null
+      category: string | null
     }, ExtArgs["result"]["course"]>
     composites: {}
   }
@@ -3548,6 +3560,7 @@ export namespace Prisma {
     readonly createdBy: FieldRef<"Course", 'String'>
     readonly createdAt: FieldRef<"Course", 'DateTime'>
     readonly thumbnailUrl: FieldRef<"Course", 'String'>
+    readonly category: FieldRef<"Course", 'String'>
   }
     
 
@@ -10820,7 +10833,8 @@ export namespace Prisma {
     description: 'description',
     createdBy: 'createdBy',
     createdAt: 'createdAt',
-    thumbnailUrl: 'thumbnailUrl'
+    thumbnailUrl: 'thumbnailUrl',
+    category: 'category'
   };
 
   export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
@@ -11114,6 +11128,7 @@ export namespace Prisma {
     createdBy?: StringNullableFilter<"Course"> | string | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    category?: StringNullableFilter<"Course"> | string | null
     assignments?: CourseAssignmentListRelationFilter
     courseVideos?: CourseVideoListRelationFilter
   }
@@ -11125,6 +11140,7 @@ export namespace Prisma {
     createdBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
     assignments?: CourseAssignmentOrderByRelationAggregateInput
     courseVideos?: CourseVideoOrderByRelationAggregateInput
   }
@@ -11139,6 +11155,7 @@ export namespace Prisma {
     createdBy?: StringNullableFilter<"Course"> | string | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    category?: StringNullableFilter<"Course"> | string | null
     assignments?: CourseAssignmentListRelationFilter
     courseVideos?: CourseVideoListRelationFilter
   }, "id">
@@ -11150,6 +11167,7 @@ export namespace Prisma {
     createdBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
     _count?: CourseCountOrderByAggregateInput
     _avg?: CourseAvgOrderByAggregateInput
     _max?: CourseMaxOrderByAggregateInput
@@ -11167,6 +11185,7 @@ export namespace Prisma {
     createdBy?: StringNullableWithAggregatesFilter<"Course"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
     thumbnailUrl?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    category?: StringNullableWithAggregatesFilter<"Course"> | string | null
   }
 
   export type CourseAssignmentWhereInput = {
@@ -11192,6 +11211,7 @@ export namespace Prisma {
 
   export type CourseAssignmentWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    courseId_userId?: CourseAssignmentCourseId_userIdCompoundUniqueInput
     AND?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
     OR?: CourseAssignmentWhereInput[]
     NOT?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
@@ -11200,7 +11220,7 @@ export namespace Prisma {
     assignedAt?: DateTimeFilter<"CourseAssignment"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
+  }, "id" | "courseId_userId">
 
   export type CourseAssignmentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11310,19 +11330,19 @@ export namespace Prisma {
 
   export type VideoWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    videoId?: string
     AND?: VideoWhereInput | VideoWhereInput[]
     OR?: VideoWhereInput[]
     NOT?: VideoWhereInput | VideoWhereInput[]
     title?: StringFilter<"Video"> | string
     platform?: StringFilter<"Video"> | string
     videoUrl?: StringFilter<"Video"> | string
-    videoId?: StringFilter<"Video"> | string
     duration?: IntFilter<"Video"> | number
     createdAt?: DateTimeFilter<"Video"> | Date | string
     courseVideos?: CourseVideoListRelationFilter
     watchLogs?: WatchLogListRelationFilter
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
-  }, "id">
+  }, "id" | "videoId">
 
   export type VideoOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11636,6 +11656,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     assignments?: CourseAssignmentCreateNestedManyWithoutCourseInput
     courseVideos?: CourseVideoCreateNestedManyWithoutCourseInput
   }
@@ -11647,6 +11668,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutCourseInput
     courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutCourseInput
   }
@@ -11657,6 +11679,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     assignments?: CourseAssignmentUpdateManyWithoutCourseNestedInput
     courseVideos?: CourseVideoUpdateManyWithoutCourseNestedInput
   }
@@ -11668,6 +11691,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     assignments?: CourseAssignmentUncheckedUpdateManyWithoutCourseNestedInput
     courseVideos?: CourseVideoUncheckedUpdateManyWithoutCourseNestedInput
   }
@@ -11679,6 +11703,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
   }
 
   export type CourseUpdateManyMutationInput = {
@@ -11687,6 +11712,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CourseUncheckedUpdateManyInput = {
@@ -11696,6 +11722,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CourseAssignmentCreateInput = {
@@ -12262,6 +12289,7 @@ export namespace Prisma {
     createdBy?: SortOrder
     createdAt?: SortOrder
     thumbnailUrl?: SortOrder
+    category?: SortOrder
   }
 
   export type CourseAvgOrderByAggregateInput = {
@@ -12275,6 +12303,7 @@ export namespace Prisma {
     createdBy?: SortOrder
     createdAt?: SortOrder
     thumbnailUrl?: SortOrder
+    category?: SortOrder
   }
 
   export type CourseMinOrderByAggregateInput = {
@@ -12284,6 +12313,7 @@ export namespace Prisma {
     createdBy?: SortOrder
     createdAt?: SortOrder
     thumbnailUrl?: SortOrder
+    category?: SortOrder
   }
 
   export type CourseSumOrderByAggregateInput = {
@@ -12316,6 +12346,11 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type CourseAssignmentCourseId_userIdCompoundUniqueInput = {
+    courseId: number
+    userId: number
   }
 
   export type CourseAssignmentCountOrderByAggregateInput = {
@@ -13643,6 +13678,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     courseVideos?: CourseVideoCreateNestedManyWithoutCourseInput
   }
 
@@ -13653,6 +13689,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutCourseInput
   }
 
@@ -13704,6 +13741,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     courseVideos?: CourseVideoUpdateManyWithoutCourseNestedInput
   }
 
@@ -13714,6 +13752,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     courseVideos?: CourseVideoUncheckedUpdateManyWithoutCourseNestedInput
   }
 
@@ -13755,6 +13794,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     assignments?: CourseAssignmentCreateNestedManyWithoutCourseInput
   }
 
@@ -13765,6 +13805,7 @@ export namespace Prisma {
     createdBy?: string | null
     createdAt: Date | string
     thumbnailUrl?: string | null
+    category?: string | null
     assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutCourseInput
   }
 
@@ -13818,6 +13859,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     assignments?: CourseAssignmentUpdateManyWithoutCourseNestedInput
   }
 
@@ -13828,6 +13870,7 @@ export namespace Prisma {
     createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     assignments?: CourseAssignmentUncheckedUpdateManyWithoutCourseNestedInput
   }
 

@@ -36,6 +36,7 @@ model Course {
   thumbnailUrl String?
   assignments  CourseAssignment[]
   courseVideos CourseVideo[]
+  category     String?
 }
 
 model CourseAssignment {
@@ -46,7 +47,7 @@ model CourseAssignment {
   userId     Int
   assignedAt DateTime
 
-  @@index([userId, courseId])
+  @@unique([courseId, userId], name: "courseId_userId")
 }
 
 model CourseVideo {
@@ -65,7 +66,7 @@ model Video {
   title        String
   platform     String
   videoUrl     String
-  videoId      String
+  videoId      String        @unique
   duration     Int
   createdAt    DateTime
   courseVideos CourseVideo[]
