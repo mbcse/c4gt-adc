@@ -130,6 +130,9 @@ export default function VideoPage() {
                       <Play className="h-8 w-8 text-white p-3 bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-2xl" />
                       <CardTitle className="text-2xl font-bold">{currentVideo.title}</CardTitle>
                     </div>
+                    {currentVideo.description && (
+        <p className="text-slate-600 max-w-3xl leading-relaxed">{currentVideo.description}</p>
+      )}
                     <div className="flex items-center gap-4 text-slate-600">
                       <div className="flex items-center gap-2 bg-slate-100 rounded-xl px-4 py-2">
                         <Clock className="h-5 w-5 text-violet-500" />
@@ -142,15 +145,6 @@ export default function VideoPage() {
                         </span>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <Button
-                      onClick={() => setIsPlaying((p) => !p)}
-                      className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-4 text-lg font-semibold rounded-2xl flex items-center gap-3"
-                    >
-                      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                      <span>{isPlaying ? "Pause Video" : "Play Video"}</span>
-                    </Button>
                   </div>
                 </div>
               </CardHeader>

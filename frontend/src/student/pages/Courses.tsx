@@ -18,6 +18,7 @@ import {
   SortAsc,
   MoreHorizontal,
   Bookmark,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/student/lib/utils";
 import { Link } from "react-router-dom";
@@ -146,12 +147,16 @@ export default function Courses() {
         case "name":
           return a.title.localeCompare(b.title);
         case "date":
-          return new Date(b.enrolledDate).getTime() - new Date(a.enrolledDate).getTime();
+          // Use enrolledDate if available, otherwise createdAt
+          const dateA = new Date(a.assignedAt || a.createdAt).getTime();
+          const dateB = new Date(b.assignedAt || b.createdAt).getTime();
+          return dateB - dateA;
         default:
           return 0;
       }
     });
   };
+
 
   const filterCourses = (courses: typeof allCourses) => {
     let filtered = courses;
@@ -167,6 +172,10 @@ export default function Courses() {
       );
     }
     return filtered;
+  };
+
+  const getStatusCount = (status: string) => {
+    return allCourses.filter(c => c.status === status).length;
   };
 
   const filteredAndSortedCourses = sortCourses(filterCourses(allCourses));
@@ -362,24 +371,23 @@ export default function Courses() {
 
           <div className="flex flex-wrap gap-4 items-center mb-6">
             <div className="inline-flex rounded-md bg-white/80 border border-violet-300 shadow-lg backdrop-blur-sm p-1">
-  {["all", "assigned", "unassigned"].map((filter) => (
-    <button
-      key={filter}
-      onClick={() => setAssignedFilter(filter as any)}
-      className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${
-        assignedFilter === filter
-          ? "bg-violet-600 text-white shadow-md"
-          : "text-violet-700 hover:bg-violet-200"
-      }`}
-    >
-      {filter === "all"
-        ? "All Courses"
-        : filter === "assigned"
-        ? "Assigned Courses"
-        : "Unassigned Courses"}
-    </button>
-  ))}
-</div>
+              {["all", "assigned", "unassigned"].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setAssignedFilter(filter as any)}
+                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${assignedFilter === filter
+                      ? "bg-violet-600 text-white shadow-md"
+                      : "text-violet-700 hover:bg-violet-200"
+                    }`}
+                >
+                  {filter === "all"
+                    ? "All Courses"
+                    : filter === "assigned"
+                      ? "Assigned Courses"
+                      : "Unassigned Courses"}
+                </button>
+              ))}
+            </div>
 
 
             <select
@@ -548,15 +556,18 @@ export default function Courses() {
                           </p>
 
                           {/* Progress Bar */}
-                          <div className="mb-5">
-                            <div className="relative">
-                              <Progress
-                                value={course.progress > 0 ? course.progress : 0}
-                                className="h-3 rounded-full bg-slate-200 shadow-inner"
-                              />
-                              <div className={`absolute inset-0 bg-gradient-to-r ${progressBg} rounded-full opacity-90 transition-all duration-300`} style={{ width: `${course.progress}%` }}></div>
-                            </div>
-                            <div className="text-sm text-slate-700 mt-2 font-medium">{course.progress}% Complete</div>
+                          <div className="relative">
+                            <Progress
+                              value={course.progress}
+                              className="h-3 rounded-full bg-slate-200 shadow-inner"
+                            />
+                            <div
+                              className={`absolute inset-0 bg-gradient-to-r ${progressBg} rounded-full opacity-90 transition-all duration-300`}
+                              style={{ width: `${course.progress}%` }}
+                            />
+                          </div>
+                          <div className="text-sm text-slate-700 mt-2 font-medium">
+                            {course.progress}% Complete • {course.totalWatchTime}min watched
                           </div>
 
                           <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>
@@ -568,8 +579,8 @@ export default function Courses() {
                               {course.completedLessons}/{course.totalLessons} lessons
                             </span>
                             <span className="flex items-center font-medium">
-                              <div className="w-2 h-2 bg-teal-400 rounded-full mr-2 animate-pulse"></div>
-                              {course.lastActivity}
+                              <Clock className="h-4 w-4 mr-2 text-teal-500" />
+                              {course.totalWatchTime} min
                             </span>
                           </div>
 
@@ -589,7 +600,7 @@ export default function Courses() {
                             </div>
                           ) : (
                             <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold text-base group-hover:scale-105">
-                              <Link to={`/courses/${course.id}/video`}>
+                              <Link to={`/courses/${course.id}`}>
                                 <Play className="h-5 w-5 mr-2" />
                                 {course.status === "not-started" ? "Start Learning" : "Continue Learning"}
                               </Link>

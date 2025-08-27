@@ -36,7 +36,8 @@ export function VideoPlayer({
   const [hasSeeked, setHasSeeked] = useState(false);
   const [showSpeedWarning, setShowSpeedWarning] = useState(false);
   const [detectedSpeed, setDetectedSpeed] = useState<number>(1);
-  
+  const [playbackRate, setPlaybackRate] = useState(1);
+
   // Track the last valid progress position (before speed violation)
   const [lastValidPosition, setLastValidPosition] = useState<number>(0);
 
@@ -75,6 +76,7 @@ export function VideoPlayer({
   } = useVideoProgressWithAnalytics({ 
     videoId, 
     duration: actualDuration,
+    playbackRate,
     onBackendProgressUpdate: onProgressUpdate,
     onSpeedViolation: handleSpeedViolation,
   });
@@ -238,7 +240,6 @@ useEffect(() => {
   const onTimeUpdate = useCallback((state: any) => {
   if (isSeeking) return;
 
-  // Parse playedSeconds similar to onProgress
   let playedSeconds = 0;
   let played = 0;
 
@@ -262,7 +263,6 @@ useEffect(() => {
     setLastValidPosition(playedSeconds);
   }
 
-  // Compose progress state matching hook expectations
   const progressState = {
     played,
     playedSeconds,
@@ -282,6 +282,26 @@ useEffect(() => {
   const onError = useCallback((error: any) => {
     console.error("Video player error:", error);
     setIsPlaying(false);
+  }, [setIsPlaying]);
+
+  const handleRateChange = useCallback((e: any) => {
+    let newRate = e?.playbackRate;
+
+    // fallback - some players don’t pass event.playbackRate
+    if (!newRate && playerRef.current) {
+      const internal = playerRef.current.getInternalPlayer?.() || playerRef.current;
+      newRate = internal?.playbackRate || 1;
+    }
+
+    setPlaybackRate(newRate);
+
+    // Violation check
+    if (newRate > 1.5) {
+      console.warn("Playback too fast:", newRate);
+      setDetectedSpeed(newRate);
+      setShowSpeedWarning(true);
+      setIsPlaying(false); // pause immediately
+    }
   }, [setIsPlaying]);
 
 const handleSpeedWarningClose = useCallback(() => {
@@ -306,7 +326,7 @@ const handleSpeedWarningClose = useCallback(() => {
     setCurrentTime(seekToSeconds);
     setLastValidPosition(seekToSeconds);
   }
-
+   setPlaybackRate(1);
   setTimeout(() => {
     setIsPlaying(true);
   }, 100);
@@ -333,6 +353,8 @@ const handleSpeedWarningClose = useCallback(() => {
           ref={playerRef}
           src={videoUrl} 
           playing={playing}
+          playbackRate={playbackRate}
+          onRateChange={handleRateChange}
           controls
           width="100%"
           height="100%"

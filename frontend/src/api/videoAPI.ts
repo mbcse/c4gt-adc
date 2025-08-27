@@ -17,6 +17,7 @@ export interface Video {
   platform: string;
   duration: number;
   order: number;
+  description: string;
   progress: VideoProgress;
 }
 

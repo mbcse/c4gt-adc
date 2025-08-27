@@ -8,13 +8,15 @@ const { getYouTubeThumbnail } = require("../utils/video");
 exports.getCourseDetails = async (req, res) => {
   try {
     const courseId = parseInt(req.params.courseId);
+    const userId = req.user?.userId; // Get user ID from auth
+
     if (isNaN(courseId)) {
       return res.status(400).json({ error: "Invalid course ID" });
     }
 
     const course = await prisma.course.findUnique({
       where: { id: courseId },
-      include: {   // SWITCH from `select` to `include` to get full objects
+      include: {
         category: true,
         skillLevel: true,
         grade: true,
@@ -22,10 +24,27 @@ exports.getCourseDetails = async (req, res) => {
         tags: true,
         courseVideos: {
           include: {
-            video: true,
+            video: {
+              include: {
+                // Include user progress if user is logged in
+                watchLogs: userId ? {
+                  where: { userId },
+                  select: {
+                    totalWatchTime: true,
+                    isCompleted: true,
+                    watchedPercentage: true,
+                    updatedAt: true,
+                  }
+                } : false
+              }
+            }
           },
           orderBy: { order: "asc" },
         },
+        assignments: userId ? {
+          where: { userId },
+          select: { id: true }
+        } : false
       },
     });
 
@@ -33,7 +52,53 @@ exports.getCourseDetails = async (req, res) => {
       return res.status(404).json({ error: "Course not found" });
     }
 
-    return res.json({ course });
+    // Add progress data to each video
+    const courseWithProgress = {
+      ...course,
+      isAssigned: course.assignments && course.assignments.length > 0,
+      courseVideos: course.courseVideos.map(cv => ({
+        ...cv,
+        video: {
+          ...cv.video,
+          progress: cv.video.watchLogs?.[0] || {
+            totalWatchTime: 0,
+            isCompleted: false,
+            watchedPercentage: 0.0,
+          }
+        }
+      }))
+    };
+
+    // Calculate course-level progress
+    const totalVideos = course.courseVideos.length;
+    const completedVideos = course.courseVideos.filter(cv => 
+      cv.video.watchLogs?.[0]?.isCompleted
+    ).length;
+
+    const totalDuration = course.courseVideos.reduce((sum, cv) => sum + (cv.video.duration || 0), 0);
+    const totalWatchTime = course.courseVideos.reduce((sum, cv) => 
+      sum + (cv.video.watchLogs?.[0]?.totalWatchTime || 0), 0
+    );
+
+    const completionPercentage = totalDuration > 0 
+  ? (totalWatchTime / totalDuration) * 100 
+  : 0;
+    const averageProgress = totalVideos > 0 ? course.courseVideos.reduce((sum, cv) => 
+      sum + (cv.video.watchLogs?.[0]?.watchedPercentage || 0), 0
+    ) / totalVideos : 0;
+
+    const courseProgress = {
+      totalVideos,
+      completedVideos,
+      completionPercentage,
+      totalWatchTime,
+      averageProgress
+    };
+
+    return res.json({ 
+      course: courseWithProgress,
+      courseProgress 
+    });
   } catch (error) {
     console.error("Failed to get course details:", error);
     return res.status(500).json({ error: "Server error" });
@@ -66,7 +131,7 @@ exports.getAllCourses = async (req, res) => {
     if (skillLevelId) where.skillLevelId = parseInt(skillLevelId);
     if (languageId) where.languageId = parseInt(languageId);
 
-    // --- Handle tagIds from both array or comma-separated string ---
+    // Handle tagIds from both array or comma-separated string
     let parsedTagIds = [];
     if (Array.isArray(tagIds)) {
       parsedTagIds = tagIds.map(n => Number(n));
@@ -77,7 +142,7 @@ exports.getAllCourses = async (req, res) => {
       where.tags = { some: { id: { in: parsedTagIds } } };
     }
 
-    // --- Handle search (title/description) ---
+    // Handle search (title/description)
     if (search && search.trim()) {
       where.OR = [
         { title: { contains: search.trim(), mode: "insensitive" } },
@@ -92,19 +157,93 @@ exports.getAllCourses = async (req, res) => {
       where,
       include: {
         assignments: userId ? { where: { userId } } : false,
-        tags: true, category: true, skillLevel: true, grade: true, language: true,
-        courseVideos: { include: { video: true } }
+        tags: true, 
+        category: true, 
+        skillLevel: true, 
+        grade: true, 
+        language: true,
+        courseVideos: {
+          include: {
+            video: {
+              include: {
+                // Include user progress if user is logged in
+                watchLogs: userId ? {
+                  where: { userId },
+                  select: {
+                    totalWatchTime: true,
+                    isCompleted: true,
+                    watchedPercentage: true,
+                    updatedAt: true,
+                  }
+                } : false
+              }
+            }
+          },
+          orderBy: { order: "asc" }
+        }
       },
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit
     });
 
-    // Add assignment status
-    const mappedCourses = courses.map(course => ({
-      ...course,
-      isAssigned: course.assignments && course.assignments.length > 0,
-    }));
+    // Calculate course progress for each course
+    const mappedCourses = courses.map(course => {
+      const isAssigned = course.assignments && course.assignments.length > 0;
+      
+      // Calculate course-level progress using total watch time / total duration
+      const totalVideos = course.courseVideos.length;
+      const totalDuration = course.courseVideos.reduce((sum, cv) => sum + (cv.video.duration || 0), 0);
+      const totalWatchTime = course.courseVideos.reduce((sum, cv) => 
+        sum + (cv.video.watchLogs?.[0]?.totalWatchTime || 0), 0
+      );
+      const completedVideos = course.courseVideos.filter(cv => 
+        cv.video.watchLogs?.[0]?.isCompleted
+      ).length;
+      
+      // Calculate weighted progress percentage
+      const progress = totalDuration > 0 ? Math.round((totalWatchTime / totalDuration) * 100) : 0;
+      
+      // Determine status based on progress
+      let status = 'not-started';
+      if (progress >= 95) {
+        status = 'completed';
+      } else if (progress > 0) {
+        status = 'in-progress';
+      }
+      
+      // Find most recent activity
+      const lastActivity = course.courseVideos
+        .flatMap(cv => cv.video.watchLogs || [])
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0];
+      
+      const lastActivityDate = lastActivity 
+        ? new Date(lastActivity.updatedAt).toLocaleDateString()
+        : 'Never';
+
+      return {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        thumbnailUrl: course.thumbnailUrl,
+        createdBy: course.createdBy,
+        createdAt: course.createdAt,
+        category: course.category,
+        skillLevel: course.skillLevel,
+        grade: course.grade,
+        language: course.language,
+        tags: course.tags,
+        isAssigned,
+        progress,
+        status,
+        totalLessons: totalVideos,
+        completedLessons: completedVideos,
+        totalWatchTime: Math.floor(totalWatchTime / 60), // in minutes
+        totalDuration: Math.floor(totalDuration / 60), // in minutes
+        lastActivity: lastActivityDate,
+        enrolledDate: isAssigned ? course.assignments[0]?.assignedAt || course.createdAt : null
+      };
+    });
 
     res.json({
       total: totalCourses,
@@ -117,59 +256,3 @@ exports.getAllCourses = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-
-// /**
-//  * Create a new course with optional videos and thumbnail extracted from first video.
-//  * Expects in body:
-//  *  - title (string),
-//  *  - description (string, optional),
-//  *  - createdBy (string, add this when calling),
-//  *  - category (string, optional),
-//  *  - courseVideos (array of { videoId: string }) (optional)
-//  */
-// exports.createCourse = async (req, res) => {
-//   const { title, description, createdBy, category, courseVideos = [] } = req.body;
-
-//   if (!title) {
-//     return res.status(400).json({ error: "Title is required" });
-//   }
-
-//   // Get thumbnail URL from first video's YouTube videoId if available
-//   const firstVideoId =
-//     courseVideos.length > 0 && courseVideos[0].videoId
-//       ? courseVideos[0].videoId
-//       : null;
-//   const thumbnailUrl = firstVideoId ? getYouTubeThumbnail(firstVideoId) : null;
-
-//   try {
-//     const course = await prisma.course.create({
-//       data: {
-//         title,
-//         description,
-//         createdBy,
-//         category,
-//         thumbnailUrl,
-//         createdAt: new Date(),
-//         courseVideos: {
-//           create: courseVideos.map((cv, idx) => ({
-//             video: {
-//               connect: { videoId: cv.videoId }, // assumes videoId is unique in Video table
-//             },
-//             order: idx + 1,
-//           })),
-//         },
-//       },
-//       include: {
-//         courseVideos: {
-//           include: { video: true },
-//         },
-//       },
-//     });
-
-//     return res.status(201).json({ course });
-//   } catch (err) {
-//     console.error("Error creating course:", err);
-//     return res.status(500).json({ error: "Failed to create course" });
-//   }
-// };
