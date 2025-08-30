@@ -238,8 +238,8 @@ exports.getAllCourses = async (req, res) => {
         status,
         totalLessons: totalVideos,
         completedLessons: completedVideos,
-        totalWatchTime: Math.floor(totalWatchTime / 60), // in minutes
-        totalDuration: Math.floor(totalDuration / 60), // in minutes
+        totalWatchTime,
+        totalDuration,
         lastActivity: lastActivityDate,
         enrolledDate: isAssigned ? course.assignments[0]?.assignedAt || course.createdAt : null
       };

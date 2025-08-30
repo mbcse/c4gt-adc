@@ -26,6 +26,7 @@ import DashboardLayout from "@/student/components/DashboardLayout";
 import { courseAPI } from "@/api/courseAPI";
 import { useApi } from '@/api/index';
 import { metadataAPI } from '@/api/metadataAPI';
+import { formatDuration } from "@/utils/format";
 
 export default function Courses() {
   const api = useApi();
@@ -147,7 +148,6 @@ export default function Courses() {
         case "name":
           return a.title.localeCompare(b.title);
         case "date":
-          // Use enrolledDate if available, otherwise createdAt
           const dateA = new Date(a.assignedAt || a.createdAt).getTime();
           const dateB = new Date(b.assignedAt || b.createdAt).getTime();
           return dateB - dateA;
@@ -376,8 +376,8 @@ export default function Courses() {
                   key={filter}
                   onClick={() => setAssignedFilter(filter as any)}
                   className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${assignedFilter === filter
-                      ? "bg-violet-600 text-white shadow-md"
-                      : "text-violet-700 hover:bg-violet-200"
+                    ? "bg-violet-600 text-white shadow-md"
+                    : "text-violet-700 hover:bg-violet-200"
                     }`}
                 >
                   {filter === "all"
@@ -567,7 +567,7 @@ export default function Courses() {
                             />
                           </div>
                           <div className="text-sm text-slate-700 mt-2 font-medium">
-                            {course.progress}% Complete • {course.totalWatchTime}min watched
+                            {course.progress}% Complete • {formatDuration(course.totalWatchTime)} watched
                           </div>
 
                           <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>
@@ -580,7 +580,7 @@ export default function Courses() {
                             </span>
                             <span className="flex items-center font-medium">
                               <Clock className="h-4 w-4 mr-2 text-teal-500" />
-                              {course.totalWatchTime} min
+                              {formatDuration(course.totalDuration)}
                             </span>
                           </div>
 

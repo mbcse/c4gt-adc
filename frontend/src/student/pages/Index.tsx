@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 import { courseAPI } from "@/api/courseAPI";
 import { useAuth } from '@/shared/context/AuthContext';
 import { useApi } from '@/api/index';
+import { formatDuration } from "@/utils/format";
 
 export default function Index() {
   const { user } = useAuth();
@@ -43,9 +44,9 @@ export default function Index() {
     async function fetchTopCourses() {
       try {
         setLoading(true);
-        const response = await courseAPI.getAllCourses(api, 1, 10); // page 1, limit 10
+        const response = await courseAPI.getAllCourses(api, 1, 10);
         const courses = response.data || [];
-  
+
         // Sort by progress descending, pick top 3, shape data for dashboard
         const top3 = courses
           .sort((a: any, b: any) => b.progress - a.progress)
@@ -56,8 +57,8 @@ export default function Index() {
               course.progress === 100
                 ? "from-emerald-100 to-green-100"
                 : course.progress > 0
-                ? "from-blue-100 to-indigo-100"
-                : "from-gray-100 to-slate-100",
+                  ? "from-blue-100 to-indigo-100"
+                  : "from-gray-100 to-slate-100",
             image: course.thumbnailUrl ? (
               <img
                 src={course.thumbnailUrl}
@@ -70,7 +71,7 @@ export default function Index() {
             instructor: course.creatorName || course.createdBy || "Unknown",
             timeLeft: "N/A",
           }));
-  
+
         setAssignedCourses(top3);
       } catch (error) {
         console.error("Failed to fetch courses for dashboard", error);
@@ -78,7 +79,7 @@ export default function Index() {
         setLoading(false);
       }
     }
-  
+
     fetchTopCourses();
   }, [api]);
 
@@ -142,7 +143,7 @@ export default function Index() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Dashboard Header - Fixed with proper spacing */}
+        {/* Dashboard Header */}
         <div className="text-center py-8 mb-6">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl">
@@ -169,7 +170,7 @@ export default function Index() {
                     </span>
                   </div>
                   <span className="text-4xl font-bold mb-2 bg-gradient-to-r from-violet-600 to-purple-700 bg-clip-text text-transparent">
-                    Hello, {user?.name || 'User'}! 
+                    Hello, {user?.name || 'User'}!
                   </span>
                   <span className="text-4xl font-bold mb-2">👋</span>
                   <p className="text-xl text-slate-600 mb-6">
@@ -191,8 +192,8 @@ export default function Index() {
                 <div className="relative ml-8 hidden lg:block">
                   <div className="w-32 h-32 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center shadow-inner">
                     <svg className="w-16 h-16 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 9.99 5.16-.25 9-4.44 9-9.99V7l-10-5z"/>
-                      <path d="M12 8.5L8.5 12L12 15.5L15.5 12L12 8.5z" fill="white"/>
+                      <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 9.99 5.16-.25 9-4.44 9-9.99V7l-10-5z" />
+                      <path d="M12 8.5L8.5 12L12 15.5L15.5 12L12 8.5z" fill="white" />
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center shadow-lg">
@@ -209,11 +210,11 @@ export default function Index() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-amber-500" />
+              <Trophy className="h-5 w-5 text-amber-500" />
               <h2 className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
                 Your Achievements
               </h2>
-              </div>
+            </div>
             <Link
               to="/achievements"
               className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
@@ -254,90 +255,84 @@ export default function Index() {
 
         {/* Mixed Layout Section */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Courses Section - 4 columns */}
-        <div className="lg:col-span-4" id="courses-section">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-teal-500" />
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Continue Learning
-              </h2>
+          {/* Courses Section - 4 columns */}
+          <div className="lg:col-span-4" id="courses-section">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-6 w-6 text-teal-500" />
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                  Continue Learning
+                </h2>
+              </div>
+              <Link
+                to="/courses"
+                className="text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
+              >
+                View All <ChevronRight className="h-4 w-4 ml-1" />
+              </Link>
             </div>
-            <Link
-              to="/courses"
-              className="text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
-            >
-              View All <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assignedCourses.map((course) => (
-              <Link key={course.id} to={`/courses/${course.id}`}>
-                <Card
-                  className={`bg-white border-2 border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2 hover:border-teal-200`}
-                >
-                  <CardContent className="p-0">
-                    {/* Course Thumbnail */}
-                    <div className="relative w-full h-40 rounded-t-xl overflow-hidden">
-                      {typeof course.image === "string" ? (
-                        <div className="text-6xl flex items-center justify-center h-full">
-                          {course.image}
-                        </div>
-                      ) : (
-                        course.image
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                      <div className="absolute top-3 right-3">
-                        <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
-                          {course.progress}% Complete
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {assignedCourses.map((course) => (
+                <Link key={course.id} to={`/courses/${course.id}`}>
+                  <Card
+                    className="relative flex flex-col h-full min-h-[350px] max-h-[420px] bg-white border-2 border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2 hover:border-teal-200 rounded-2xl"
+                  >
+                    <CardContent className="flex flex-col h-full p-0">
+                      {/* Thumbnail */}
+                      <div className="relative w-full h-40 rounded-t-2xl overflow-hidden">
+                        {typeof course.image === "string" ? (
+                          <div className="text-6xl flex items-center justify-center h-full">{course.image}</div>
+                        ) : (
+                          course.image
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+                        <div className="absolute top-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium text-gray-700">
+                            {course.progress}% Complete
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Course Content */}
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-teal-700 transition-colors line-clamp-2">
+                      {/* Content */}
+                      <div className="flex flex-col flex-1 p-6 min-h-[180px]">
+                        <h3 className="font-bold text-gray-900 text-lg mb-1 group-hover:text-teal-700 transition-colors line-clamp-2">
                           {course.title}
                         </h3>
-                        <p className="text-sm text-gray-600 flex items-center">
-                          <User className="h-3 w-3 mr-1" />
-                          {course.instructor}
-                        </p>
-                      </div>
+                        {course.description && (
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                            {course.description}
+                          </p>
+                        )}
+                        {/* Progress Bar */}
+                        <div className="mt-auto space-y-2">
+                          <Progress
+                            value={course.progress}
+                            className="h-2 rounded-md bg-gray-200 [&>div]:bg-teal-500"
+                          />
 
-                      {/* Progress Section */}
-                      <div className="space-y-3 mb-4">
-                        <Progress
-                          value={course.progress}
-                          className={`h-2 rounded-md ${
-                            course.progress === 0 ? "bg-gray-200" : "bg-teal-500"
-                          }`}
-                        />
-                        <div className="flex justify-between text-xs text-gray-500">
-                          <span className="flex items-center">
-                            <BookOpen className="h-3 w-3 mr-1" />
-                            {course.completedLessons}/{course.totalLessons} lessons
-                          </span>
-                          <span className="flex items-center">
-                            <Clock className="h-3 w-3 mr-1" />
-                            {course.timeLeft}
-                          </span>
+                          <div className="flex justify-between text-xs text-gray-500">
+                            <span className="flex items-center">
+                              <BookOpen className="h-3 w-3 mr-1" />
+                              {course.completedLessons}/{course.totalLessons} lessons
+                            </span>
+                            <span className="flex items-center">
+                              <Clock className="h-3 w-3 mr-1" />
+                              {formatDuration(course.totalDuration)}
+                            </span>
+                          </div>
+                          {/* Button */}
+                          <Button className="w-full mt-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-md hover:shadow-lg transition-all duration-300 py-2.5 flex items-center justify-center gap-2">
+                            <Play className="h-4 w-4" />
+                            Resume
+                          </Button>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
 
-                      {/* Action Button */}
-                      <Button className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-md hover:shadow-lg transition-all duration-300 py-2.5 flex items-center justify-center gap-2">
-                        <Play className="h-4 w-4" />
-                        Resume
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+            </div>
           </div>
-        </div>
 
           {/* Side Panel - Weekly Progress */}
           <div className="space-y-4">

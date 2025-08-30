@@ -3,8 +3,6 @@ import { Plus, Edit, Trash2, Video as VideoIcon } from "lucide-react";
 import { useAuth } from "@/shared/context/AuthContext";
 import { courseAPI } from "@/api/courseAPI";
 import { useApi } from "@/api/index";
-import { AdminCourseModal } from "@/admin/components/AdminCourseModal";
-import { AdminVideoModal } from "@/admin/components/AdminVideoModal";
 import { AssignCourseModal } from "@/admin/components/AssignCourseModal";
 import type { Course, Video } from "@/types";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +33,6 @@ export default function Courses() {
       setError(null);
       try {
         const response = await courseAPI.getAllCourses(api, currentPage, 10);
-        // Defensive: ensure response.data is always an array
         const coursesArray = Array.isArray(response.data) ? response.data : [];
         setCourses(coursesArray);
         setTotalCourses(response.total ?? 0);
@@ -65,7 +62,7 @@ export default function Courses() {
       // Refetch fresh course data from backend API
       const updatedCourse = await courseAPI.getCourse(videoModalCourseId, api);
 
-      // Update your courses array with fresh data
+      // Update courses array with fresh data
       setCourses((prevCourses) =>
         prevCourses.map((c) => (c.id === videoModalCourseId ? updatedCourse : c))
       );
@@ -187,7 +184,7 @@ export default function Courses() {
                   </div>
                 </div>
 
-                {/* Action buttons - prevent event bubbling */}
+                {/* Action buttons */}
                 <div className="flex space-x-2">
                   <button
                     onClick={(e) => {
@@ -202,7 +199,7 @@ export default function Courses() {
                   <button
                     className="btn btn-danger flex-1 text-sm"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent card click
+                      e.stopPropagation();
                       deleteCourse(course.id);
                     }}
                     title="Delete Course"
@@ -223,13 +220,6 @@ export default function Courses() {
         isOpen={isCourseWizardOpen}
         onClose={() => setCourseWizardOpen(false)}
         onSaved={handleCourseSaved}
-      />
-
-      <AdminVideoModal
-        isOpen={videoModalCourseId !== null}
-        onClose={() => setVideoModalCourseId(null)}
-        onVideoAdded={handleVideoAdded}
-        courseId={videoModalCourseId!}
       />
 
       {assignCourseModalCourseId !== null && (
