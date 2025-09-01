@@ -5,7 +5,6 @@ import {
   BookOpen,
   Trophy,
   TrendingUp,
-  Bell,
   Home,
   User,
   Menu,
@@ -31,42 +30,22 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
+function getInitials(name: string) {
+  const names = name.trim().split(' ');
+  if (names.length === 1) return names[0].charAt(0).toUpperCase();
+  return (names[0].charAt(0) + names[1].charAt(0)).toUpperCase();
+}
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const { logout } = useAuth();
+  const { user,logout } = useAuth();
   const navigate = useNavigate();
 
-  const notifications = [
-    {
-      id: 1,
-      type: "course",
-      title: "New Course Added",
-      message: "React Advanced Patterns is now available",
-      time: "2 hours ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      type: "badge",
-      title: "Badge Earned!",
-      message: "You earned the JavaScript Master badge",
-      time: "1 day ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      type: "achievement",
-      title: "Achievement Unlocked",
-      message: "Completed 10 quizzes in a row",
-      time: "3 days ago",
-      unread: false,
-    },
-  ];
-
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const userName = user?.name || "User Name";
+  const initials = getInitials(userName);
 
   const navigation = [
     { name: "Dashboard", href: "/", icon: Home },
@@ -74,7 +53,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Progress", href: "/progress", icon: TrendingUp },
     { name: "Quizzes", href: "/quizzes", icon: Brain },
     { name: "Achievements", href: "/achievements", icon: Trophy },
-    { name: "Leaderboard", href: "/leaderboard", icon: Crown },
     { name: "Profile", href: "/profile", icon: User },
   ];
 
@@ -253,11 +231,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="font-bold text-white drop-shadow-md">Rohtak Guided Learning Tracker</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Bell className="h-5 w-5 text-white/90" />
               <Link to="/profile">
                 <Avatar className="h-8 w-8 cursor-pointer hover:scale-110 transition-transform duration-200 shadow-md border-2 border-white/30">
                   <AvatarFallback className="bg-gradient-to-r from-rose-400 to-pink-400 text-white">
-                    RS
+                    {initials}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -268,56 +245,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Floating Desktop Actions */}
         <div className="hidden lg:block fixed top-4 right-6 z-50">
           <div className="flex items-center space-x-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="relative bg-white/90 backdrop-blur-sm border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-full h-10 w-10 p-0"
-                >
-                  <Bell className="h-4 w-4" />
-                  {unreadCount > 0 && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                      <span className="text-xs text-white">{unreadCount}</span>
-                    </div>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <div className="p-2 font-semibold text-sm border-b">
-                  Notifications
-                </div>
-                {notifications.map((notification, index) => (
-                  <div key={notification.id}>
-                    <DropdownMenuItem className="p-3 flex-col items-start space-y-1">
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-medium text-sm">
-                          {notification.title}
-                        </span>
-                        {notification.unread && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {notification.message}
-                      </p>
-                      <span className="text-xs text-muted-foreground">
-                        {notification.time}
-                      </span>
-                    </DropdownMenuItem>
-                    {index < notifications.length - 1 && <DropdownMenuSeparator />}
-                  </div>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="p-3 text-center text-sm text-blue-600 cursor-pointer">
-                  View all notifications
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             <Link to="/profile">
               <Avatar className="h-10 w-10 cursor-pointer hover:scale-110 transition-transform duration-200 shadow-lg border-2 border-white/50 hover:border-rose-300">
                 <AvatarFallback className="bg-gradient-to-r from-rose-500 to-pink-500 text-white">
-                  RS
+                  {initials}
                 </AvatarFallback>
               </Avatar>
             </Link>

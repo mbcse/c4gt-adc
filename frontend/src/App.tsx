@@ -15,7 +15,6 @@ import CoursePage from "./student/pages/CoursePage";
 import MyProgress from "./student/pages/Progress";
 import Quizzes from "./student/pages/Quizzes";
 import Achievements from "./student/pages/Achievements";
-import Leaderboard from "./student/pages/Leaderboard";
 import Profile from "./student/pages/Profile";
 import VideoPage from "./student/pages/VideoPage";
 import CourseVideoRouteHandler from "./student/components/CourseVideoRouteHandler";
@@ -26,10 +25,8 @@ import AdminDashboard from "./admin/pages/Dashboard";
 import ManageStudents from "./admin/pages/Students";
 import ManageCourses from "./admin/pages/Courses";
 import ViewProgress from "./admin/pages/Progress";
-import QuizAnalytics from "./admin/pages/QuizAnalytics";
 import Reports from "./admin/pages/Reports";
 import UserManagement from "./admin/pages/UserManagement";
-import ManageNotifications from "./admin/pages/Notifications";
 import CourseDetailPage from "@/admin/pages/CourseDetailPage";
 
 // Shared
@@ -65,10 +62,8 @@ const App: React.FC = () => {
               <Route path="students" element={<ManageStudents />} />
               <Route path="courses" element={<ManageCourses />} />
               <Route path="progress" element={<ViewProgress />} />
-              <Route path="quiz-analytics" element={<QuizAnalytics />} />
               <Route path="reports" element={<Reports />} />
               <Route path="users" element={<UserManagement />} />
-              <Route path="notifications" element={<ManageNotifications />} />
               <Route path="courses/:id" element={<CourseDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
@@ -88,7 +83,6 @@ const App: React.FC = () => {
                     <Route path="progress" element={<MyProgress />} />
                     <Route path="quizzes" element={<Quizzes />} />
                     <Route path="achievements" element={<Achievements />} />
-                    <Route path="leaderboard" element={<Leaderboard />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

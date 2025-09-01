@@ -1,4 +1,4 @@
-import { Activity } from '../types'
+import { Activity } from '@/types/index'
 import { UserPlus, CheckCircle, Trophy, Book, ClipboardList } from 'lucide-react'
 
 interface RecentActivityProps {

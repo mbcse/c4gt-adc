@@ -40,16 +40,12 @@ export function CourseVideosManager({
   onDeleteQuiz
 }: CourseVideosManagerProps) {
   const api = useApi();
-
-  // Playlist import states
   const [playlistUrl, setPlaylistUrl] = useState(externalPlaylistUrl || "");
   const [playlistVideos, setPlaylistVideos] = useState<PlaylistVideo[]>([]);
   const [selectedVideoIds, setSelectedVideoIds] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingPlaylist, setLoadingPlaylist] = useState(false);
-
-  // Single video add states
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
   const [addingVideo, setAddingVideo] = useState(false);
@@ -61,7 +57,6 @@ export function CourseVideosManager({
     }
   }, [externalPlaylistUrl]);
 
-  // Load playlist videos page
   const loadPlaylistVideos = async (page: number = 1) => {
     if (!playlistUrl.trim()) return;
     setLoadingPlaylist(true);
@@ -77,7 +72,6 @@ export function CourseVideosManager({
     }
   };
 
-  // Toggle video selection from playlist
   const toggleSelectVideo = (videoId: string) => {
     setSelectedVideoIds((prev) => {
       const newSet = new Set(prev);
@@ -87,16 +81,13 @@ export function CourseVideosManager({
     });
   };
 
-  // Add selected playlist videos to course
   const addSelectedVideos = async () => {
     const selectedVideos = playlistVideos.filter((v) => selectedVideoIds.has(v.videoId));
     if (selectedVideos.length === 0) {
       alert("Select at least one video");
       return;
     }
-
     try {
-      // Add videos to course via API
       await courseAPI.addVideosFromPlaylist(courseId, selectedVideos.map(v => ({
         videoUrl: v.videoUrl || `https://youtu.be/${v.videoId}`,
         title: v.title,
@@ -105,12 +96,8 @@ export function CourseVideosManager({
         thumbnailUrl: v.thumbnailUrl,
         platform: v.platform
       })), api);
-
-      // Refresh videos list
       const updatedCourse = await courseAPI.getCourse(courseId, api);
       onVideosUpdated(updatedCourse.courseVideos || []);
-
-      // Reset playlist UI
       setPlaylistUrl("");
       setPlaylistVideos([]);
       setSelectedVideoIds(new Set());
@@ -121,7 +108,6 @@ export function CourseVideosManager({
     }
   };
 
-  // Add single video from URL
   const addSingleVideo = async () => {
     if (!videoUrl.trim()) {
       alert("Video URL is required");
@@ -135,11 +121,8 @@ export function CourseVideosManager({
         platform: "youtube"
       };
       await courseAPI.addVideoToCourse(courseId, videoData, api);
-
-      // Refresh videos list
       const updatedCourse = await courseAPI.getCourse(courseId, api);
       onVideosUpdated(updatedCourse.courseVideos || []);
-
       setVideoUrl("");
       setVideoTitle("");
       setShowAddVideo(false);
@@ -150,13 +133,10 @@ export function CourseVideosManager({
     }
   };
 
-  // Delete video from course
   const deleteVideo = async (videoId: number) => {
     if (!window.confirm("Are you sure you want to delete this video?")) return;
     try {
       await courseAPI.deleteVideoFromCourse(courseId, videoId, api);
-
-      // Refresh videos list
       const updatedCourse = await courseAPI.getCourse(courseId, api);
       onVideosUpdated(updatedCourse.courseVideos || []);
     } catch (error: any) {
@@ -164,26 +144,19 @@ export function CourseVideosManager({
     }
   };
 
-  // Reorder videos via drag and drop
   const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
-
     const reorderedVideos = Array.from(videos);
     const [movedVideo] = reorderedVideos.splice(result.source.index, 1);
     reorderedVideos.splice(result.destination.index, 0, movedVideo);
-
-    // Update UI
     onVideosUpdated(reorderedVideos);
-
     try {
       const videoOrders = reorderedVideos.map((video, index) => ({
         videoId: video.video.id,
         order: index + 1
       }));
-
       await courseAPI.reorderVideos(courseId, videoOrders, api);
     } catch (error) {
-      // Revert UI on error
       onVideosUpdated(videos);
       alert("Failed to reorder videos");
     }
@@ -226,11 +199,8 @@ export function CourseVideosManager({
         })),
         api
       );
-
-      // Refresh course videos list
       const updatedCourse = await courseAPI.getCourse(courseId, api);
       onVideosUpdated(updatedCourse.courseVideos ?? []);
-
       setPlaylistVideos([]);
       setSelectedVideoIds(new Set());
       setPlaylistUrl("");
@@ -239,15 +209,13 @@ export function CourseVideosManager({
     }
   }
 
-  // Calculate total duration
   const totalDuration = videos.reduce((total, cv) => total + (cv.video?.duration || 0), 0);
 
   return (
     <div className="space-y-6">
-      {/* Playlist Import Section */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className="bg-gray-50 p-4 md:p-6 rounded-lg">
         <h3 className="text-lg font-semibold mb-4">Import Videos from YouTube Playlist</h3>
-        <div className="mb-4 flex space-x-2">
+        <div className="flex flex-col sm:flex-row gap-2 mb-4">
           <input
             type="text"
             placeholder="YouTube Playlist URL"
@@ -259,7 +227,7 @@ export function CourseVideosManager({
           <button
             onClick={() => loadPlaylistVideos(1)}
             disabled={disabled || loadingPlaylist || !playlistUrl.trim()}
-            className="btn btn-secondary"
+            className="btn btn-secondary w-full sm:w-auto"
           >
             {loadingPlaylist ? "Loading..." : "Load Playlist"}
           </button>
@@ -267,47 +235,46 @@ export function CourseVideosManager({
 
         {playlistVideos.length > 0 && (
           <div className="playlist-selector p-4 border rounded space-y-4">
-            <div className="video-list max-h-64 overflow-auto">
+            <div className="video-list max-h-64 overflow-y-auto space-y-3">
               {playlistVideos.map((video) => (
-                <label key={video.videoId} className="flex items-center space-x-3 cursor-pointer">
+                <label key={video.videoId} className="flex items-start sm:items-center space-x-3 cursor-pointer p-2 rounded hover:bg-gray-100">
                   <input
                     type="checkbox"
                     checked={selectedVideoIds.has(video.videoId)}
                     onChange={() => toggleSelectVideo(video.videoId)}
                     disabled={disabled}
-                    className="form-checkbox"
+                    className="form-checkbox mt-1 sm:mt-0"
                   />
-                  <img src={video.thumbnailUrl} alt={video.title} className="w-20 rounded" />
-                  <div>
-                    <p className="font-semibold">{video.title}</p>
-                    <p className="text-sm text-gray-500">{formatDuration(video.duration)}</p>
+                  <img src={video.thumbnailUrl} alt={video.title} className="w-16 sm:w-20 rounded flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm sm:text-base break-words">{video.title}</p>
+                    <p className="text-xs sm:text-sm text-gray-500">{formatDuration(video.duration)}</p>
                   </div>
                 </label>
               ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div className="pagination flex justify-between">
+            <div className="pagination flex flex-col sm:flex-row justify-between items-center gap-2">
               <button
                 disabled={currentPage <= 1 || loadingPlaylist || disabled}
                 onClick={() => loadPlaylistVideos(currentPage - 1)}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full sm:w-auto"
               >
                 Previous
               </button>
-              <span>
+              <span className="text-sm font-medium">
                 Page {currentPage} / {totalPages}
               </span>
               <button
                 disabled={currentPage >= totalPages || loadingPlaylist || disabled}
                 onClick={() => loadPlaylistVideos(currentPage + 1)}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full sm:w-auto"
               >
                 Next
               </button>
             </div>
 
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={() => addVideos(playlistVideos)}
                 disabled={loadingPlaylist || !playlistVideos.length}
@@ -315,7 +282,6 @@ export function CourseVideosManager({
               >
                 Add All Videos in This Page
               </button>
-
               <button
                 onClick={addEntirePlaylist}
                 disabled={loadingPlaylist || !playlistVideos.length}
@@ -336,7 +302,6 @@ export function CourseVideosManager({
         )}
       </div>
 
-      {/* Single Video Add Section */}
       <div>
         <label className="block font-medium mb-2">Add Single Video</label>
         {!showAddVideo ? (
@@ -349,7 +314,7 @@ export function CourseVideosManager({
             Add Single Video
           </button>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 p-4 border rounded-lg bg-gray-50">
             <input
               type="text"
               placeholder="Video URL"
@@ -366,11 +331,11 @@ export function CourseVideosManager({
               onChange={(e) => setVideoTitle(e.target.value)}
               disabled={disabled || addingVideo}
             />
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={addSingleVideo}
                 disabled={disabled || addingVideo || !videoUrl.trim()}
-                className="btn btn-primary"
+                className="btn btn-primary w-full sm:w-auto"
               >
                 {addingVideo ? "Adding..." : "Add Video"}
               </button>
@@ -381,7 +346,7 @@ export function CourseVideosManager({
                   setVideoTitle("");
                 }}
                 disabled={disabled || addingVideo}
-                className="btn btn-outline"
+                className="btn btn-outline w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -390,24 +355,22 @@ export function CourseVideosManager({
         )}
       </div>
 
-      {/* Videos List Section with Quizzes */}
       <div>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
           <div>
             <h3 className="text-lg font-semibold">Videos & Quizzes</h3>
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
+            <div className="flex flex-wrap items-center gap-x-4 text-sm text-gray-600">
               <span>{videos.length} videos</span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span>{quizzes.length} quizzes</span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span>{formatDuration(totalDuration)} total duration</span>
             </div>
           </div>
         </div>
 
         {videos.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 border-2 border-dashed rounded-lg">
             No videos in this course yet. Add some videos above.
           </div>
         ) : (
@@ -426,36 +389,29 @@ export function CourseVideosManager({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`flex items-center gap-4 p-4 bg-white border rounded-lg hover:shadow-md transition-shadow ${snapshot.isDragging ? "shadow-lg" : ""
-                              }`}
+                            className={`flex flex-col md:flex-row items-start md:items-center gap-4 p-3 md:p-4 bg-white border rounded-lg hover:shadow-md transition-shadow ${snapshot.isDragging ? "shadow-lg" : ""}`}
                           >
-                            {/* Drag Handle */}
-                            <div {...provided.dragHandleProps} className="cursor-grab">
-                              <GripVertical className="w-5 h-5" />
+                            <div className="flex items-center gap-3 w-full md:w-auto flex-shrink-0">
+                                <div {...provided.dragHandleProps} className="cursor-grab text-gray-400">
+                                  <GripVertical className="w-5 h-5" />
+                                </div>
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm font-medium">
+                                  {index + 1}
+                                </div>
+                                <img
+                                  src={video.thumbnailUrl}
+                                  alt={video.title}
+                                  className="h-12 w-20 md:h-16 md:w-28 object-cover rounded"
+                                />
                             </div>
-
-                            {/* Video Order Badge */}
-                            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm font-medium">
-                              {index + 1}
-                            </div>
-
-                            {/* Video Thumbnail */}
-                            <img
-                              src={video.thumbnailUrl}
-                              alt={video.title}
-                              className="h-16 w-28 object-cover rounded"
-                            />
-
-                            {/* Video Details */}
-                            <div className="flex-grow min-w-0">
-                              <h4 className="font-medium text-gray-900 line-clamp-2 mb-1">{video.title}</h4>
-                              <div className="flex items-center space-x-4 text-sm text-gray-500">
+                            
+                            <div className="flex-grow min-w-0 w-full md:w-auto">
+                              <h4 className="font-medium text-gray-900 break-words mb-1">{video.title}</h4>
+                              <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-500">
                                 <span>{formatDuration(video.duration)}</span>
-                                <span>•</span>
-                                <span>{video.platform}</span>
+                                <span className="hidden sm:inline">•</span>
+                                <span className="capitalize">{video.platform}</span>
                               </div>
-
-                              {/* Quiz Status */}
                               <div className="flex items-center space-x-2 mt-2">
                                 <span className="text-xs font-medium text-gray-600">Quiz:</span>
                                 {existingQuiz ? (
@@ -470,59 +426,52 @@ export function CourseVideosManager({
                                 )}
                               </div>
                             </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col space-y-2">
-                              {/* Video Actions */}
-                              <div className="flex space-x-1 items-center">
-                                <button
-                                  onClick={() => deleteVideo(video.id ?? video.videoId)}
-                                  className="flex items-center text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50"
-                                  title="Delete Video"
-                                  disabled={disabled}
-                                >
-                                  <Trash2 className="w-4 h-4 mr-1" />
-                                  <span className="text-sm">Delete Video</span>
-                                </button>
-                              </div>
-
-                              {/* Quiz Actions */}
-                              <div className="flex space-x-1 items-center">
-                                {existingQuiz ? (
-                                  <>
+                            
+                            <div className="flex flex-col items-start gap-2 w-full md:w-auto md:ml-auto">
+                              <div className="flex flex-wrap gap-2 items-center">
+                                  {existingQuiz ? (
+                                    <>
+                                      <button
+                                        onClick={() => onEditQuiz(existingQuiz)}
+                                        disabled={disabled}
+                                        className="flex items-center p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
+                                        title="Edit Quiz"
+                                      >
+                                        <Edit className="w-4 h-4 mr-1" />
+                                        <span className="text-sm">Edit Quiz</span>
+                                      </button>
+                                      <button
+                                        onClick={() => onDeleteQuiz(existingQuiz.id)}
+                                        disabled={disabled}
+                                        className="flex items-center p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
+                                        title="Delete Quiz"
+                                      >
+                                        <Trash2 className="w-4 h-4 mr-1" />
+                                        <span className="text-sm">Delete Quiz</span>
+                                      </button>
+                                    </>
+                                  ) : (
                                     <button
-                                      onClick={() => onEditQuiz(existingQuiz)}
+                                      onClick={() => onCreateQuiz(video)}
                                       disabled={disabled}
-                                      className="flex items-center p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
-                                      title="Edit Quiz"
+                                      className="flex items-center p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded"
+                                      title="Add Quiz"
                                     >
-                                      <Edit className="w-4 h-4 mr-1" />
-                                      <span className="text-sm">Edit Quiz</span>
+                                      <Plus className="w-4 h-4 mr-1" />
+                                      <span className="text-sm">Add Quiz</span>
                                     </button>
-                                    <button
-                                      onClick={() => onDeleteQuiz(existingQuiz.id)}
-                                      disabled={disabled}
-                                      className="flex items-center p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
-                                      title="Delete Quiz"
-                                    >
-                                      <Trash2 className="w-4 h-4 mr-1" />
-                                      <span className="text-sm">Delete Quiz</span>
-                                    </button>
-                                  </>
-                                ) : (
+                                  )}
                                   <button
-                                    onClick={() => onCreateQuiz(video)}
+                                    onClick={() => deleteVideo(video.id ?? video.videoId)}
+                                    className="flex items-center text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50"
+                                    title="Delete Video"
                                     disabled={disabled}
-                                    className="flex items-center p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded"
-                                    title="Add Quiz"
                                   >
-                                    <Plus className="w-4 h-4 mr-1" />
-                                    <span className="text-sm">Add Quiz</span>
+                                    <Trash2 className="w-4 h-4 mr-1" />
+                                    <span className="text-sm">Delete Video</span>
                                   </button>
-                                )}
                               </div>
                             </div>
-
                           </div>
                         )}
                       </Draggable>

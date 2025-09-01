@@ -41,7 +41,6 @@ export default function CourseDetailPage() {
   const [languageId, setLanguageId] = useState<number | "">("");
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
-  // Load quizzes for this course
   const loadQuizzes = async () => {
     if (!course?.id) return;
     try {
@@ -77,14 +76,12 @@ export default function CourseDetailPage() {
     fetchCourse();
   }, [id, api, user]);
 
-  // Load quizzes when course is loaded
   useEffect(() => {
     if (course?.id) {
       loadQuizzes();
     }
   }, [course?.id]);
 
-  // Quiz management handlers
   const handleCreateQuiz = (video: Video) => {
     setEditingQuiz(null);
     setSelectedVideo(video);
@@ -113,7 +110,6 @@ export default function CourseDetailPage() {
 
   const handleSaveMetadata = async () => {
     if (!course) return;
-
     setSaving(true);
     try {
       const payload = {
@@ -154,24 +150,25 @@ export default function CourseDetailPage() {
   };
 
   if (loading) {
-    return <div>Loading course...</div>;
+    return <div className="flex items-center justify-center h-screen">Loading course...</div>;
   }
   if (error || !course) {
     return (
-      <div>
-        <p>{error || "Course not found"}</p>
-        <button onClick={() => navigate("/admin/courses")}>Back to Courses</button>
+      <div className="flex flex-col items-center justify-center h-screen p-4 text-center">
+        <p className="mb-4 text-red-600">{error || "Course not found"}</p>
+        <button onClick={() => navigate("/admin/courses")} className="btn btn-outline">
+          Back to Courses
+        </button>
       </div>
     );
   }
 
   function ReadOnlyVideosList({ videos }: { videos: Course['courseVideos'] }) {
     if (!videos || videos.length === 0) return <p>No videos in this course.</p>;
-
     return (
       <ul className="space-y-2 list-disc list-inside text-gray-700">
         {videos.map(cv => (
-          <li key={cv.id}>
+          <li key={cv.id} className="break-words">
             {cv.video.title} ({formatDuration(cv.video.duration)})
           </li>
         ))}
@@ -180,12 +177,12 @@ export default function CourseDetailPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6 md:space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <button
           onClick={() => navigate("/admin/courses")}
-          className="btn btn-outline"
+          className="btn btn-outline w-full sm:w-auto"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Courses
@@ -193,17 +190,17 @@ export default function CourseDetailPage() {
         {!isEditingMetadata ? (
           <button
             onClick={() => setIsEditingMetadata(true)}
-            className="btn btn-primary"
+            className="btn btn-primary w-full sm:w-auto"
           >
             <Edit className="w-4 h-4 mr-2" />
             Edit Metadata
           </button>
         ) : (
-          <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
             <button
               onClick={handleCancelEdit}
               disabled={saving}
-              className="btn btn-outline"
+              className="btn btn-outline w-full sm:w-auto"
             >
               <X className="w-4 h-4 mr-2" />
               Cancel
@@ -211,7 +208,7 @@ export default function CourseDetailPage() {
             <button
               onClick={handleSaveMetadata}
               disabled={saving || !title.trim()}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               <Save className="w-4 h-4 mr-2" />
               {saving ? "Saving..." : "Save Metadata"}
@@ -221,27 +218,32 @@ export default function CourseDetailPage() {
       </div>
 
       {/* Metadata form or read-only display */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="bg-white rounded-lg shadow-sm border p-4 md:p-6">
         {!isEditingMetadata ? (
-          <>
+          <div className="space-y-4">
             {course.thumbnailUrl ? (
               <div className="mb-4">
                 <img
                   src={course.thumbnailUrl}
                   alt={`${course.title} Thumbnail`}
-                  className="rounded shadow-md max-w-xs"
+                  className="rounded shadow-md w-full max-w-xs"
                 />
               </div>
             ) : (
-              <p>No course thumbnail available</p>
+              <p className="text-gray-500">No course thumbnail available.</p>
             )}
-
-            <h2 className="text-xl font-semibold mb-4">Course Information</h2>
-            <p><strong>Title:</strong> {course.title}</p>
-            <p><strong>Description:</strong> {course.description}</p>
-          </>
+            <h2 className="text-xl font-semibold">Course Information</h2>
+            <div>
+                <strong className="block text-gray-800">Title:</strong>
+                <p className="break-words">{course.title}</p>
+            </div>
+            <div>
+                <strong className="block text-gray-800">Description:</strong>
+                <p className="break-words">{course.description}</p>
+            </div>
+          </div>
         ) : (
-          <>
+          <div className="space-y-4">
             <div className="mb-4">
               <label htmlFor="thumbnailUrl" className="block font-medium mb-1">
                 Course Thumbnail URL
@@ -253,13 +255,13 @@ export default function CourseDetailPage() {
                 onChange={(e) => setThumbnailUrl(e.target.value)}
                 disabled={saving}
                 className="w-full border rounded p-2"
-                placeholder="Enter thumbnail URL"
+                placeholder="https://example.com/image.png"
               />
               {thumbnailUrl && (
                 <img
                   src={thumbnailUrl}
                   alt="Thumbnail Preview"
-                  className="mt-2 w-40 rounded shadow"
+                  className="mt-2 w-full max-w-[200px] rounded shadow"
                 />
               )}
             </div>
@@ -276,23 +278,25 @@ export default function CourseDetailPage() {
               setSelectedTagIds={setSelectedTagIds}
               disabled={saving}
             />
-          </>
+          </div>
         )}
       </div>
 
       {/* Video Management and Quiz*/}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="bg-white rounded-lg shadow-sm border p-4 md:p-6">
         {!isEditingMetadata ? (
-          <CourseVideosManager
-            courseId={course.id}
-            videos={course.courseVideos || []}
-            onVideosUpdated={handleVideosUpdated}
-            disabled={saving}
-            quizzes={quizzes}
-            onCreateQuiz={handleCreateQuiz}
-            onEditQuiz={handleEditQuiz}
-            onDeleteQuiz={handleDeleteQuiz}
-          />
+          <div className="overflow-x-auto">
+            <CourseVideosManager
+              courseId={course.id}
+              videos={course.courseVideos || []}
+              onVideosUpdated={handleVideosUpdated}
+              disabled={saving}
+              quizzes={quizzes}
+              onCreateQuiz={handleCreateQuiz}
+              onEditQuiz={handleEditQuiz}
+              onDeleteQuiz={handleDeleteQuiz}
+            />
+          </div>
         ) : (
           <div>
             <h3 className="text-lg font-semibold mb-4">Videos in this course</h3>
@@ -300,7 +304,6 @@ export default function CourseDetailPage() {
           </div>
         )}
       </div>
-
 
       {/* Admin Quiz Modal */}
       <AdminQuizModal

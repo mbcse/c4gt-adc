@@ -87,13 +87,14 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="md:flex md:items-center md:justify-between">
+    // The `overflow-x-hidden` class here prevents the entire page from scrolling horizontally.
+    <div className="space-y-6 p-4 md:p-6 overflow-x-hidden">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:tracking-tight">
           User Management
         </h1>
         {activeRole !== "STUDENT" && (
-          <button className="btn btn-primary flex items-center">
+          <button className="btn btn-primary flex items-center justify-center w-full md:w-auto">
             <UserPlus className="w-4 h-4 mr-2" />
             Add {activeRole.charAt(0) + activeRole.slice(1).toLowerCase()}
           </button>
@@ -106,8 +107,8 @@ export default function UserManagement() {
           <div
             key={role.value}
             onClick={() => handleCardClick(role.value)}
-            className={`card p-6 text-center cursor-pointer ${
-              activeRole === role.value ? "ring-2 ring-blue-500" : ""
+            className={`card p-6 text-center cursor-pointer transition-shadow hover:shadow-lg ${
+              activeRole === role.value ? "ring-2 ring-blue-500 shadow-lg" : "shadow-sm"
             }`}
           >
             <div
@@ -118,7 +119,7 @@ export default function UserManagement() {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               {role.title}
             </h3>
-            <p className="text-gray-600 mb-4">{role.description}</p>
+            <p className="text-sm text-gray-600 mb-4 h-10">{role.description}</p>
             {activeRole === role.value && activeRole !== "STUDENT" && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                 {totalCount} user{totalCount !== 1 ? "s" : ""}
@@ -130,8 +131,8 @@ export default function UserManagement() {
 
       {/* Table for roles except students */}
       {activeRole !== "STUDENT" && (
-        <>
-          <div className="flex items-center space-x-4 mt-6">
+        <div className="space-y-4">
+          <div className="flex items-center">
             <input
               type="text"
               placeholder={`Search ${activeRole.toLowerCase()}s...`}
@@ -140,43 +141,47 @@ export default function UserManagement() {
                 setPage(1);
                 setSearchTerm(e.target.value);
               }}
-              className="border rounded p-2 flex-grow max-w-md"
+              className="border rounded p-2 w-full md:max-w-md"
             />
           </div>
 
-          <div className="card overflow-hidden mt-4">
+          <div className="card overflow-hidden">
             <div className="overflow-x-auto">
               {loading ? (
-                <p className="p-4 text-center text-gray-600">Loading...</p>
+                <p className="p-6 text-center text-gray-600">Loading...</p>
               ) : users.length === 0 ? (
-                <p className="p-4 text-center text-gray-600">
+                <p className="p-6 text-center text-gray-600">
                   No {activeRole.toLowerCase()}s found.
                 </p>
               ) : (
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Email</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Role</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Joined</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500">Actions</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {users.map((user) => (
                       <tr key={user.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            {user.role}
+                           </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {user.createdAt
                             ? new Date(user.createdAt).toLocaleDateString()
                             : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
-                            className="text-red-600 hover:text-red-900 p-1 rounded"
+                            className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
                             onClick={() => handleDeleteUser(user.id)}
                           >
                             Delete
@@ -190,27 +195,29 @@ export default function UserManagement() {
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-between items-center mt-4 max-w-md mx-auto">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage(page - 1)}
-                className="px-4 py-2 border rounded disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span>
-                Page {page} of {totalPages}
-              </span>
-              <button
-                disabled={page >= totalPages}
-                onClick={() => setPage(page + 1)}
-                className="px-4 py-2 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+            {totalPages > 1 && (
+              <div className="p-4 flex justify-between items-center text-sm border-t">
+                <button
+                  disabled={page <= 1}
+                  onClick={() => setPage(page - 1)}
+                  className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <span className="font-medium">
+                  Page {page} of {totalPages}
+                </span>
+                <button
+                  disabled={page >= totalPages}
+                  onClick={() => setPage(page + 1)}
+                  className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
