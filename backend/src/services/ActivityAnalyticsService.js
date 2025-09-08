@@ -67,7 +67,7 @@ class ActivityAnalyticsService {
           totalActiveDays,
           totalStudyTimeYear: Math.round(totalStudyTimeYear * 10) / 10,
           totalLessonsYear,
-          activityByDayOfWeek: activityByDayOfWeek.map(time => Math.round((time / 3600) * 10) / 10),
+          activityByDayOfWeek: activityByDayOfWeek.map(time => Math.round((time / 3600) * 100) / 100),
         }
       };
 
@@ -96,7 +96,7 @@ class ActivityAnalyticsService {
 
       return Array.from(dataMap.values())
         .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .map((item) => ({ period: item.period, studyTime: Math.round(item.studyTime * 10) / 10 }));
+        .map((item) => ({ period: item.period, studyTime: Math.round(item.studyTime * 100) / 100 }));
     } catch (error) {
       console.error("Error getting study time patterns:", error);
       throw error;
@@ -155,7 +155,7 @@ class ActivityAnalyticsService {
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .map((item) => ({
         period: item.period,
-        studyTime: Math.round(item.studyTime * 10) / 10,
+        studyTime: Math.round(item.studyTime * 100) / 100,
         lessons: item.lessons,
       }));
   }

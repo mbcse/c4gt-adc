@@ -2,7 +2,7 @@ const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
 class CoreAnalyticsService {
-  async getStudentSummary(userId) {
+async getStudentSummary(userId) {
     try {
       const watchStats = await prisma.watchLog.aggregate({
         where: { userId },
@@ -21,30 +21,32 @@ class CoreAnalyticsService {
       });
 
       const totalQuizzes = quizStats._count.id || 0;
-      const streak = await this.calculateStreak(userId);
+      
+      const activityData = await this.calculateStreak(userId);
 
       const { startedCourses, completedCourses } = await this.getCourseCounts(userId);
 
       const [
-        weeklyStats,
         nextLesson
       ] = await Promise.all([
-        this.getWeeklyStats(userId),
         this.getNextLesson(userId)
       ]);
 
+      const totalTimeInHours = (watchStats._sum.totalWatchTime || 0) / 3600;
+      const totalStudyTime = Math.round(totalTimeInHours * 100) / 100;
+
       return {
-        totalStudyTime: Math.round((watchStats._sum.totalWatchTime || 0) / 3600 * 10) / 10,
+        totalStudyTime: totalStudyTime,
         totalLessons: completedVideos,
-        currentStreak: streak.current,
-        longestStreak: streak.longest,
+        currentStreak: activityData.current,            
+        longestStreak: activityData.longest,   
         averageQuizScore: Math.round((quizStats._avg.score || 0) * 10) / 10,
         totalQuizzes,
         enrolledCourses: startedCourses,
         completedCourses,
         completionRate: startedCourses > 0 ? Math.round((completedCourses / startedCourses) * 100) : 0,
-        lessonsCompletedThisWeek: weeklyStats.lessonsCompletedThisWeek,
-        studyTimeThisWeek: weeklyStats.studyTimeThisWeek,
+        lessonsCompletedThisWeek: activityData.lessonsCompletedThisWeek, 
+        studyTimeThisWeek: activityData.studyTimeThisWeek, 
         nextLesson: nextLesson
       };
     } catch (error) {
@@ -147,77 +149,63 @@ class CoreAnalyticsService {
     }
   }
 
-  async calculateStreak(userId) {
+async calculateStreak(userId) {
     try {
       const logs = await prisma.watchLog.findMany({
         where: { userId },
-        select: { updatedAt: true },
+        select: { updatedAt: true, totalWatchTime: true, isCompleted: true },
         orderBy: { updatedAt: "desc" },
       });
 
-      const activityDays = Array.from(
-        new Set(logs.map((log) => log.updatedAt.toISOString().split("T")[0]))
-      ).sort().reverse();
-
+      const activityDaySet = new Set(
+        logs.map((log) => log.updatedAt.toISOString().split("T")[0])
+      );
+      
       let currentStreak = 0;
       let longestStreak = 0, tempStreak = 1;
-
-      const activityDaySet = new Set(activityDays);
       const today = new Date();
       let checkDate = new Date(today);
-
       while (activityDaySet.has(checkDate.toISOString().split("T")[0])) {
         currentStreak++;
         checkDate.setDate(checkDate.getDate() - 1);
       }
-
+      const activityDays = Array.from(activityDaySet).sort().reverse(); 
       for (let i = 0; i < activityDays.length - 1; i++) {
         const date1 = new Date(activityDays[i]);
         const date2 = new Date(activityDays[i + 1]);
-        if (date1.getTime() - date2.getTime() === 24 * 60 * 60 * 1000) {
-          tempStreak++;
-        } else {
+        if (date1.getTime() - date2.getTime() === 24 * 60 * 60 * 1000) tempStreak++;
+        else {
           longestStreak = Math.max(longestStreak, tempStreak);
           tempStreak = 1;
         }
       }
       longestStreak = Math.max(longestStreak, tempStreak);
 
-      return { current: currentStreak, longest: longestStreak };
-    } catch (error) {
-      console.error("Error calculating streak:", error);
-      return { current: 0, longest: 0 };
-    }
-  }
+      
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      sevenDaysAgo.setHours(0, 0, 0, 0); 
+      
+      const weeklyLogs = logs.filter(log => log.updatedAt >= sevenDaysAgo); 
 
-  async getWeeklyStats(userId) {
-    try {
-      const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
+      const lessonsCompletedThisWeek = weeklyLogs.filter(log => log.isCompleted).length;
+      const studyTimeInSeconds = weeklyLogs.reduce((sum, log) => sum + log.totalWatchTime, 0);
 
-      const weeklyWatchLogs = await prisma.watchLog.findMany({
-        where: {
-          userId,
-          updatedAt: { gte: sevenDaysAgo }
-        },
-        select: {
-          isCompleted: true,
-          totalWatchTime: true,
-        }
-      });
-
-      const lessonsCompletedThisWeek = weeklyWatchLogs.filter(log => log.isCompleted).length;
-      const studyTimeThisWeek = weeklyWatchLogs.reduce((sum, log) => sum + log.totalWatchTime, 0);
+      const studyTimeInHours = studyTimeInSeconds / 3600;
+      const studyTimeThisWeek = Math.round((studyTimeInSeconds / 60) * 10) / 10;
 
       return {
+        current: currentStreak,
+        longest: longestStreak,
         lessonsCompletedThisWeek,
-        studyTimeThisWeek: Math.round((studyTimeThisWeek / 3600) * 10) / 10, // in hours
+        studyTimeThisWeek,
       };
+      
     } catch (error) {
-      console.error("Error getting weekly stats:", error);
-      return { lessonsCompletedThisWeek: 0, studyTimeThisWeek: 0 };
+      console.error("Error calculating streak and weekly stats:", error);
+      return { current: 0, longest: 0, lessonsCompletedThisWeek: 0, studyTimeThisWeek: 0 };
     }
   }
-
   async getNextLesson(userId) {
     try {
       // Find the first in-progress course

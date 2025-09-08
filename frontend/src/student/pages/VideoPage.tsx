@@ -53,7 +53,12 @@ export default function VideoPage() {
   }, [courseId, videoId]);
 
   useEffect(() => {
-    if (!videoProgress.isCompleted || !currentVideo || quizUnlocked) return;
+  if (
+      !videoProgress.isCompleted ||
+      !currentVideo ||
+      quizUnlocked ||
+      !currentVideo.quizStatus.hasQuiz // <-- CORRECTED: Check the nested property
+    ) return;
     setIsPollingForQuiz(true);
     let attempts = 0;
     const maxAttempts = 10;

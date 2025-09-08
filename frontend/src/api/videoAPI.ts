@@ -1,5 +1,13 @@
 import api from './index';
 
+export interface QuizStatus {
+  hasQuiz: boolean;
+  isUnlocked?: boolean;
+  attemptCount?: number;
+  bestScore?: number;
+  lastAttempt?: any;
+}
+
 export interface VideoProgress {
   totalWatchTime: number;
   isCompleted: boolean;
@@ -19,6 +27,7 @@ export interface Video {
   order: number;
   description: string;
   progress: VideoProgress;
+  quizStatus: QuizStatus;
 }
 
 export interface CourseProgress {

@@ -15,7 +15,7 @@ const analyticsRoutes = require('./routes/analytics');
 const quizRoutes = require('./routes/quizRoutes');
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:8080',
+  origin: [`${process.env.CORS_ORIGIN}`, 'http://localhost:8080'],
   credentials: true
 }));
 
@@ -51,7 +51,7 @@ app.use((err, req, res, next) => {
     });
   }
 
-  if (err.code === 'P2002') { // Prisma unique constraint violation
+  if (err.code === 'P2002') {
     return res.status(409).json({
       error: 'Data conflict occurred'
     });
@@ -64,7 +64,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler for unmatched routes
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.originalUrl} not found` });
 });

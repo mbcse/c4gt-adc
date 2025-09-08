@@ -22,11 +22,13 @@ import {
   Sparkles,
   Calendar,
   TrendingUp,
-  GraduationCap
+  GraduationCap,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/student/lib/utils";
 import { Link } from "react-router-dom";
 import DashboardLayout from "@/student/components/DashboardLayout";
+import { useStudentAnalytics } from "@/student/hooks/useStudentAnalytics";
 
 import { useEffect, useState } from "react";
 import { courseAPI } from "@/api/courseAPI";
@@ -38,12 +40,23 @@ export default function Index() {
   const { user } = useAuth();
   const api = useApi();
   const [assignedCourses, setAssignedCourses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingCourses, setLoadingCourses] = useState(true);
+
+const {
+    summary,
+    activityCalendar,
+    studyTimePatterns, 
+    fetchStudyTimePatterns,
+    loading: loadingAnalytics, 
+    error: analyticsError,
+  } = useStudentAnalytics();
+
+
 
   useEffect(() => {
     async function fetchTopCourses() {
       try {
-        setLoading(true);
+        setLoadingCourses(true);
         const response = await courseAPI.getAllCourses(api, 1, 10);
         const courses = response.data || [];
 
@@ -66,7 +79,7 @@ export default function Index() {
                 className="object-cover w-full h-full"
               />
             ) : (
-              "📚"
+              <BookOpen className="h-16 w-16 text-gray-400" />
             ),
             instructor: course.creatorName || course.createdBy || "Unknown",
             timeLeft: "N/A",
@@ -76,22 +89,58 @@ export default function Index() {
       } catch (error) {
         console.error("Failed to fetch courses for dashboard", error);
       } finally {
-        setLoading(false);
+        setLoadingCourses(false);
       }
     }
 
     fetchTopCourses();
   }, [api]);
 
-  if (loading) {
+  useEffect(() => {
+    // Also fetch the data for the weekly chart
+    if (fetchStudyTimePatterns) {
+      fetchStudyTimePatterns('weekly');
+    }
+  }, [fetchStudyTimePatterns]);
+
+ const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  
+  // Create a map of the weekly pattern data for easy lookup
+  // studyTimePatterns = [{period: 'Mon', studyTime: 0.01}, {period: 'Tue', studyTime: 0.02}, ...]
+  const weeklyPatternMap = new Map(
+     (studyTimePatterns || []).map(item => [item.period, item.studyTime])
+  );
+
+  // Build the final array for the chart, ensuring all 7 days are present in order
+  const dynamicDailyData = dayLabels.map(day => {
+    const hours = weeklyPatternMap.get(day) || 0;
+    return {
+      day: day,
+      hours: hours,
+      completed: hours > 0,
+    };
+  });
+
+
+  if (loadingCourses || loadingAnalytics) {
     return (
       <DashboardLayout>
-        <div className="min-h-screen flex items-center justify-center p-6">
-          <span className="text-gray-600 text-lg">Loading courses...</span>
+        <div className="min-h-screen flex items-center justify-center p-6 space-x-3">
+          <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+          <span className="text-gray-600 text-lg">
+            {loadingCourses ? "Loading your courses..." : "Loading your progress..."}
+          </span>
         </div>
       </DashboardLayout>
     );
   }
+
+  if (analyticsError) {
+    // Optionally handle analytics error (e.g., show a default state)
+    console.error("Analytics Error:", analyticsError);
+    // You could still render the dashboard but the stats cards will show 0
+  }
+
 
   // Top 3 most recent achievements (from achievements page)
   const recentAchievements = [
@@ -124,22 +173,6 @@ export default function Index() {
     },
   ];
 
-  const weeklyProgress = {
-    currentStreak: 7,
-    hoursThisWeek: 12.5,
-    lessonsCompleted: 15,
-    target: 20,
-    dailyData: [
-      { day: "Mon", hours: 2.5, completed: true },
-      { day: "Tue", hours: 1.8, completed: true },
-      { day: "Wed", hours: 2.2, completed: true },
-      { day: "Thu", hours: 1.5, completed: true },
-      { day: "Fri", hours: 2.8, completed: true },
-      { day: "Sat", hours: 1.7, completed: true },
-      { day: "Sun", hours: 0, completed: false },
-    ],
-  };
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -154,7 +187,7 @@ export default function Index() {
             </h1>
           </div>
           <p className="text-lg text-gray-600">
-            Step in • Power up • Rise high! 🚀
+            Step in • Power up • Rise high! 
           </p>
         </div>
         {/* Welcome Card */}
@@ -172,9 +205,8 @@ export default function Index() {
                   <span className="text-4xl font-bold mb-2 bg-gradient-to-r from-violet-600 to-purple-700 bg-clip-text text-transparent">
                     Hello, {user?.name || 'User'}!
                   </span>
-                  <span className="text-4xl font-bold mb-2">👋</span>
                   <p className="text-xl text-slate-600 mb-6">
-                    Ready to unlock new skills today? You're on fire! 🔥
+                    Ready to unlock new skills today? You're on fire! <Flame className="h-5 w-5 text-orange-500" />
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
@@ -197,7 +229,7 @@ export default function Index() {
                     </svg>
                   </div>
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center shadow-lg">
-                    ⚡
+                    <Zap className="h-5 w-5 text-white" />
                   </div>
                   <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-green-400 to-teal-400 rounded-full shadow-lg"></div>
                 </div>
@@ -336,81 +368,65 @@ export default function Index() {
 
           {/* Side Panel - Weekly Progress */}
           <div className="space-y-4">
+            {/* 6. Replace hardcoded data with summary hook data */}
             <Card className="relative overflow-hidden bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-500 shadow-xl border-4 border-blue-200">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-              <div className="absolute top-1 right-1 w-2 h-2 bg-cyan-300 rounded-full animate-ping"></div>
-              <div className="absolute top-2 right-4 w-1 h-1 bg-white rounded-full animate-pulse"></div>
-              <div className="absolute bottom-2 left-2 w-1.5 h-1.5 bg-blue-200 rounded-full animate-bounce"></div>
-              <div className="absolute top-3 left-3 w-1 h-1 bg-cyan-200 rounded-full animate-ping"></div>
-              <div className="absolute bottom-4 right-3 w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-              <div className="absolute top-1 left-1 w-1 h-1 bg-blue-300 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-1 right-5 w-1 h-1 bg-cyan-400 rounded-full animate-ping"></div>
+              {/* Decorative elements */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
+              <div className="absolute top-1 right-1 w-2 h-2 bg-cyan-300 rounded-full opacity-70"></div>
+              <div className="absolute bottom-2 left-2 w-1.5 h-1.5 bg-blue-200 rounded-full opacity-70"></div>
+
               <CardContent className="relative p-4 text-center">
                 <div className="relative">
                   <Flame className="h-6 w-6 text-white mx-auto mb-2 drop-shadow-lg" />
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-300 rounded-full animate-ping"></div>
-                  <div className="absolute -bottom-1 -left-1 w-1 h-1 bg-white rounded-full animate-pulse"></div>
                 </div>
                 <div className="text-xl font-bold text-white mb-1 drop-shadow-md">
-                  {weeklyProgress.currentStreak}
+                  {summary?.currentStreak || 0}
                 </div>
-                <p className="text-white/90 font-medium text-sm drop-shadow-sm">Day Streak!</p>
-                <p className="text-xs text-white/80 mt-1">Keep it up! 🔥</p>
+                <p className="text-white/90 font-medium text-sm drop-shadow-sm">Day Streak</p>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10 pointer-events-none"></div>
               </CardContent>
             </Card>
 
             <Card className="relative overflow-hidden bg-gradient-to-br from-teal-400 via-cyan-400 to-blue-500 shadow-xl border-4 border-teal-200">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-pulse"></div>
-              <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
-              <div className="absolute top-3 right-2 w-1 h-1 bg-cyan-200 rounded-full animate-pulse"></div>
-              <div className="absolute bottom-1 right-1 w-2 h-2 bg-teal-200 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-3 left-3 w-1 h-1 bg-white rounded-full animate-ping"></div>
-              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-cyan-300 rounded-full animate-pulse"></div>
-              <div className="absolute bottom-2 right-4 w-1 h-1 bg-teal-300 rounded-full animate-bounce"></div>
-              <div className="absolute top-4 right-1 w-1 h-1 bg-white rounded-full animate-ping"></div>
+              {/* Decorative elements */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-50"></div>
+              <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-white rounded-full opacity-70"></div>
+              <div className="absolute bottom-1 right-1 w-2 h-2 bg-teal-200 rounded-full opacity-70"></div>
+
               <CardContent className="relative p-4 text-center">
                 <div className="relative">
                   <Clock className="h-6 w-6 text-white mx-auto mb-2 drop-shadow-lg" />
-                  <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-cyan-200 rounded-full animate-ping"></div>
-                  <div className="absolute -top-0.5 -left-0.5 w-1 h-1 bg-white rounded-full animate-pulse"></div>
                 </div>
                 <div className="text-xl font-bold text-white mb-1 drop-shadow-md">
-                  {weeklyProgress.hoursThisWeek}h
+                  {summary?.studyTimeThisWeek || 0}h
                 </div>
                 <p className="text-white/90 font-medium text-sm drop-shadow-sm">This Week</p>
-                <Progress
-                  value={(weeklyProgress.lessonsCompleted / weeklyProgress.target) * 100}
-                  className="mt-2 h-2 bg-white/20"
-                />
-                <p className="text-xs text-white/80 mt-2">
-                  {weeklyProgress.lessonsCompleted}/{weeklyProgress.target} lessons
-                </p>
+
+                {/* Replaced Progress bar with dynamic lesson count, since target isn't available */}
+                <div className="border-t border-white/20 mt-2 pt-2">
+                  <p className="text-sm font-semibold text-white/90">
+                    {summary?.lessonsCompletedThisWeek || 0} Lessons
+                  </p>
+                </div>
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10 pointer-events-none"></div>
               </CardContent>
             </Card>
 
             <Card className="relative overflow-hidden bg-gradient-to-br from-purple-400 via-violet-400 to-indigo-500 shadow-xl border-4 border-purple-200">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent animate-pulse"></div>
-              <div className="absolute top-2 left-2 w-1 h-1 bg-pink-300 rounded-full animate-ping"></div>
-              <div className="absolute top-1 right-3 w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-              <div className="absolute bottom-3 left-1 w-2 h-2 bg-purple-200 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-1 right-2 w-1 h-1 bg-violet-200 rounded-full animate-ping"></div>
-              <div className="absolute top-4 left-4 w-1 h-1 bg-white rounded-full animate-bounce"></div>
-              <div className="absolute bottom-4 right-4 w-1.5 h-1.5 bg-pink-200 rounded-full animate-pulse"></div>
-              <div className="absolute top-1 left-5 w-1 h-1 bg-violet-300 rounded-full animate-ping"></div>
-              <div className="absolute bottom-2 left-4 w-1 h-1 bg-white rounded-full animate-pulse"></div>
+              {/* Decorative elements */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-50"></div>
+              <div className="absolute top-2 left-2 w-1 h-1 bg-pink-300 rounded-full opacity-70"></div>
+              <div className="absolute bottom-1 right-2 w-1 h-1 bg-violet-200 rounded-full opacity-70"></div>
+
               <CardContent className="relative p-4 text-center">
                 <div className="relative">
                   <Trophy className="h-6 w-6 text-white mx-auto mb-2 drop-shadow-lg" />
-                  <div className="absolute -top-1 -left-1 w-1.5 h-1.5 bg-pink-300 rounded-full animate-ping"></div>
-                  <div className="absolute -bottom-1 -right-1 w-1 h-1 bg-white rounded-full animate-bounce"></div>
                 </div>
                 <div className="text-xl font-bold text-white mb-1 drop-shadow-md">
-                  92%
+                  {summary?.averageQuizScore || 0}%
                 </div>
-                <p className="text-white/90 font-medium text-sm drop-shadow-sm">Overall Score</p>
-                <p className="text-xs text-white/80 mt-1">Excellent! 🏆</p>
+                <p className="text-white/90 font-medium text-sm drop-shadow-sm">Avg. Score</p>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10 pointer-events-none"></div>
               </CardContent>
             </Card>
@@ -433,7 +449,7 @@ export default function Index() {
               </Link>
             </div>
             <div className="grid grid-cols-7 gap-3">
-              {weeklyProgress.dailyData.map((day, index) => (
+              {dynamicDailyData.map((day, index) => (
                 <div key={index} className="text-center">
                   <div
                     className={cn(
@@ -442,6 +458,7 @@ export default function Index() {
                         ? "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg border-emerald-300"
                         : "bg-emerald-100 hover:bg-emerald-200 border-emerald-200",
                     )}
+                    title={`${day.hours} hours studied`} // Added a title for accessibility
                   >
                     {day.completed && (
                       <CheckCircle className="h-6 w-6 text-white" />

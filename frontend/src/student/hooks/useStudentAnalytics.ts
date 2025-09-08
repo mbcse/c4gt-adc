@@ -112,7 +112,7 @@ export const useStudentAnalytics = () => {
     }
   }, []);
 
-  const fetchActivityCalendar = useCallback(async (year?: number) => {
+const fetchActivityCalendar = useCallback(async (year?: number) => {
     try {
       const data = await analyticsAPI.getActivityCalendar(year);
       setActivityCalendar(data);
@@ -174,7 +174,6 @@ export const useStudentAnalytics = () => {
         fetchQuizAnalytics(),
         fetchCourseCompletionStats(),
         fetchActivityCalendar(),
-        fetchStudyTimePatterns(),
         fetchLessonCompletionPatterns(),
         fetchAvailableCourses(),
         fetchPeakStudyHours(),
@@ -187,8 +186,7 @@ export const useStudentAnalytics = () => {
     }
   }, [
     fetchSummary, fetchActivityTrends, fetchCourseProgress, fetchQuizAnalytics,
-    fetchCourseCompletionStats, fetchActivityCalendar, fetchDetailedQuizPerformance,
-    fetchStudyTimePatterns, fetchLessonCompletionPatterns, fetchAvailableCourses,
+    fetchCourseCompletionStats, fetchActivityCalendar, fetchLessonCompletionPatterns, fetchAvailableCourses,
     fetchPeakStudyHours, fetchCourseSpecificQuizAnalytics
   ]);
 

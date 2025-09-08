@@ -479,10 +479,11 @@ export default function Courses() {
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
                   <Card
-                    className="relative overflow-hidden bg-white border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group hover:-translate-y-3 hover:scale-105 transform-gpu"
+                    // FIX: Added flex, flex-col, and h-full to make the card a flex container that fills its grid cell
+                    className="flex flex-col h-full relative overflow-hidden bg-white border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group hover:-translate-y-3 hover:scale-105 transform-gpu"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/85 group-hover:from-white/98 group-hover:via-white/95 group-hover:to-white/90 transition-all duration-500"></div>
-                    <CardContent className="relative p-0">
+                    <CardContent className="relative p-0 flex flex-col flex-grow">
                       {/* Course Thumbnail */}
                       <div className="relative">
                         <div className="w-full h-56 rounded-t-xl flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
@@ -543,8 +544,10 @@ export default function Courses() {
                       )}
 
                       {/* Course Content */}
-                      <div className="p-7">
-                        <div className="mb-6">
+                      {/* FIX: Added flex, flex-col, and flex-grow to make this section fill available space */}
+                      <div className="p-7 flex flex-col flex-grow">
+                        {/* FIX: Added flex-grow to this inner div to push the buttons to the bottom */}
+                        <div className="flex-grow">
                           <div className="flex items-start justify-between mb-3">
                             <h3 className="font-bold text-slate-900 text-xl group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2">
                               {course.title}
@@ -554,9 +557,8 @@ export default function Courses() {
                             <span className="inline-block w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mr-2"></span>
                             {course.createdBy || "Unknown"}
                           </p>
-
-                          {/* Progress Bar */}
-                          <div className="relative">
+                          
+                          <div className="relative mb-2">
                             <Progress
                               value={course.progress}
                               className="h-3 rounded-full bg-slate-200 shadow-inner"
@@ -566,13 +568,12 @@ export default function Courses() {
                               style={{ width: `${course.progress}%` }}
                             />
                           </div>
-                          <div className="text-sm text-slate-700 mt-2 font-medium">
+                          <div className="text-sm text-slate-700 mb-4 font-medium">
                             {course.progress}% Complete • {formatDuration(course.totalWatchTime)} watched
                           </div>
 
                           <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>
 
-                          {/* Lessons and Last Activity */}
                           <div className="flex justify-between text-sm text-slate-500 mb-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-3">
                             <span className="flex items-center font-medium">
                               <BookOpen className="h-4 w-4 mr-2 text-violet-500" />
@@ -583,30 +584,26 @@ export default function Courses() {
                               {formatDuration(course.totalDuration)}
                             </span>
                           </div>
+                        </div>
 
-                          {/* Action Buttons */}
-                          {course.status === "completed" ? (
-                            <div className="space-y-3">
-                              <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
-                                <Trophy className="h-5 w-5 mr-2" />
-                                View Certificate
-                              </Button>
-                              <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
-                                <Link to={`/courses/${course.id}/video`}>
-                                  <BookOpen className="h-5 w-5 mr-2" />
-                                  Revise Course
-                                </Link>
-                              </Button>
-                            </div>
-                          ) : (
-                            <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold text-base group-hover:scale-105">
-                              <Link to={`/courses/${course.id}`}>
-                                <Play className="h-5 w-5 mr-2" />
-                                {course.status === "not-started" ? "Start Learning" : "Continue Learning"}
+                        {/* Action Buttons (will now be at the bottom) */}
+                        {course.status === "completed" ? (
+                          <div className="space-y-3">
+                            <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
+                              <Link to={`/courses/${course.id}/video`}>
+                                <BookOpen className="h-5 w-5 mr-2" />
+                                Revise Course
                               </Link>
                             </Button>
-                          )}
-                        </div>
+                          </div>
+                        ) : (
+                          <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold text-base group-hover:scale-105">
+                            <Link to={`/courses/${course.id}`}>
+                              <Play className="h-5 w-5 mr-2" />
+                              {course.status === "not-started" ? "Start Learning" : "Continue Learning"}
+                            </Link>
+                          </Button>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

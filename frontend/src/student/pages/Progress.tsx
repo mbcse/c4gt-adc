@@ -538,7 +538,7 @@ export default function ProgressPage() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-800">Courses Completed:</span>
+                      <span className="text-blue-800">Video Lessons Completed:</span>
                       <span className="font-bold text-blue-900">{activityCalendar?.summary?.totalLessonsYear || 0}</span>
                     </div>
                   </div>

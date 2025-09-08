@@ -21,11 +21,9 @@ import CourseVideoRouteHandler from "./student/components/CourseVideoRouteHandle
 
 // Admin layout + pages (layout wraps pages via <Outlet />)
 import AdminLayout from "./admin/components/Layout";
-import AdminDashboard from "./admin/pages/Dashboard";
+import AnalyticsDashboard from "./admin/pages/Analytics";
 import ManageStudents from "./admin/pages/Students";
 import ManageCourses from "./admin/pages/Courses";
-import ViewProgress from "./admin/pages/Progress";
-import Reports from "./admin/pages/Reports";
 import UserManagement from "./admin/pages/UserManagement";
 import CourseDetailPage from "@/admin/pages/CourseDetailPage";
 
@@ -58,11 +56,9 @@ const App: React.FC = () => {
               }
             >
               {/* Nested admin pages */}
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<AnalyticsDashboard />} />
               <Route path="students" element={<ManageStudents />} />
               <Route path="courses" element={<ManageCourses />} />
-              <Route path="progress" element={<ViewProgress />} />
-              <Route path="reports" element={<Reports />} />
               <Route path="users" element={<UserManagement />} />
               <Route path="courses/:id" element={<CourseDetailPage />} />
               <Route path="*" element={<NotFound />} />
