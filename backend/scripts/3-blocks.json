@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Lakhan Majra",
+    "type": "BLOCK",
+    "parentId": 2
+  },
+  {
+    "name": "Kalanaur",
+    "type": "BLOCK",
+    "parentId": 2
+  },
+  {
+    "name": "Meham",
+    "type": "BLOCK",
+    "parentId": 2
+  },
+  {
+    "name": "Rohtak",
+    "type": "BLOCK",
+    "parentId": 2
+  },
+  {
+    "name": "Sampla",
+    "type": "BLOCK",
+    "parentId": 2
+  }
+]

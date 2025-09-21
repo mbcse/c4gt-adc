@@ -5,14 +5,17 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/student/components/ui/card";
+import { Button } from "@/student/components/ui/button";
 import { Badge } from "@/student/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/student/components/ui/avatar";
-import { User, Mail, Calendar, Award, Clock, Trophy, UserPlus, Building, GraduationCap } from "lucide-react";
+import { User, Mail, Calendar, Award, Clock, Trophy, UserPlus, Building, GraduationCap, KeyRound } from "lucide-react";
 import DashboardLayout from "@/student/components/DashboardLayout";
 import { useApi } from "@/api/index";
 import { useToast } from "@/student/hooks/use-toast";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const iconMap = {
   Award,
@@ -80,7 +83,7 @@ export default function Profile() {
                 </p>
                 {profile?.organizationUnit && (
                   <p className="text-teal-200 text-sm mb-4">
-                    {profile.organizationUnit.name} • Grade {profile?.grade?.value || 'N/A'}
+                    {profile.organizationUnit.name} • {profile?.grade?.value || 'N/A'}
                   </p>
                 )}
                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -145,12 +148,22 @@ export default function Profile() {
                   <GraduationCap className="h-5 w-5 text-gray-500 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-gray-700">Grade</p>
-                    <p className="text-gray-900 text-sm sm:text-base">Grade {profile.grade.value}</p>
+                    <p className="text-gray-900 text-sm sm:text-base">{profile.grade.value}</p>
                   </div>
                 </div>
               )}
             </div>
           </CardContent>
+
+          <CardFooter className="border-t pt-6">
+            <Button asChild variant="outline">
+              <Link to="/change-password">
+                <KeyRound className="h-4 w-4 mr-2" />
+                Change Password
+              </Link>
+            </Button>
+          </CardFooter>
+
         </Card>
 
         {/* Recent Activity */}

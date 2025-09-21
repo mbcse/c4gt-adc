@@ -14,6 +14,8 @@ router.post('/assign', adminCourseController.assignCourse);
 router.post('/assign-bulk', adminCourseController.assignCourseBulk);
 router.delete('/assign', adminCourseController.unassignCourse);
 router.get('/assignments', adminCourseController.listAssignments);
+
+router.get('/video-metadata', adminVideoController.getVideoMetadata);
 router.get('/:id', adminCourseController.getCourse);
 
 // Video endpoints
@@ -22,7 +24,7 @@ router.delete('/:courseId/videos/:videoId', adminVideoController.deleteVideoFrom
 router.post('/process-playlist', adminVideoController.processPlaylist);
 router.post('/:courseId/videos/bulk', adminVideoController.addVideosFromPlaylist);
 router.put('/:courseId/videos/reorder', adminVideoController.reorderVideos);
-router.get('/video-metadata', adminVideoController.getVideoMetadata);
+
 router.get('/playlist/videos', adminVideoController.getPaginatedPlaylistVideos);
 router.post('/:courseId/playlist/add-all', adminVideoController.addEntirePlaylist);
 

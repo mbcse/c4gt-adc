@@ -111,7 +111,7 @@ getCourse: async (courseId: number, client = api) => {
 
   // Process playlist URL and get list of videos with metadata
   processPlaylist: async (playlistUrl: string, client = api) => {
-    const response = await client.post('/courses/process-playlist', { playlistUrl });
+    const response = await client.post('/courses/process-playlist', { playlistUrl }, { timeout: 120000 });
     return response.data;
   },
 
@@ -148,7 +148,7 @@ getCourse: async (courseId: number, client = api) => {
   },
 
   addEntirePlaylist: async (courseId: number, data: { playlistUrl: string }, client = api) => {
-  const response = await client.post(`/courses/${courseId}/playlist/add-all`, data);
+  const response = await client.post(`/courses/${courseId}/playlist/add-all`, data, { timeout: 60000 } );
   return response.data;
 },
 

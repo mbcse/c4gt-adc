@@ -56,13 +56,30 @@ export default function Courses() {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [assignedFilter, setAssignedFilter] = useState<"all" | "assigned" | "unassigned">("all");
 
-
+  // This useEffect will run when a filter changes, to reset the list
+  useEffect(() => {
+    // When a filter changes, reset the page to 1 and clear existing courses
+    setPage(1);
+    setAllCourses([]);
+    setHasMore(true);
+  }, [
+    selectedCategory,
+    selectedSkillLevel,
+    selectedGrade,
+    selectedLanguage,
+    selectedTagIds,
+    assignedFilter,
+    searchQuery,
+  ]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // This useEffect will handle fetching data whenever the page number changes.
   useEffect(() => {
+    if (!hasMore) return; // Stop fetching if we've reached the end
+
     const fetchCourses = async () => {
       try {
         setLoading(true);
@@ -78,21 +95,25 @@ export default function Courses() {
         };
 
         if (assignedFilter === "assigned") filters.assigned = true;
-        else if (assignedFilter === "unassigned") filters.assigned = false;
 
-        const response = await courseAPI.getAllCourses(api, 1, limit, filters);
-        setAllCourses(response.data);
+        const response = await courseAPI.getAllCourses(api, page, limit, filters);
+
+        // Append new courses to the existing list
+        setAllCourses(prevCourses => (page === 1 ? response.data : [...prevCourses, ...response.data]));
+
         setHasMore(response.page < response.totalPages);
-        setPage(1);
+
       } catch (err: any) {
         setError(err.message || "Failed to load courses");
       } finally {
         setLoading(false);
       }
     };
+
     fetchCourses();
   }, [
     api,
+    page,
     limit,
     selectedCategory,
     selectedSkillLevel,
@@ -102,7 +123,6 @@ export default function Courses() {
     assignedFilter,
     searchQuery,
   ]);
-
 
   useEffect(() => {
     async function fetchMetadata() {
@@ -199,7 +219,7 @@ export default function Courses() {
     return { color: "from-gray-100 to-slate-100", border: "border-gray-300" };
   };
 
-  if (loading) {
+  if (loading && allCourses.length === 0) {
     return (
       <DashboardLayout>
         <div className="min-h-screen flex items-center justify-center p-6">
@@ -609,7 +629,7 @@ export default function Courses() {
           </div>
 
           {/* Loading indicator */}
-          {loading && (
+          {loading && allCourses.length > 0 && (
             <div className="text-center py-6 text-gray-600">
               Loading more courses...
             </div>

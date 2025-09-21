@@ -236,20 +236,77 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.OrganizationUnitOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  verificationToken: 'verificationToken',
+  resetToken: 'resetToken'
+};
+
+exports.Prisma.CategoryOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.SkillLevelOrderByRelevanceFieldEnum = {
+  level: 'level'
+};
+
+exports.Prisma.GradeOrderByRelevanceFieldEnum = {
+  value: 'value'
+};
+
+exports.Prisma.LanguageOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.TagOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.CourseOrderByRelevanceFieldEnum = {
+  title: 'title',
+  description: 'description',
+  createdBy: 'createdBy',
+  thumbnailUrl: 'thumbnailUrl'
+};
+
+exports.Prisma.VideoOrderByRelevanceFieldEnum = {
+  title: 'title',
+  platform: 'platform',
+  videoUrl: 'videoUrl',
+  videoId: 'videoId',
+  thumbnailUrl: 'thumbnailUrl',
+  description: 'description'
 };
 
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.WatchLogOrderByRelevanceFieldEnum = {
+  lastUserAgent: 'lastUserAgent',
+  lastEventType: 'lastEventType'
+};
+
+exports.Prisma.QuizOrderByRelevanceFieldEnum = {
+  generatedBy: 'generatedBy'
 };
 exports.UnitType = exports.$Enums.UnitType = {
   STATE: 'STATE',
@@ -320,7 +377,7 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "postgresql",
+  "activeProvider": "mysql",
   "postinstall": false,
   "inlineDatasources": {
     "db": {
@@ -330,8 +387,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel OrganizationUnit {\n  id        Int      @id @default(autoincrement())\n  name      String\n  type      UnitType\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  parentId Int?\n  parent   OrganizationUnit?  @relation(\"Hierarchy\", fields: [parentId], references: [id], onDelete: Cascade)\n  children OrganizationUnit[] @relation(\"Hierarchy\")\n\n  users                   User[]\n  availableGrades         Grade[]\n  organizationAssignments OrganizationAssignment[]\n\n  @@index([parentId])\n  @@index([type])\n}\n\nenum UnitType {\n  STATE\n  DISTRICT\n  BLOCK\n  SCHOOL\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  email     String   @unique\n  password  String\n  role      Role\n  createdAt DateTime @default(now())\n\n  verified          Boolean?  @default(false)\n  verificationToken String?\n  resetToken        String?   @unique\n  resetTokenExpiry  DateTime?\n\n  organizationUnitId Int?\n  organizationUnit   OrganizationUnit? @relation(fields: [organizationUnitId], references: [id], onDelete: SetNull)\n\n  gradeId Int?\n  grade   Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)\n\n  assignments  CourseAssignment[]\n  quizAttempts QuizAttempt[]\n  watchLogs    WatchLog[]\n\n  @@index([organizationUnitId])\n  @@index([gradeId])\n  @@index([role])\n}\n\nmodel Category {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[]\n}\n\nmodel SkillLevel {\n  id      Int      @id @default(autoincrement())\n  level   String   @unique\n  courses Course[]\n}\n\nmodel Grade {\n  id      Int                @id @default(autoincrement())\n  value   String             @unique\n  courses Course[]\n  users   User[]\n  schools OrganizationUnit[]\n}\n\nmodel Language {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[]\n}\n\nmodel Tag {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[] @relation(\"CourseTags\")\n}\n\nmodel Course {\n  id                      Int                      @id @default(autoincrement())\n  title                   String\n  description             String?\n  createdBy               String?\n  createdAt               DateTime                 @default(now())\n  thumbnailUrl            String?\n  category                Category?                @relation(fields: [categoryId], references: [id], onDelete: SetNull)\n  categoryId              Int?\n  skillLevel              SkillLevel?              @relation(fields: [skillLevelId], references: [id], onDelete: SetNull)\n  skillLevelId            Int?\n  grade                   Grade?                   @relation(fields: [gradeId], references: [id], onDelete: SetNull)\n  gradeId                 Int?\n  language                Language?                @relation(fields: [languageId], references: [id], onDelete: SetNull)\n  languageId              Int?\n  tags                    Tag[]                    @relation(\"CourseTags\")\n  assignments             CourseAssignment[]\n  courseVideos            CourseVideo[]\n  organizationAssignments OrganizationAssignment[]\n}\n\nmodel OrganizationAssignment {\n  id                 Int      @id @default(autoincrement())\n  courseId           Int\n  organizationUnitId Int\n  assignedAt         DateTime @default(now())\n  assignedById       Int? // The admin who created this assignment\n\n  course           Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  organizationUnit OrganizationUnit @relation(fields: [organizationUnitId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, organizationUnitId], name: \"course_org_unique_assignment\")\n}\n\nmodel CourseAssignment {\n  id         Int      @id @default(autoincrement())\n  courseId   Int\n  userId     Int\n  assignedAt DateTime\n  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, userId], name: \"courseId_userId\")\n}\n\nmodel CourseVideo {\n  id       Int    @id @default(autoincrement())\n  courseId Int\n  videoId  Int\n  order    Int\n  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  video    Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, videoId])\n  @@index([courseId, order])\n}\n\nmodel Video {\n  id           Int           @id @default(autoincrement())\n  title        String\n  platform     String\n  videoUrl     String\n  videoId      String        @unique\n  duration     Int\n  createdAt    DateTime\n  thumbnailUrl String?\n  description  String?\n  courseVideos CourseVideo[]\n  quiz         Quiz?\n  watchLogs    WatchLog[]\n}\n\nmodel WatchLog {\n  id                Int       @id @default(autoincrement())\n  userId            Int\n  videoId           Int\n  totalWatchTime    Int\n  isCompleted       Boolean   @default(false)\n  watchedPercentage Float     @default(0.0)\n  skipEvents        Json      @default(\"[]\")\n  pauseEvents       Json      @default(\"[]\")\n  createdAt         DateTime  @default(now())\n  updatedAt         DateTime  @updatedAt\n  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  video             Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)\n  lastUpdateTime    DateTime?\n  lastUserAgent     String?\n  lastEventType     String?\n\n  @@unique([userId, videoId])\n  @@index([userId, updatedAt(sort: Desc)])\n  @@index([videoId, isCompleted])\n  @@index([userId, videoId])\n  @@index([lastUpdateTime])\n}\n\nmodel Quiz {\n  id          Int           @id @default(autoincrement())\n  videoId     Int           @unique\n  generatedBy String?\n  createdAt   DateTime\n  questions   Json\n  video       Video         @relation(fields: [videoId], references: [id], onDelete: Cascade)\n  attempts    QuizAttempt[]\n}\n\nmodel QuizAttempt {\n  id          Int      @id @default(autoincrement())\n  userId      Int\n  quizId      Int\n  score       Float\n  answers     Json?\n  completedAt DateTime\n  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)\n  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nenum Role {\n  SUPERADMIN\n  ADMIN\n  INSTRUCTOR\n  STUDENT\n}\n",
-  "inlineSchemaHash": "9a6a34d1ed0d5ce52439d855f68a054c6ddcb60d27cfe35efbf48f634d1eed4b",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel OrganizationUnit {\n  id        Int      @id @default(autoincrement())\n  name      String\n  type      UnitType\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  parentId Int?\n  parent   OrganizationUnit?  @relation(\"Hierarchy\", fields: [parentId], references: [id], onDelete: Cascade)\n  children OrganizationUnit[] @relation(\"Hierarchy\")\n\n  users                   User[]\n  availableGrades         Grade[]\n  organizationAssignments OrganizationAssignment[]\n\n  @@index([parentId])\n  @@index([type])\n}\n\nenum UnitType {\n  STATE\n  DISTRICT\n  BLOCK\n  SCHOOL\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  name      String\n  email     String   @unique\n  password  String\n  role      Role\n  createdAt DateTime @default(now())\n\n  verified          Boolean?  @default(false)\n  verificationToken String?\n  resetToken        String?   @unique\n  resetTokenExpiry  DateTime?\n\n  organizationUnitId Int?\n  organizationUnit   OrganizationUnit? @relation(fields: [organizationUnitId], references: [id], onDelete: SetNull)\n\n  gradeId Int?\n  grade   Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)\n\n  assignments  CourseAssignment[]\n  quizAttempts QuizAttempt[]\n  watchLogs    WatchLog[]\n\n  @@index([organizationUnitId])\n  @@index([gradeId])\n  @@index([role])\n}\n\nmodel Category {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[]\n}\n\nmodel SkillLevel {\n  id      Int      @id @default(autoincrement())\n  level   String   @unique\n  courses Course[]\n}\n\nmodel Grade {\n  id      Int                @id @default(autoincrement())\n  value   String             @unique\n  courses Course[]\n  users   User[]\n  schools OrganizationUnit[]\n}\n\nmodel Language {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[]\n}\n\nmodel Tag {\n  id      Int      @id @default(autoincrement())\n  name    String   @unique\n  courses Course[] @relation(\"CourseTags\")\n}\n\nmodel Course {\n  id                      Int                      @id @default(autoincrement())\n  title                   String\n  description             String?\n  createdBy               String?\n  createdAt               DateTime                 @default(now())\n  thumbnailUrl            String?\n  category                Category?                @relation(fields: [categoryId], references: [id], onDelete: SetNull)\n  categoryId              Int?\n  skillLevel              SkillLevel?              @relation(fields: [skillLevelId], references: [id], onDelete: SetNull)\n  skillLevelId            Int?\n  grade                   Grade?                   @relation(fields: [gradeId], references: [id], onDelete: SetNull)\n  gradeId                 Int?\n  language                Language?                @relation(fields: [languageId], references: [id], onDelete: SetNull)\n  languageId              Int?\n  tags                    Tag[]                    @relation(\"CourseTags\")\n  assignments             CourseAssignment[]\n  courseVideos            CourseVideo[]\n  organizationAssignments OrganizationAssignment[]\n}\n\nmodel OrganizationAssignment {\n  id                 Int      @id @default(autoincrement())\n  courseId           Int\n  organizationUnitId Int\n  assignedAt         DateTime @default(now())\n  assignedById       Int? // The admin who created this assignment\n\n  course           Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  organizationUnit OrganizationUnit @relation(fields: [organizationUnitId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, organizationUnitId], name: \"course_org_unique_assignment\")\n}\n\nmodel CourseAssignment {\n  id         Int      @id @default(autoincrement())\n  courseId   Int\n  userId     Int\n  assignedAt DateTime\n  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, userId], name: \"courseId_userId\")\n}\n\nmodel CourseVideo {\n  id       Int    @id @default(autoincrement())\n  courseId Int\n  videoId  Int\n  order    Int\n  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)\n  video    Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)\n\n  @@unique([courseId, videoId])\n  @@index([courseId, order])\n}\n\nmodel Video {\n  id           Int           @id @default(autoincrement())\n  title        String\n  platform     String\n  videoUrl     String\n  videoId      String        @unique\n  duration     Int\n  createdAt    DateTime\n  thumbnailUrl String?\n  description  String?\n  courseVideos CourseVideo[]\n  quiz         Quiz?\n  watchLogs    WatchLog[]\n}\n\nmodel WatchLog {\n  id                Int       @id @default(autoincrement())\n  userId            Int\n  videoId           Int\n  totalWatchTime    Int\n  isCompleted       Boolean   @default(false)\n  watchedPercentage Float     @default(0.0)\n  skipEvents        Json      @default(\"[]\")\n  pauseEvents       Json      @default(\"[]\")\n  createdAt         DateTime  @default(now())\n  updatedAt         DateTime  @updatedAt\n  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  video             Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)\n  lastUpdateTime    DateTime?\n  lastUserAgent     String?\n  lastEventType     String?\n\n  @@unique([userId, videoId])\n  @@index([userId, updatedAt(sort: Desc)])\n  @@index([videoId, isCompleted])\n  @@index([userId, videoId])\n  @@index([lastUpdateTime])\n}\n\nmodel Quiz {\n  id          Int           @id @default(autoincrement())\n  videoId     Int           @unique\n  generatedBy String?\n  createdAt   DateTime\n  questions   Json\n  video       Video         @relation(fields: [videoId], references: [id], onDelete: Cascade)\n  attempts    QuizAttempt[]\n}\n\nmodel QuizAttempt {\n  id          Int      @id @default(autoincrement())\n  userId      Int\n  quizId      Int\n  score       Float\n  answers     Json?\n  completedAt DateTime\n  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)\n  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nenum Role {\n  SUPERADMIN\n  ADMIN\n  INSTRUCTOR\n  STUDENT\n}\n",
+  "inlineSchemaHash": "5a0ea33a68ab613d496e25a4da1e547664a720573fd68b12f291afab2b0934ff",
   "copyEngine": true
 }
 

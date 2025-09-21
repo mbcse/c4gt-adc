@@ -370,3 +370,43 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete user' });
   }
 };
+
+exports.createOrganizationUnit = async (req, res) => {
+  try {
+    const { name, type, parentId } = req.body;
+
+    if (!name || !type) {
+      return res.status(400).json({ message: 'Name and type are required' });
+    }
+
+    const validTypes = ['STATE', 'DISTRICT', 'BLOCK', 'SCHOOL'];
+    if (!validTypes.includes(type.toUpperCase())) {
+      return res.status(400).json({ message: 'Invalid organization unit type' });
+    }
+
+    if (parentId) {
+      const parentUnit = await prisma.organizationUnit.findUnique({
+        where: { id: Number(parentId) },
+      });
+      if (!parentUnit) {
+        return res.status(400).json({ message: 'Parent organization unit not found' });
+      }
+    }
+
+    const newUnit = await prisma.organizationUnit.create({
+      data: {
+        name: name.trim(),
+        type: type.toUpperCase(),
+        parentId: parentId ? Number(parentId) : null,
+      },
+    });
+
+    res.status(201).json(newUnit);
+  } catch (error) {
+    if (error.code === 'P2002') {
+       return res.status(409).json({ message: `An organization unit with the name "${req.body.name}" already exists.` });
+    }
+    console.error('Error creating organization unit:', error);
+    res.status(500).json({ message: 'Failed to create organization unit' });
+  }
+};

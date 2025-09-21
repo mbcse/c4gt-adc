@@ -1,0 +1,739 @@
+[
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLF_7kfnwLFCEbuqbwU9hyghx5vHpaBPRo",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      8,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3ieFuXAdtlenRNcey9Cxo6I",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      8,
+      12,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLqjFFrfKcY5xKSLZCP3WzfiKRwODXnrDD",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      11,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLbu_fGT0MPsuT9pmkl2RuowDlIQ0OXI0l",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      8,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLYFlGICvnvLgtUsAXwDlIa1aRS2agfNT3",
+    "categoryId": 11,
+    "skillLevelId": 3,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      8,
+      9,
+      12,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PL9tzqmHNezzDzB7DiCwyEYpBJYCSUCuzc",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLev-MfB_WiOPELdVMm_wX6oxCXD25huTM",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLCzaIJYXP5YdzEuuJNhRKbk_iAcJKP7XC",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3gvV4VbbP8pza7MtoJkGu6M",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLJyab0VQDBGUMa1ndqTTm2295o939H51g",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLJyab0VQDBGU70KXMGBBgxSd3VG7mFeu-",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLJyab0VQDBGVpMaJJ0q2E2-RHnvDmOFOg",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLJyab0VQDBGWLDzyNceHh103c8KT2dHUe",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3gk_Li5kx4pJ7TSOYE2EQPQ",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3joVGFUCCKG5BIKBSBW5ihL",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3hbSWRWA0PW9BBiMfZQHj4K",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLxyGaR3hEy3isOMa8qRwN4KXwDfx3YLT_",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLv_Jo3K8g_DoTiqnULb-wfv6t9xC2WMqS",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLv_Jo3K8g_DoO4FP3tLWIk80ZY4kUnr3o",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLv_Jo3K8g_DpoD11EE2aNjoxbimXbCepL",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLv_Jo3K8g_DrxJ0X8gD06647CZ8q52cFu",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLv_Jo3K8g_Dpi_ZvLPAL-Usc-y5qrMiSB",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLAhomlwJUwWb5zPDYXoc-EGlgxZ-1vCVE",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLAhomlwJUwWYSyLwTYrjgvn3k5qrO2N8r",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLlxE9WKuvDj9frfrHcL-2wnxXyy4auLpe",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLG4bwc5fquzj0Rkn0DVWZP9FxF9iG7OgB",
+    "categoryId": 2,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      31,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLLtQdEJkug7s7wALabWnGbjYchLRZMlFt",
+    "categoryId": 3,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      28,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLYIF2mj1kyOCN2347cgbIUmrLRrthbypV",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLu0W_9lII9agwh1XjRt242xIpHhPT2llg",
+    "categoryId": 6,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      19,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLu0W_9lII9agiCUZYRsvtGTXdxkzPyItg",
+    "categoryId": 7,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      23,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLu0W_9lII9aiXlHcLx-mDH1Qul38wD3aR",
+    "categoryId": 6,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      22,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLsyeobzWxl7poL9JTVyndKe62ieoN-MZ3",
+    "categoryId": 6,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      20,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLRAV69dS1uWSxUIk5o3vQY2-_VKsOpXLD",
+    "categoryId": 8,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      25,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLTjRvDozrdlxj5wgH4qkvwSOdHLOCx10f",
+    "categoryId": 9,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      26,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLZoTAELRMXVPBTrWtJkn3wWQxZkmTXGwe",
+    "categoryId": 8,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      25,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLEiEAq2VkUULmrMwindF_kKq9oj7eBoyU",
+    "categoryId": 9,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      26,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLdOKnrf8EcP17p05q13WXbHO5Z_JfXNpw",
+    "categoryId": 8,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      25,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLLlSBGLVsEPIFGSGw2zJ2K43V5vxMMMTE",
+    "categoryId": 9,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      26,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLW-zSkCnZ-gDgc_YNSC7uCaYNLoMwLPp8",
+    "categoryId": 8,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      25,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLlHtucAD9KT2_Gh27QvKE3FIEf3A4Il9_",
+    "categoryId": 9,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      26,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLTukPelH6ee67bP78MB1rTs-6pk2BFvfZ",
+    "categoryId": 8,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      25,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLW-zSkCnZ-gABGZU8--ISUauyewG40Yex",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      4,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PL2HeOArLswsVuHMZJAHNrkAoQ375mVpwJ",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 4,
+    "languageId": 2,
+    "tagIds": [
+      3,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj81ttgTsy5QyLWdDkmX9pyBC",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      4,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj83p-1hdqVoWiE6IAzVVc1hk",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 4,
+    "languageId": 2,
+    "tagIds": [
+      3,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj81WGZRrBIg9HkigaldzDIOV",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      4,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj821TftppQTWB6fJNnboUJL7",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 4,
+    "languageId": 2,
+    "tagIds": [
+      3,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj83zXclLC4RruKWoeB6JxXjL",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      4,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLcJiYBaxEj82X18wDx1xsnWpwSpkVqaAH",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 4,
+    "languageId": 2,
+    "tagIds": [
+      3,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLT84HfR4Od83pLZYVZnnQqm6hXUbvqN71",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      4,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLFLyCYS0pGW4C1oqM4PPfvlMrcGqjrGq4",
+    "categoryId": 13,
+    "skillLevelId": 1,
+    "gradeId": 4,
+    "languageId": 2,
+    "tagIds": [
+      3,
+      14,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhWYCmKqzuzhnq57ENS7kgqO",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      2,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhW47wzJZJ6mkN_K9jeiAFhK",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhW-dCeym7BoXL-2GkHtCmDH",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      2,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhVYKK-PbFl9N9RSv44PhL0C",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLFLyCYS0pGW4FEsd4vs1IvCWj2IzGyH2I",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      2,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLFLyCYS0pGW63mZb4WHTu7CaSXC8_9bss",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhX0al4r0kMB03thG0YJU4ER",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      2,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhVOsmCnhoLeUZ-bUFLM0Ijy",
+    "categoryId": 13,
+    "skillLevelId": 2,
+    "gradeId": 6,
+    "languageId": 2,
+    "tagIds": [
+      1,
+      11,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhWMHRA2nMUENtoXZ6vmnePu",
+    "categoryId": 4,
+    "skillLevelId": 2,
+    "gradeId": 7,
+    "languageId": 2,
+    "tagIds": [
+      38,
+      13,
+      43
+    ]
+  },
+  {
+    "playlistUrl": "https://www.youtube.com/playlist?list=PLVLoWQFkZbhUqnP1UipkL9mZPZN-pCn1H",
+    "categoryId": 1,
+    "skillLevelId": 2,
+    "gradeId": 5,
+    "languageId": 2,
+    "tagIds": [
+      18,
+      13,
+      43
+    ]
+  }
+]

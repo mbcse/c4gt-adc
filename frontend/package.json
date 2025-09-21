@@ -14,7 +14,7 @@
     "dev": "vite",
     "build": "npm run build:client",
     "build:client": "vite build",
-    "start": "vite preview",
+    "start": "vite",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"
