@@ -30,8 +30,10 @@ import DashboardLayout from "@/components/DashboardLayout";
 
 import { useEffect, useState } from "react";
 import { courseAPI } from "../services/api";
+import { useAuth } from '@/context/AuthContext';
 
 export default function Index() {
+  const { user } = useAuth();
   const [assignedCourses, setAssignedCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -165,7 +167,7 @@ export default function Index() {
                     </span>
                   </div>
                   <span className="text-4xl font-bold mb-2 bg-gradient-to-r from-violet-600 to-purple-700 bg-clip-text text-transparent">
-                    Hello, Rohan! 
+                    Hello, {user?.name || 'User'}! 
                   </span>
                   <span className="text-4xl font-bold mb-2">👋</span>
                   <p className="text-xl text-slate-600 mb-6">

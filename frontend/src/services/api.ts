@@ -57,6 +57,23 @@ export interface CourseProgress {
   averageProgress: number;
 }
 
+export const authAPI = {
+  login: async (email: string, password: string) => {
+    const response = await api.post('/api/auth/login', { email, password });
+    return response.data;
+  },
+
+  signup: async (name: string, email: string, password: string) => {
+    const response = await api.post('/api/auth/signup', { name, email, password });
+    return response.data;
+  },
+
+  getProfile: async () => {
+    const response = await api.get('/api/user/profile');
+    return response.data;
+  }
+};
+
 export const videoAPI = {
 
   getCourseVideos: async (courseId: number): Promise<Video[]> => {

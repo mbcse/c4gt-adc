@@ -1,11 +1,7 @@
-// src/App.tsx
+
 import React from "react";
 
-// Import your global CSS here if not imported in main.tsx
 import "./global.css";
-
-// Import UI components, routes, providers etc.
-// Make sure these paths and files exist in your project
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +19,9 @@ import Profile from "./pages/Profile";
 import VideoPage from "./pages/VideoPage";
 import NotFound from "./pages/NotFound";
 import CourseVideoRedirect from "./pages/CourseVideoRedirect";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -34,16 +33,21 @@ const App: React.FC = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/courses/:courseId" element={<CoursePage />} />
-            <Route path="/courses/:courseId/video" element={<CourseVideoRedirect />} />
-            <Route path="/courses/:courseId/video/:videoId" element={<VideoPage />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/quizzes" element={<Quizzes />} />
-            <Route path="/achievements" element={<Achievements />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+<Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+<Route path="/courses/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
+<Route path="/courses/:courseId/video" element={<ProtectedRoute><CourseVideoRedirect /></ProtectedRoute>} />
+<Route path="/courses/:courseId/video/:videoId" element={<ProtectedRoute><VideoPage /></ProtectedRoute>} />
+<Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+<Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
+<Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
+<Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+<Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* Catch-all route for 404 Not Found */}
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
