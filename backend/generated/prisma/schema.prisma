@@ -149,6 +149,7 @@ model QuizAttempt {
   userId      Int
   quizId      Int
   score       Float
+  answers     Json?
   completedAt DateTime
   quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)

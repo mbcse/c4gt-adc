@@ -24,6 +24,7 @@ router.use('/students', requireRole(['ADMIN', 'SUPERADMIN']), studentsRoutes);
 
 // ADMIN and SUPERADMIN courses management routes
 router.use('/courses', requireRole(['ADMIN', 'SUPERADMIN']), coursesRoutes);
+router.use('/metadata', requireRole(['ADMIN', 'SUPERADMIN']), adminMetadataRoutes);
 
 // INSTRUCTOR, ADMIN and SUPERADMIN progress tracking routes
 router.use('/progress', requireRole(['INSTRUCTOR', 'ADMIN', 'SUPERADMIN']), progressRoutes);
@@ -36,8 +37,5 @@ router.use('/reports', requireRole(['ADMIN', 'SUPERADMIN']), reportsRoutes);
 
 // ADMIN and SUPERADMIN notifications routes
 router.use('/notifications', requireRole(['ADMIN', 'SUPERADMIN']), notificationsRoutes);
-
-router.use('/metadata', requireRole(['ADMIN', 'SUPERADMIN']), adminMetadataRoutes);
-
 
 module.exports = router;

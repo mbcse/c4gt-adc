@@ -8,8 +8,13 @@ import DashboardLayout from "@/student/components/DashboardLayout";
 import ErrorBoundary from "@/student/components/ErrorBoundary";
 import { videoAPI, Video } from "@/api/videoAPI";
 import { VideoPlayer } from "@/student/components/VideoPlayer";
+import { QuizModal } from "@/student/components/QuizModal";
+import { quizAPI } from "@/api/quizAPI";
+import { useApi } from "@/api/index";
 
 export default function VideoPage() {
+  const api = useApi();
+
   const { courseId, videoId } = useParams<{ courseId: string; videoId: string }>();
   const navigate = useNavigate();
 
@@ -18,7 +23,12 @@ export default function VideoPage() {
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [currentQuiz, setCurrentQuiz] = useState<any>(null);
+  const [quizUnlocked, setQuizUnlocked] = useState(false);
+  const [isPollingForQuiz, setIsPollingForQuiz] = useState(false);
+
   const [videoProgress, setVideoProgress] = useState({
     totalWatchTime: 0,
     watchedPercentage: 0,
@@ -46,9 +56,61 @@ export default function VideoPage() {
     loadVideos();
   }, [courseId, videoId]);
 
-  // Proper progress update handler - always accept updates from the hook
+  useEffect(() => {
+    if (!videoProgress.isCompleted || !currentVideo || quizUnlocked) return;
+
+    setIsPollingForQuiz(true);
+    let attempts = 0;
+    const maxAttempts = 10; // Poll for 30 seconds (10 * 3s intervals)
+    
+    const pollForQuiz = async () => {
+      attempts++;
+      try {
+        const quiz = await quizAPI.getQuizByVideoId(currentVideo.id, api);
+        if (quiz) {
+          setCurrentQuiz(quiz);
+          setShowQuizModal(true);
+          setQuizUnlocked(true);
+          setIsPollingForQuiz(false);
+          clearInterval(interval);
+          // console.log("Quiz unlocked successfully!");
+        }
+      } catch (error) {
+        // console.log(`Quiz polling attempt ${attempts}: still locked`);
+        if (attempts >= maxAttempts) {
+          setIsPollingForQuiz(false);
+          clearInterval(interval);
+          console.warn("Quiz not unlocked within timeout period");
+        }
+      }
+    };
+
+    const interval = setInterval(pollForQuiz, 3000);
+    pollForQuiz();
+
+    return () => {
+      clearInterval(interval);
+      setIsPollingForQuiz(false);
+    };
+  }, [videoProgress.isCompleted, currentVideo?.id, quizUnlocked, api]);
+
+  const handleQuizComplete = async (score: number, answers: any[]) => {
+    try {
+      if (currentQuiz) {
+        await quizAPI.createQuizAttempt({
+          quizId: currentQuiz.id,
+          answers,
+          score
+        }, api);
+
+        // console.log("Quiz attempt saved successfully!");
+      }
+    } catch (error) {
+      console.error("Failed to save quiz attempt:", error);
+    }
+  };
+
   const handleProgressUpdate = useCallback((progress) => {
-    // console.log('VideoPage received progress update:', progress);
     setVideoProgress({
       totalWatchTime: progress.totalWatchTime || 0,
       watchedPercentage: progress.watchedPercentage || 0,
@@ -100,6 +162,9 @@ export default function VideoPage() {
     navigate(`/courses/${courseId}/video/${lesson.id}`);
     setCurrentVideo(lesson);
     setIsPlaying(false);
+    // Reset quiz state when navigating to new video
+    setQuizUnlocked(false);
+    setIsPollingForQuiz(false);
   };
 
   return (
@@ -131,8 +196,8 @@ export default function VideoPage() {
                       <CardTitle className="text-2xl font-bold">{currentVideo.title}</CardTitle>
                     </div>
                     {currentVideo.description && (
-        <p className="text-slate-600 max-w-3xl leading-relaxed">{currentVideo.description}</p>
-      )}
+                      <p className="text-slate-600 max-w-3xl leading-relaxed">{currentVideo.description}</p>
+                    )}
                     <div className="flex items-center gap-4 text-slate-600">
                       <div className="flex items-center gap-2 bg-slate-100 rounded-xl px-4 py-2">
                         <Clock className="h-5 w-5 text-violet-500" />
@@ -196,14 +261,25 @@ export default function VideoPage() {
                       <>
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                         <span>Keep watching to complete this lesson</span>
-                        </>
+                      </>
                     )}
                   </span>
                 </div>
+                
+                {/* **Quiz polling feedback UI** */}
+                {isPollingForQuiz && (
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                    <div className="flex items-center justify-center gap-3 text-blue-700">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="font-medium">Your quiz will be available shortly...</span>
+                    </div>
+                    <p className="text-sm text-blue-600 mt-1">Please wait while we unlock your quiz ⏳</p>
+                  </div>
+                )}
               </div>
             </Card>
 
-            {/* Navigation Buttons  */}
+            {/* Navigation Buttons */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Button
                 variant="outline"
@@ -233,6 +309,17 @@ export default function VideoPage() {
           </div>
         </div>
       </DashboardLayout>
+      {showQuizModal && currentQuiz && (
+        <QuizModal
+          quiz={currentQuiz}
+          isOpen={showQuizModal}
+          onClose={() => {
+            setShowQuizModal(false);
+            setCurrentQuiz(null);
+          }}
+          onComplete={handleQuizComplete}
+        />
+      )}
     </ErrorBoundary>
   );
 }

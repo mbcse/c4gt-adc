@@ -4,35 +4,75 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'SUPERADMIN' |'ADMIN' | 'INSTRUCTOR' | 'STUDENT';
-  lastActive: string;
-  enrolledCourses: number;
-  progress: number; 
+  role: Role;
+  createdAt?: string;
+  assignments?: CourseAssignment[];
+  quizAttempts?: QuizAttempt[];
+  watchLogs?: WatchLog[];
 }
 
 export interface Category {
   id: number;
   name: string;
+  courses?: Course[];
 }
 
 export interface SkillLevel {
   id: number;
   level: string;
+  courses?: Course[];
 }
 
 export interface Grade {
   id: number;
   value: string;
+  courses?: Course[];
 }
 
 export interface Language {
   id: number;
   name: string;
+  courses?: Course[];
 }
 
 export interface Tag {
   id: number;
   name: string;
+  courses?: Course[];
+}
+
+export interface Course {
+  id: number;
+  title: string;
+  description?: string;
+  thumbnailUrl?: string | null;
+  category?: Category | null;
+  skillLevel?: SkillLevel | null;
+  grade?: Grade | null;
+  language?: Language | null;
+  tags?: Tag[];
+  assignments?: CourseAssignment[];
+  courseVideos?: CourseVideo[];
+  createdAt?: string;
+  createdBy?: string;
+}
+
+export interface CourseAssignment {
+  id: number;
+  courseId: number;
+  userId: number;
+  assignedAt: string;
+  course?: Course;
+  user?: User;
+}
+
+export interface CourseVideo {
+  id: number;
+  courseId: number;
+  videoId: number;
+  order: number;
+  course?: Course;
+  video: Video;
 }
 
 export interface Video {
@@ -60,83 +100,28 @@ export interface WatchLog {
   skipEvents: unknown[];
   pauseEvents: unknown[];
   createdAt: string;
-  updatedAt: string;  
-  lastUpdateTime?: string; 
-  user?: User;  
+  updatedAt: string;
+  lastUpdateTime?: string;
+  user?: User;
   video?: Video;
 }
 
-
-export interface CourseVideo {
-  id: number;
-  order: number;
-  video: Video;
-}
-
-export interface Course {
-  id: number;
-  title: string;
-  description?: string;
-  thumbnailUrl?: string | null;
-  totalVideos?: number;
-  avgDuration?: number;
-  enrolledStudents?: number;
-  category?: Category | null;
-  skillLevel?: SkillLevel | null;
-  grade?: Grade | null;
-  language?: Language | null;
-  tags?: Tag[];
-  courseVideos?: CourseVideo[];
-}
-
-export interface Metrics {
-  totalStudents: number;
-  activeCourses: number;
-  completionRate: number;
-  avgQuizScore: number;
-  totalWatchHours: number;
-  newEnrollments: number;
-}
-
-export interface Activity {
-  type: 'enrollment' | 'completion' | 'quiz' | 'course' | 'assignment';
-  message: string;
-  timestamp: string;
-  icon: string;
-  color: string;
-}
-
-export interface ProgressData {
-  studentId: number;
-  courseId: number;
-  progress: number;
-  timeSpent: number; 
-  lastAccessed: string;
-}
-
-export interface QuizResult {
-  studentId: number;
-  courseId: number;
-  quizId: number;
-  score: number; 
-  completedAt: string;
-}
-
 export interface QuizQuestion {
-  question: string; 
-  options: string[];  
-  correctAnswer: number;  
-  explanation?: string; 
+  id?: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
 }
 
 export interface Quiz {
   id: number;
-  videoId: number;           
-  questions: QuizQuestion[];  
+  videoId: number;
+  questions: QuizQuestion[];
   generatedBy?: string;
   createdAt: string;
-  video?: Video;     
-  attempts?: QuizAttempt[];  
+  video?: Video;
+  attempts?: QuizAttempt[];
 }
 
 export interface QuizAttempt {
@@ -145,8 +130,9 @@ export interface QuizAttempt {
   quizId: number;
   score: number;
   completedAt: string;
-  user?: User; 
-  quiz?: Quiz;  
+  answers?: any; 
+  user?: User;
+  quiz?: Quiz;
 }
 
 export interface PaginatedResponse<T> {

@@ -16085,6 +16085,7 @@ export namespace Prisma {
     userId: number
     quizId: number
     score: number
+    answers: number
     completedAt: number
     _all: number
   }
@@ -16125,6 +16126,7 @@ export namespace Prisma {
     userId?: true
     quizId?: true
     score?: true
+    answers?: true
     completedAt?: true
     _all?: true
   }
@@ -16220,6 +16222,7 @@ export namespace Prisma {
     userId: number
     quizId: number
     score: number
+    answers: JsonValue | null
     completedAt: Date
     _count: QuizAttemptCountAggregateOutputType | null
     _avg: QuizAttemptAvgAggregateOutputType | null
@@ -16247,6 +16250,7 @@ export namespace Prisma {
     userId?: boolean
     quizId?: boolean
     score?: boolean
+    answers?: boolean
     completedAt?: boolean
     quiz?: boolean | QuizDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16257,6 +16261,7 @@ export namespace Prisma {
     userId?: boolean
     quizId?: boolean
     score?: boolean
+    answers?: boolean
     completedAt?: boolean
     quiz?: boolean | QuizDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16267,6 +16272,7 @@ export namespace Prisma {
     userId?: boolean
     quizId?: boolean
     score?: boolean
+    answers?: boolean
     completedAt?: boolean
     quiz?: boolean | QuizDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16277,10 +16283,11 @@ export namespace Prisma {
     userId?: boolean
     quizId?: boolean
     score?: boolean
+    answers?: boolean
     completedAt?: boolean
   }
 
-  export type QuizAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "quizId" | "score" | "completedAt", ExtArgs["result"]["quizAttempt"]>
+  export type QuizAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "quizId" | "score" | "answers" | "completedAt", ExtArgs["result"]["quizAttempt"]>
   export type QuizAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quiz?: boolean | QuizDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -16305,6 +16312,7 @@ export namespace Prisma {
       userId: number
       quizId: number
       score: number
+      answers: Prisma.JsonValue | null
       completedAt: Date
     }, ExtArgs["result"]["quizAttempt"]>
     composites: {}
@@ -16735,6 +16743,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"QuizAttempt", 'Int'>
     readonly quizId: FieldRef<"QuizAttempt", 'Int'>
     readonly score: FieldRef<"QuizAttempt", 'Float'>
+    readonly answers: FieldRef<"QuizAttempt", 'Json'>
     readonly completedAt: FieldRef<"QuizAttempt", 'DateTime'>
   }
     
@@ -18417,6 +18426,7 @@ export namespace Prisma {
     userId: 'userId',
     quizId: 'quizId',
     score: 'score',
+    answers: 'answers',
     completedAt: 'completedAt'
   };
 
@@ -18448,6 +18458,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -19312,6 +19330,7 @@ export namespace Prisma {
     userId?: IntFilter<"QuizAttempt"> | number
     quizId?: IntFilter<"QuizAttempt"> | number
     score?: FloatFilter<"QuizAttempt"> | number
+    answers?: JsonNullableFilter<"QuizAttempt">
     completedAt?: DateTimeFilter<"QuizAttempt"> | Date | string
     quiz?: XOR<QuizScalarRelationFilter, QuizWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -19322,6 +19341,7 @@ export namespace Prisma {
     userId?: SortOrder
     quizId?: SortOrder
     score?: SortOrder
+    answers?: SortOrderInput | SortOrder
     completedAt?: SortOrder
     quiz?: QuizOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -19335,6 +19355,7 @@ export namespace Prisma {
     userId?: IntFilter<"QuizAttempt"> | number
     quizId?: IntFilter<"QuizAttempt"> | number
     score?: FloatFilter<"QuizAttempt"> | number
+    answers?: JsonNullableFilter<"QuizAttempt">
     completedAt?: DateTimeFilter<"QuizAttempt"> | Date | string
     quiz?: XOR<QuizScalarRelationFilter, QuizWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -19345,6 +19366,7 @@ export namespace Prisma {
     userId?: SortOrder
     quizId?: SortOrder
     score?: SortOrder
+    answers?: SortOrderInput | SortOrder
     completedAt?: SortOrder
     _count?: QuizAttemptCountOrderByAggregateInput
     _avg?: QuizAttemptAvgOrderByAggregateInput
@@ -19361,6 +19383,7 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"QuizAttempt"> | number
     quizId?: IntWithAggregatesFilter<"QuizAttempt"> | number
     score?: FloatWithAggregatesFilter<"QuizAttempt"> | number
+    answers?: JsonNullableWithAggregatesFilter<"QuizAttempt">
     completedAt?: DateTimeWithAggregatesFilter<"QuizAttempt"> | Date | string
   }
 
@@ -20117,6 +20140,7 @@ export namespace Prisma {
 
   export type QuizAttemptCreateInput = {
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
     quiz: QuizCreateNestedOneWithoutAttemptsInput
     user: UserCreateNestedOneWithoutQuizAttemptsInput
@@ -20127,11 +20151,13 @@ export namespace Prisma {
     userId: number
     quizId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
   export type QuizAttemptUpdateInput = {
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quiz?: QuizUpdateOneRequiredWithoutAttemptsNestedInput
     user?: UserUpdateOneRequiredWithoutQuizAttemptsNestedInput
@@ -20142,6 +20168,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     quizId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20150,11 +20177,13 @@ export namespace Prisma {
     userId: number
     quizId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
   export type QuizAttemptUpdateManyMutationInput = {
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20163,6 +20192,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     quizId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21034,6 +21064,29 @@ export namespace Prisma {
     id?: SortOrder
     videoId?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type QuizScalarRelationFilter = {
     is?: QuizWhereInput
@@ -21045,6 +21098,7 @@ export namespace Prisma {
     userId?: SortOrder
     quizId?: SortOrder
     score?: SortOrder
+    answers?: SortOrder
     completedAt?: SortOrder
   }
 
@@ -21076,6 +21130,32 @@ export namespace Prisma {
     userId?: SortOrder
     quizId?: SortOrder
     score?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type AnalyticsEventCountOrderByAggregateInput = {
@@ -22333,6 +22413,29 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type CourseAssignmentCreateWithoutUserInput = {
     assignedAt: Date | string
@@ -22357,6 +22460,7 @@ export namespace Prisma {
 
   export type QuizAttemptCreateWithoutUserInput = {
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
     quiz: QuizCreateNestedOneWithoutAttemptsInput
   }
@@ -22365,6 +22469,7 @@ export namespace Prisma {
     id?: number
     quizId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
@@ -22488,6 +22593,7 @@ export namespace Prisma {
     userId?: IntFilter<"QuizAttempt"> | number
     quizId?: IntFilter<"QuizAttempt"> | number
     score?: FloatFilter<"QuizAttempt"> | number
+    answers?: JsonNullableFilter<"QuizAttempt">
     completedAt?: DateTimeFilter<"QuizAttempt"> | Date | string
   }
 
@@ -23727,6 +23833,7 @@ export namespace Prisma {
 
   export type QuizAttemptCreateWithoutQuizInput = {
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
     user: UserCreateNestedOneWithoutQuizAttemptsInput
   }
@@ -23735,6 +23842,7 @@ export namespace Prisma {
     id?: number
     userId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
@@ -24058,6 +24166,7 @@ export namespace Prisma {
     id?: number
     quizId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
@@ -24101,6 +24210,7 @@ export namespace Prisma {
 
   export type QuizAttemptUpdateWithoutUserInput = {
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quiz?: QuizUpdateOneRequiredWithoutAttemptsNestedInput
   }
@@ -24109,6 +24219,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     quizId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -24116,6 +24227,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     quizId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -24603,11 +24715,13 @@ export namespace Prisma {
     id?: number
     userId: number
     score: number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt: Date | string
   }
 
   export type QuizAttemptUpdateWithoutQuizInput = {
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutQuizAttemptsNestedInput
   }
@@ -24616,6 +24730,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -24623,6 +24738,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     score?: FloatFieldUpdateOperationsInput | number
+    answers?: NullableJsonNullValueInput | InputJsonValue
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

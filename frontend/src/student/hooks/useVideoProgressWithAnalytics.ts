@@ -84,14 +84,12 @@ export function useVideoProgressWithAnalytics({
       updateTimeoutRef.current = setTimeout(async () => {
         try {
           const response = await api.post(`/videos/${videoId}/progress`, progressToSend);
-          // console.log("Backend progress updated:", response.data.progress);
           setError(null);
           setLastPersistedSeconds(progressToSend.totalWatchTime || 0);
           retryAttempts.current = 0;
         } catch (err: any) {
           console.error("Progress update failed:", err);
           
-          // Handle different types of backend errors
           if (err.response?.status === 400) {
             const errorCode = err.response.data?.code;
             const errorData = err.response.data?.details || {};
@@ -123,11 +121,9 @@ export function useVideoProgressWithAnalytics({
               default:
                 setError(err.response.data?.error || 'Failed to save progress');
             }
-
             return;
           } 
           
-          // Retry logic for network errors
           if (retryAttempts.current < 3) {
             retryAttempts.current++;
             const delay = Math.pow(2, retryAttempts.current) * 1000;
@@ -142,64 +138,57 @@ export function useVideoProgressWithAnalytics({
   );
 
   // Handle progress event with immediate UI updates
-const handleProgress = useCallback(
-  (progressEvent: { played: number; playedSeconds: number }) => {
-    if (isViolationActive) {
-      // console.log('Progress update blocked - violation active');
-      return;
-    }
-
-    const playedSeconds = Math.max(0, progressEvent.playedSeconds || 0);
-
-    if (typeof maxWatchedTimeRef.current !== 'number') {
-      maxWatchedTimeRef.current = 0;
-    }
-
-    // Allow minor regressions and forward jumps up to 10s
-    const newMaxWatchTime = Math.max(maxWatchedTimeRef.current, playedSeconds);
-
-    if (
-      playedSeconds >= maxWatchedTimeRef.current - 2 && // allow 2s regressions
-      newMaxWatchTime <= maxWatchedTimeRef.current + 10 // allow forward jumps up to 10s
-    ) {
-      maxWatchedTimeRef.current = newMaxWatchTime;
-
-      const watchedPercentage = duration > 0 ? Math.min((newMaxWatchTime / duration) * 100, 100) : 0;
-
-      const newProgress = {
-        watchedPercentage,
-        totalWatchTime: newMaxWatchTime,
-        isCompleted: watchedPercentage >= 95,
-        skipEvents: skipEventsRef.current,
-        pauseEvents: pauseEventsRef.current,
-      };
-
-      setProgress(prev => ({ ...prev, ...newProgress }));
-
-      if (onBackendProgressUpdate) {
-        // console.log('Progress update sent to parent:', newProgress);
-        onBackendProgressUpdate(newProgress);
+  const handleProgress = useCallback(
+    (progressEvent: { played: number; playedSeconds: number }) => {
+      if (isViolationActive) {
+        return;
       }
 
-      // Throttle backend updates every 5 seconds
-      const now = Date.now();
-      if (now - lastUpdateTime.current > 5000) {
-        lastUpdateTime.current = now;
-        sendAnalyticsEvent("video_progress", {
-          currentTime: playedSeconds,
-          percentWatched: watchedPercentage,
-        });
+      const playedSeconds = Math.max(0, progressEvent.playedSeconds || 0);
 
-        debouncedUpdate(newProgress);
+      if (typeof maxWatchedTimeRef.current !== 'number') {
+        maxWatchedTimeRef.current = 0;
       }
-    } else {
-      // console.log(`Invalid progress rejected: ${playedSeconds}s vs max ${maxWatchedTimeRef.current}s`);
-    }
-  },
-  [duration, sendAnalyticsEvent, debouncedUpdate, onBackendProgressUpdate, isViolationActive]
-);
 
-  // Handle play event
+      const newMaxWatchTime = Math.max(maxWatchedTimeRef.current, playedSeconds);
+
+      if (
+        playedSeconds >= maxWatchedTimeRef.current - 2 &&
+        newMaxWatchTime <= maxWatchedTimeRef.current + 10
+      ) {
+        maxWatchedTimeRef.current = newMaxWatchTime;
+
+        const watchedPercentage = duration > 0 ? Math.min((newMaxWatchTime / duration) * 100, 100) : 0;
+
+        const newProgress = {
+          watchedPercentage,
+          totalWatchTime: newMaxWatchTime,
+          isCompleted: watchedPercentage >= 95,
+          skipEvents: skipEventsRef.current,
+          pauseEvents: pauseEventsRef.current,
+        };
+
+        setProgress(prev => ({ ...prev, ...newProgress }));
+
+        if (onBackendProgressUpdate) {
+          onBackendProgressUpdate(newProgress);
+        }
+
+        const now = Date.now();
+        if (now - lastUpdateTime.current > 5000) {
+          lastUpdateTime.current = now;
+          sendAnalyticsEvent("video_progress", {
+            currentTime: playedSeconds,
+            percentWatched: watchedPercentage,
+          });
+
+          debouncedUpdate(newProgress);
+        }
+      }
+    },
+    [duration, sendAnalyticsEvent, debouncedUpdate, onBackendProgressUpdate, isViolationActive]
+  );
+
   const handlePlay = useCallback(
     (currentTime: number) => {
       sendAnalyticsEvent("video_play", { currentTime });
@@ -207,7 +196,6 @@ const handleProgress = useCallback(
     [sendAnalyticsEvent]
   );
 
-  // Handle pause event
   const handlePause = useCallback(
     (currentTime: number) => {
       const pauseEvent = { timestamp: Date.now(), currentTime };
@@ -217,10 +205,8 @@ const handleProgress = useCallback(
     [sendAnalyticsEvent]
   );
 
-  // Handle seek event
   const handleSeek = useCallback(
     (from: number, to: number) => {
-      // Don't process seeks if violation is active
       if (isViolationActive) {
         return;
       }
@@ -232,20 +218,12 @@ const handleProgress = useCallback(
       const skipDistance = Math.abs(to - from);
       const isForwardSkip = to > from;
       
-      // console.log(`Seek detected: ${from.toFixed(1)}s -> ${to.toFixed(1)}s (${skipDistance.toFixed(1)}s skip)`);
-      
-      // Check recent skip events for excessive skipping pattern
       const now = Date.now();
       const recentSkips = skipEventsRef.current.filter(event => 
-        now - event.timestamp < 30000 && // Within last 30 seconds
-        Math.abs(event.to - event.from) >= 5 // Skips 5 seconds or longer
+        now - event.timestamp < 30000 &&
+        Math.abs(event.to - event.from) >= 5
       );
       
-      // console.log(`Recent skips in last 30s: ${recentSkips.length}`);
-      
-      // Trigger violation if:
-      // 1. Single large forward skip (>60 seconds), OR
-      // 2. More than 5 skips >=5 seconds in last 30s (frequent small skips)
       if (
         (isForwardSkip && skipDistance > 60) || 
         recentSkips.length > 5
@@ -257,13 +235,12 @@ const handleProgress = useCallback(
         }
         return;
       }
-
     },
     [sendAnalyticsEvent, onSpeedViolation, isViolationActive]
   );
 
-  // Handle video ended event
-  const handleEnded = useCallback(() => {
+  // **Handle video ended event with immediate backend sync**
+  const handleEnded = useCallback(async () => {
     const finalProgress = {
       watchedPercentage: 100,
       isCompleted: true,
@@ -282,59 +259,57 @@ const handleProgress = useCallback(
 
     sendAnalyticsEvent("video_ended", {});
 
-    // Immediately update backend on video end
-    api
-      .post(`/videos/${videoId}/progress`, finalProgress)
-      .then((res) => {
-        setLastPersistedSeconds(finalProgress.totalWatchTime || duration);
-        // console.log("Video completion saved:", res.data.progress);
-      })
-      .catch((err) => console.error("Failed to save completion:", err));
+    // **Immediately update backend on video end (no debounce)**
+    try {
+      await api.post(`/videos/${videoId}/progress`, finalProgress);
+      setLastPersistedSeconds(finalProgress.totalWatchTime || duration);
+      // console.log("Video completion saved immediately");
+    } catch (err) {
+      console.error("Failed to save completion:", err);
+    }
   }, [api, videoId, duration, onBackendProgressUpdate, sendAnalyticsEvent]);
 
   // Load initial progress from backend
-useEffect(() => {
-  const loadProgress = async () => {
-    try {
-      setIsLoading(true);
-      const res = await api.get(`/videos/${videoId}`);
-      const videoData = res.data.video;
-      const initialProgress = videoData.progress || {
-        totalWatchTime: 0,
-        isCompleted: false,
-        watchedPercentage: 0,
-        skipEvents: [],
-        pauseEvents: [],
-      };
+  useEffect(() => {
+    const loadProgress = async () => {
+      try {
+        setIsLoading(true);
+        const res = await api.get(`/videos/${videoId}`);
+        const videoData = res.data.video;
+        const initialProgress = videoData.progress || {
+          totalWatchTime: 0,
+          isCompleted: false,
+          watchedPercentage: 0,
+          skipEvents: [],
+          pauseEvents: [],
+        };
 
-      maxWatchedTimeRef.current = initialProgress.totalWatchTime || 0;
+        maxWatchedTimeRef.current = initialProgress.totalWatchTime || 0;
 
-      setProgress(initialProgress);
-      setLastPersistedSeconds(initialProgress.totalWatchTime || 0);
-      skipEventsRef.current = initialProgress.skipEvents || [];
-      pauseEventsRef.current = initialProgress.pauseEvents || [];
+        setProgress(initialProgress);
+        setLastPersistedSeconds(initialProgress.totalWatchTime || 0);
+        skipEventsRef.current = initialProgress.skipEvents || [];
+        pauseEventsRef.current = initialProgress.pauseEvents || [];
 
-      if (onBackendProgressUpdate) {
-        onBackendProgressUpdate(initialProgress);
+        if (onBackendProgressUpdate) {
+          onBackendProgressUpdate(initialProgress);
+        }
+      } catch (error) {
+        setError("Failed to load progress");
+        console.error("Failed to load progress:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      setError("Failed to load progress");
-      console.error("Failed to load progress:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  if (videoId > 0) loadProgress();
+    if (videoId > 0) loadProgress();
 
-  return () => {
-    if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
-  };
-}, [api, videoId, onBackendProgressUpdate]);
+    return () => {
+      if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
+    };
+  }, [api, videoId, onBackendProgressUpdate]);
 
-  // Reset violation state (called when modal is dismissed)
   const resetViolationState = useCallback(() => {
-    // console.log('Resetting violation state');
     setIsViolationActive(false);
   }, []);
 

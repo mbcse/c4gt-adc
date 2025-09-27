@@ -220,6 +220,7 @@ exports.Prisma.QuizAttemptScalarFieldEnum = {
   userId: 'userId',
   quizId: 'quizId',
   score: 'score',
+  answers: 'answers',
   completedAt: 'completedAt'
 };
 
@@ -238,6 +239,11 @@ exports.Prisma.SortOrder = {
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 

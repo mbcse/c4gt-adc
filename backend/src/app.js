@@ -12,6 +12,7 @@ const videoRoutes = require('./routes/videoRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const metadataRoutes = require('./routes/metadata');
 const analyticsRoutes = require('./routes/analytics');
+const quizRoutes = require('./routes/quizRoutes');
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:8080',
@@ -31,6 +32,7 @@ app.use('/api/videos', videoRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/metadata', metadataRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/quizzes', quizRoutes);
 
 
 // Health check endpoint

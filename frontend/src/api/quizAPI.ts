@@ -1,6 +1,13 @@
 import api from './index';
 import type { Quiz, QuizAttempt, PaginatedResponse, QuizQuestion } from "@/types";
 
+
+export interface QuizWithStatus extends Quiz {
+  isUnlocked: boolean;
+  attemptCount: number;
+  bestScore: number;
+}
+
 interface QuizFilters {
   videoId?: number;
   courseId?: number;
@@ -30,7 +37,7 @@ export const quizAPI = {
     page: number = 1,
     limit: number = 10,
     filters: QuizFilters = {}
-  ): Promise<PaginatedResponse<Quiz>> => {
+  ): Promise<PaginatedResponse<QuizWithStatus>> => {
     const params: any = { page, limit, ...filters };
     const response = await client.get('/quizzes', { params });
     return response.data;
@@ -91,5 +98,39 @@ export const quizAPI = {
     const params: any = { page, limit, ...filters };
     const response = await client.get('/quizzes/attempts', { params });
     return response.data;
+  },
+
+  createQuizAttempt: async (
+    attemptData: {
+      quizId: number;
+      answers: any[];
+      score: number;
+    },
+    client = api
+  ): Promise<QuizAttempt> => {
+    const response = await client.post('/quizzes/attempts', attemptData);
+    return response.data;
+  },
+
+  getUserQuizAttempts: async (
+    client = api,
+    page: number = 1,
+    limit: number = 10,
+    quizId?: number
+  ): Promise<PaginatedResponse<QuizAttempt>> => {
+    const params: any = { page, limit };
+    if (quizId) params.quizId = quizId;
+    const response = await client.get('/quizzes/attempts', { params });
+    return response.data;
+  },
+
+  getUnlockedQuizzes: async (
+    client = api,
+    courseId?: number
+  ): Promise<Quiz[]> => {
+    const params: any = {};
+    if (courseId) params.courseId = courseId;
+    const response = await client.get('/quizzes', { params });
+    return response.data.data.filter((quiz: any) => quiz.isUnlocked);
   }
 };
