@@ -103,13 +103,17 @@ const validateProgressData = (req, res, next) => {
 
   if (Array.isArray(pauseEvents)) {
     const invalidPauses = pauseEvents.filter(event => {
-      return !event.timestamp || typeof event.currentTime !== 'number';
+      return !Array.isArray(event) ||
+        event.length !== 2 ||
+        typeof event[0] !== 'number' ||
+        (event[1] !== null && typeof event[1] !== 'number');
     });
 
     if (invalidPauses.length > 0) {
-      errors.push('Invalid pause event structure: missing timestamp or currentTime');
+      errors.push('Invalid pause event structure: must be [playTimestamp, pauseTimestamp|null]');
     }
   }
+
 
   if (errors.length > 0) {
     return res.status(400).json({

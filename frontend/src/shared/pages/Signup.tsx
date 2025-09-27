@@ -19,8 +19,9 @@ import {
   Users,
   Building,
   School,
+  CheckCircle,
 } from "lucide-react";
-import { useApi } from "@/api/index";
+import { authAPI } from "@/api/authAPI";
 
 interface FilterOptions {
   blocks: Array<{ id: number; name: string }>;
@@ -30,7 +31,6 @@ interface FilterOptions {
 
 const Signup: React.FC = () => {
   const { signup } = useAuth();
-  const api = useApi();
 
   const [form, setForm] = useState({
     name: "",
@@ -43,17 +43,17 @@ const Signup: React.FC = () => {
 
   const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingOptions, setLoadingOptions] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchFilterOptions() {
       try {
         setLoadingOptions(true);
-        const response = await api.get("/auth/signup-options");
-        setFilterOptions(response.data);
+        const response = await authAPI.getSignupOptions();
+        setFilterOptions(response);
       } catch (error) {
         console.error("Failed to fetch signup options:", error);
         setError("Failed to load signup options. Please refresh the page.");
@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
     }
 
     fetchFilterOptions();
-  }, [api]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -90,6 +90,7 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
 
     if (!form.blockId || !form.schoolId || !form.gradeId) {
       setError("Please select your block, school, and grade");
@@ -106,8 +107,8 @@ const Signup: React.FC = () => {
         gradeId: parseInt(form.gradeId),
       };
 
-      await signup(signupData);
-      navigate("/dashboard");
+      const response = await signup(signupData);
+      setSuccessMessage(response.message);
     } catch (err: any) {
       setError(err.message || "Signup failed");
     } finally {
@@ -149,9 +150,6 @@ const Signup: React.FC = () => {
                     loading="lazy"
                   />
                   <div className="flex items-center">
-                    <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-600 rounded-xl">
-                      <GraduationCap className="h-6 w-6 text-white" />
-                    </div>
                     <h1 className="ml-3 text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
                       Rohtak Guided Learning Tracker
                     </h1>
@@ -166,159 +164,174 @@ const Signup: React.FC = () => {
               </CardHeader>
 
               <CardContent className="px-6 sm:px-8 pb-6 sm:pb-8">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="name"
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Enter your full name"
-                        required
-                        className="pl-10 h-12 rounded-xl"
-                      />
-                    </div>
+                {successMessage ? (
+                  <div className="text-center">
+                    <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
+                    <h3 className="mt-4 text-xl font-semibold text-gray-800">Registration Successful!</h3>
+                    <p className="mt-2 text-gray-600">{successMessage}</p>
+                    <p className="mt-4 text-sm text-gray-500">
+                      Once you've verified, you can{" "}
+                      <Link to="/login" className="font-semibold text-emerald-600 hover:underline">
+                        log in here
+                      </Link>
+                      .
+                    </p>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="Enter your email"
-                        type="email"
-                        required
-                        className="pl-10 h-12 rounded-xl"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="password"
-                        name="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        placeholder="Create a strong password"
-                        type={showPassword ? "text" : "password"}
-                        required
-                        className="pl-10 pr-10 h-12 rounded-xl"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="blockId">Select Block</Label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <select
-                        id="blockId"
-                        name="blockId"
-                        value={form.blockId}
-                        onChange={handleChange}
-                        required
-                        className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer"
-                      >
-                        <option value="">Choose your block</option>
-                        {filterOptions?.blocks.map((block) => (
-                          <option key={block.id} value={block.id}>
-                            {block.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="schoolId">Select School</Label>
-                    <div className="relative">
-                      <School className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <select
-                        id="schoolId"
-                        name="schoolId"
-                        value={form.schoolId}
-                        onChange={handleChange}
-                        required
-                        disabled={!form.blockId}
-                        className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer disabled:bg-muted disabled:cursor-not-allowed"
-                      >
-                        <option value="">
-                          {!form.blockId ? "Select block first" : "Choose your school"}
-                        </option>
-                        {getFilteredSchools().map((school) => (
-                          <option key={school.id} value={school.id}>
-                            {school.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="gradeId">Select Grade</Label>
-                    <div className="relative">
-                      <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                      <select
-                        id="gradeId"
-                        name="gradeId"
-                        value={form.gradeId}
-                        onChange={handleChange}
-                        required
-                        className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer"
-                      >
-                        <option value="">Choose your grade</option>
-                        {filterOptions?.grades.map((grade) => (
-                          <option key={grade.id} value={grade.id}>
-                            Grade {grade.value}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full h-12 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transition-transform transform hover:scale-[1.02]"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Creating account...
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Input
+                          id="name"
+                          name="name"
+                          value={form.name}
+                          onChange={handleChange}
+                          placeholder="Enter your full name"
+                          required
+                          className="pl-10 h-12 rounded-xl"
+                        />
                       </div>
-                    ) : (
-                      "Create Account"
-                    )}
-                  </Button>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Input
+                          id="email"
+                          name="email"
+                          value={form.email}
+                          onChange={handleChange}
+                          placeholder="Enter your email"
+                          type="email"
+                          required
+                          className="pl-10 h-12 rounded-xl"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Input
+                          id="password"
+                          name="password"
+                          value={form.password}
+                          onChange={handleChange}
+                          placeholder="Create a strong password"
+                          type={showPassword ? "text" : "password"}
+                          required
+                          className="pl-10 pr-10 h-12 rounded-xl"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blockId">Select Block</Label>
+                      <div className="relative">
+                        <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <select
+                          id="blockId"
+                          name="blockId"
+                          value={form.blockId}
+                          onChange={handleChange}
+                          required
+                          className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer"
+                        >
+                          <option value="">Choose your block</option>
+                          {filterOptions?.blocks.map((block) => (
+                            <option key={block.id} value={block.id}>
+                              {block.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="schoolId">Select School</Label>
+                      <div className="relative">
+                        <School className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <select
+                          id="schoolId"
+                          name="schoolId"
+                          value={form.schoolId}
+                          onChange={handleChange}
+                          required
+                          disabled={!form.blockId}
+                          className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer disabled:bg-muted disabled:cursor-not-allowed"
+                        >
+                          <option value="">
+                            {!form.blockId ? "Select block first" : "Choose your school"}
+                          </option>
+                          {getFilteredSchools().map((school) => (
+                            <option key={school.id} value={school.id}>
+                              {school.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="gradeId">Select Grade</Label>
+                      <div className="relative">
+                        <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <select
+                          id="gradeId"
+                          name="gradeId"
+                          value={form.gradeId}
+                          onChange={handleChange}
+                          required
+                          className="pl-10 w-full h-12 border border-input bg-background rounded-xl appearance-none cursor-pointer"
+                        >
+                          <option value="">Choose your grade</option>
+                          {filterOptions?.grades.map((grade) => (
+                            <option key={grade.id} value={grade.id}>
+                              Grade {grade.value}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
-                  {error && (
-                    <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  <div className="pt-4 text-center text-sm text-gray-600">
-                    Already have an account?{" "}
-                    <Link
-                      to="/login"
-                      className="font-semibold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent hover:from-emerald-700 hover:to-blue-700"
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full h-12 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transition-transform transform hover:scale-[1.02]"
                     >
-                      Sign in here
-                    </Link>
-                  </div>
-                </form>
+                      {isLoading ? (
+                        <div className="flex items-center justify-center">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          Creating account...
+                        </div>
+                      ) : (
+                        "Create Account"
+                      )}
+                    </Button>
+
+                    {error && (
+                      <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
+
+                    <div className="pt-4 text-center text-sm text-gray-600">
+                      Already have an account?{" "}
+                      <Link
+                        to="/login"
+                        className="font-semibold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent hover:from-emerald-700 hover:to-blue-700"
+                      >
+                        Sign in here
+                      </Link>
+                    </div>
+                  </form>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -328,9 +341,6 @@ const Signup: React.FC = () => {
         <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center p-12">
           <div className="max-w-md w-full">
             <div className="flex items-center mb-10">
-              <div className="p-3 bg-gradient-to-r from-emerald-500 to-blue-600 rounded-2xl shadow-xl">
-                <GraduationCap className="h-8 w-8 text-white" />
-              </div>
               <h1 className="ml-4 text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
                 Rohtak Guided Learning Tracker
               </h1>

@@ -25,10 +25,10 @@ export default function CoursePage() {
       try {
         const courseRes = await api.get(`/courses/${courseId}`);
         const { course: courseData, courseProgress: progressData } = courseRes.data;
-        
+
         setCourse(courseData);
         setCourseProgress(progressData);
-        
+
         const courseVideos = Array.isArray(courseData?.courseVideos) ? courseData.courseVideos : [];
         const videoList = courseVideos.map(cv => ({
           ...cv.video,
@@ -131,7 +131,7 @@ export default function CoursePage() {
               </span>
             </div>
 
-            {/* Course Header with Enhanced Progress */}
+            {/* Course Header with Progress */}
             <Card className="mb-6 md:mb-8 bg-white/90 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-purple-500/10 to-teal-500/5"></div>
               <CardHeader className="relative p-4 md:p-6 lg:p-8">
@@ -147,8 +147,8 @@ export default function CoursePage() {
                     </div>
                     <div className="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl">{course.description}</div>
                   </div>
-                  
-                  {/* Enhanced Progress Card */}
+
+                  {/* Progress Card */}
                   <div className="w-full lg:w-auto lg:min-w-[320px] bg-white/80 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-xl border border-violet-200">
                     <div className="text-center mb-4">
                       <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-1">
@@ -156,14 +156,15 @@ export default function CoursePage() {
                       </div>
                       <div className="text-slate-600 font-medium">Course Progress</div>
                     </div>
-                    <div className="relative mb-4">
-                      <Progress value={courseProgress?.completionPercentage || 0} className="h-3 md:h-4 rounded-full bg-slate-200 shadow-inner" />
+                    <div className="relative w-full h-4 bg-slate-200 rounded-full overflow-hidden mb-6 shadow-inner">
                       <div
-                        className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
-                        style={{ width: `${courseProgress?.completionPercentage || 0}%` }}
+                        className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+                        style={{ width: `${courseProgress?.completionPercentage ?? 0}%` }}
                       />
                     </div>
-                    
+                    <p className="text-sm text-slate-600 text-center mb-4">
+                      Complete all videos and quizzes to complete the course!
+                    </p>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between text-slate-600">
                         <span>Completed:</span>
@@ -222,13 +223,12 @@ export default function CoursePage() {
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <div className="flex-shrink-0">
                               <div
-                                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg ${
-                                  status === 'completed'
-                                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
-                                    : status === 'in-progress'
+                                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg ${status === 'completed'
+                                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
+                                  : status === 'in-progress'
                                     ? "bg-gradient-to-r from-amber-500 to-orange-600"
                                     : "bg-gradient-to-r from-indigo-500 to-purple-600"
-                                }`}
+                                  }`}
                               >
                                 {status === 'completed' ? (
                                   <CheckCircle className="h-6 w-6" />
@@ -241,7 +241,17 @@ export default function CoursePage() {
                               <h4 className="text-base md:text-lg font-bold text-slate-900 group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 truncate">
                                 {video.title}
                               </h4>
-                              <Progress value={progressValue} className="h-2 rounded-full mt-2" />
+                              <div className="relative w-full h-2 mt-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`absolute top-0 left-0 h-full transition-all duration-500 rounded-full ${status === 'completed'
+                                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
+                                    : status === 'in-progress'
+                                      ? "bg-gradient-to-r from-amber-500 to-orange-600"
+                                      : "bg-gradient-to-r from-indigo-500 to-purple-600"
+                                    }`}
+                                  style={{ width: `${progressValue}%` }}
+                                />
+                              </div>
                               <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
                                 {status === 'in-progress' && <span>{progressValue.toFixed(0)}% watched</span>}
                                 {status === 'completed' && <span>Completed</span>}

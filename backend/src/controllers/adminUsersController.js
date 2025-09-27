@@ -1,15 +1,16 @@
 const { PrismaClient } = require("../../generated/prisma");
 const { buildUserFilter, getOrgUnitDescendants } = require('../utils/filterUtils');
 const bcrypt = require('bcrypt');
+const { sendNewUserEmail } = require('../utils/email');
 const prisma = new PrismaClient();
 
 exports.listUsers = async (req, res) => {
   try {
-    const { 
-      role, 
-      skip = 0, 
-      take = 20, 
-      search 
+    const {
+      role,
+      skip = 0,
+      take = 20,
+      search
     } = req.query;
 
     const currentUser = req.user;
@@ -18,22 +19,22 @@ exports.listUsers = async (req, res) => {
     // Role-based access control for what users can be viewed
     if (currentUser.role === 'SUPERADMIN') {
       if (role) {
-        if (!['ADMIN', 'INSTRUCTOR'].includes(role.toUpperCase())) {
+        if (!['SUPERADMIN', 'ADMIN', 'INSTRUCTOR'].includes(role.toUpperCase())) {
           return res.status(403).json({ message: 'Access denied for this role' });
         }
         whereCondition.role = role.toUpperCase();
       } else {
-        whereCondition.role = { in: ['ADMIN', 'INSTRUCTOR'] };
+        whereCondition.role = { in: ['SUPERADMIN', 'ADMIN', 'INSTRUCTOR'] };
       }
     } else if (currentUser.role === 'ADMIN') {
       whereCondition.role = 'INSTRUCTOR';
-      
+
       if (currentUser.organizationUnitId) {
         const descendantIds = await getOrgUnitDescendants(currentUser.organizationUnitId);
         const accessibleOrgIds = [currentUser.organizationUnitId, ...descendantIds];
         whereCondition.organizationUnitId = { in: accessibleOrgIds };
       }
-      
+
       if (role && role.toUpperCase() !== 'INSTRUCTOR') {
         return res.status(403).json({ message: 'Access denied for this role' });
       }
@@ -69,15 +70,15 @@ exports.listUsers = async (req, res) => {
             }
           },
           grade: {
-            select: { 
-              id: true, 
-              value: true 
+            select: {
+              id: true,
+              value: true
             }
           },
-          _count: { 
-            select: { 
-              assignments: true 
-            } 
+          _count: {
+            select: {
+              assignments: true
+            }
           }
         },
       }),
@@ -104,44 +105,42 @@ exports.listUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    const { 
-      name, 
-      email, 
-      password, 
-      role, 
-      organizationUnitId, 
-      gradeId 
+    const {
+      name,
+      email,
+      password,
+      role,
+      organizationUnitId,
+      gradeId
     } = req.body;
 
     const currentUser = req.user;
 
-    // Basic validation
     if (!name || !email || !password || !role) {
       return res.status(400).json({ message: 'Name, email, password, and role are required' });
     }
 
     // Role-based permission validation
     if (currentUser.role === 'SUPERADMIN') {
-      // Superadmins can create ADMIN and INSTRUCTOR
-      if (!['ADMIN', 'INSTRUCTOR'].includes(role.toUpperCase())) {
-        return res.status(400).json({ message: 'Superadmins can only create ADMIN and INSTRUCTOR users' });
+      if (!['SUPERADMIN', 'ADMIN', 'INSTRUCTOR'].includes(role.toUpperCase())) {
+        return res.status(400).json({ message: 'Superadmins can only create SUPERADMIN, ADMIN, and INSTRUCTOR users' });
       }
     } else if (currentUser.role === 'ADMIN') {
       // Admins can only create INSTRUCTOR
       if (role.toUpperCase() !== 'INSTRUCTOR') {
         return res.status(400).json({ message: 'Admins can only create INSTRUCTOR users' });
       }
-      
+
       // For instructors created by admins, they must be in the admin's organization
       if (!organizationUnitId) {
         return res.status(400).json({ message: 'Organization unit is required for instructors' });
       }
-      
+
       // Verify the organizationUnitId is within admin's scope
       if (currentUser.organizationUnitId) {
         const descendantIds = await getOrgUnitDescendants(currentUser.organizationUnitId);
         const accessibleOrgIds = [currentUser.organizationUnitId, ...descendantIds];
-        
+
         if (!accessibleOrgIds.includes(organizationUnitId)) {
           return res.status(400).json({ message: 'Cannot assign user to organization outside your scope' });
         }
@@ -151,10 +150,10 @@ exports.createUser = async (req, res) => {
     }
 
     // Check if email already exists
-    const existingUser = await prisma.user.findUnique({ 
-      where: { email: email.toLowerCase() } 
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
     });
-    
+
     if (existingUser) {
       return res.status(409).json({ message: 'A user with this email already exists' });
     }
@@ -164,7 +163,7 @@ exports.createUser = async (req, res) => {
       const orgUnit = await prisma.organizationUnit.findUnique({
         where: { id: organizationUnitId }
       });
-      
+
       if (!orgUnit) {
         return res.status(400).json({ message: 'Invalid organization unit' });
       }
@@ -175,7 +174,7 @@ exports.createUser = async (req, res) => {
       const grade = await prisma.grade.findUnique({
         where: { id: gradeId }
       });
-      
+
       if (!grade) {
         return res.status(400).json({ message: 'Invalid grade' });
       }
@@ -193,6 +192,7 @@ exports.createUser = async (req, res) => {
         role: role.toUpperCase(),
         organizationUnitId: organizationUnitId || null,
         gradeId: gradeId || null,
+        verified: true // New users created by admin are auto-verified
       },
       select: {
         id: true,
@@ -209,17 +209,24 @@ exports.createUser = async (req, res) => {
           }
         },
         grade: {
-          select: { 
-            id: true, 
-            value: true 
+          select: {
+            id: true,
+            value: true
           }
         }
       },
     });
 
-    res.status(201).json({ 
+    await sendNewUserEmail(
+      newUser.email,
+      password,
+      newUser.role,
+      newUser.organizationUnit?.name
+    );
+
+    res.status(201).json({
       user: newUser,
-      message: 'User created successfully'
+      message: 'User created successfully and an email has been sent.'
     });
   } catch (error) {
     console.error('Error creating user:', error);
@@ -232,19 +239,19 @@ exports.updateUserRole = async (req, res) => {
     const userId = parseInt(req.params.id);
     const { role } = req.body;
     const currentUser = req.user;
-    
+
     // Get the user to be updated
     const userToUpdate = await prisma.user.findUnique({
       where: { id: userId },
-      select: { 
-        id: true, 
-        role: true, 
+      select: {
+        id: true,
+        role: true,
         organizationUnitId: true,
         name: true,
         email: true
       }
     });
-    
+
     if (!userToUpdate) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -255,19 +262,19 @@ exports.updateUserRole = async (req, res) => {
       if (userToUpdate.role !== 'INSTRUCTOR') {
         return res.status(403).json({ message: 'Cannot update this user type' });
       }
-      
+
       if (currentUser.organizationUnitId) {
         const descendantIds = await getOrgUnitDescendants(currentUser.organizationUnitId);
         const accessibleOrgIds = [currentUser.organizationUnitId, ...descendantIds];
-        
+
         if (!accessibleOrgIds.includes(userToUpdate.organizationUnitId)) {
           return res.status(403).json({ message: 'Cannot update users outside your organization' });
         }
       }
     }
 
-    const allowedRoles = currentUser.role === 'SUPERADMIN' 
-      ? ['ADMIN', 'INSTRUCTOR'] 
+    const allowedRoles = currentUser.role === 'SUPERADMIN'
+      ? ['ADMIN', 'INSTRUCTOR']
       : ['INSTRUCTOR'];
 
     if (!role || !allowedRoles.includes(role.toUpperCase())) {
@@ -277,10 +284,10 @@ exports.updateUserRole = async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { role: role.toUpperCase() },
-      select: { 
-        id: true, 
-        name: true, 
-        email: true, 
+      select: {
+        id: true,
+        name: true,
+        email: true,
         role: true,
         organizationUnit: {
           select: {
@@ -291,8 +298,8 @@ exports.updateUserRole = async (req, res) => {
         }
       }
     });
-    
-    res.json({ 
+
+    res.json({
       user: updatedUser,
       message: 'User role updated successfully'
     });
@@ -310,9 +317,9 @@ exports.deleteUser = async (req, res) => {
     // Get user to be deleted
     const userToDelete = await prisma.user.findUnique({
       where: { id: userId },
-      select: { 
-        id: true, 
-        role: true, 
+      select: {
+        id: true,
+        role: true,
         organizationUnitId: true,
         name: true,
         email: true
@@ -329,11 +336,11 @@ exports.deleteUser = async (req, res) => {
       if (userToDelete.role !== 'INSTRUCTOR') {
         return res.status(403).json({ message: 'Cannot delete this user type' });
       }
-      
+
       if (currentUser.organizationUnitId) {
         const descendantIds = await getOrgUnitDescendants(currentUser.organizationUnitId);
         const accessibleOrgIds = [currentUser.organizationUnitId, ...descendantIds];
-        
+
         if (!accessibleOrgIds.includes(userToDelete.organizationUnitId)) {
           return res.status(403).json({ message: 'Cannot delete users outside your organization' });
         }
@@ -350,11 +357,11 @@ exports.deleteUser = async (req, res) => {
       return res.status(400).json({ message: 'Cannot delete your own account' });
     }
 
-    await prisma.user.delete({ 
-      where: { id: userId } 
+    await prisma.user.delete({
+      where: { id: userId }
     });
 
-    res.json({ 
+    res.json({
       success: true,
       message: 'User deleted successfully'
     });

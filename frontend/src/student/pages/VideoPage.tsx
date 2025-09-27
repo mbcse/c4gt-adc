@@ -53,15 +53,18 @@ export default function VideoPage() {
   }, [courseId, videoId]);
 
   useEffect(() => {
-  if (
+    if (
       !videoProgress.isCompleted ||
       !currentVideo ||
       quizUnlocked ||
-      !currentVideo.quizStatus.hasQuiz // <-- CORRECTED: Check the nested property
+      !currentVideo.quizStatus.hasQuiz
     ) return;
+
     setIsPollingForQuiz(true);
     let attempts = 0;
     const maxAttempts = 10;
+    let interval;
+
     const pollForQuiz = async () => {
       attempts++;
       try {
@@ -71,23 +74,29 @@ export default function VideoPage() {
           setShowQuizModal(true);
           setQuizUnlocked(true);
           setIsPollingForQuiz(false);
-          clearInterval(interval);
+          if (interval) clearInterval(interval);
         }
       } catch (error) {
         if (attempts >= maxAttempts) {
           setIsPollingForQuiz(false);
-          clearInterval(interval);
+          if (interval) clearInterval(interval);
           console.warn("Quiz not unlocked within timeout period");
         }
       }
     };
-    const interval = setInterval(pollForQuiz, 3000);
-    pollForQuiz();
+
+    const startPolling = setTimeout(() => {
+      interval = setInterval(pollForQuiz, 3000);
+      pollForQuiz();
+    }, 2000);
+
     return () => {
-      clearInterval(interval);
+      clearTimeout(startPolling);
+      if (interval) clearInterval(interval);
       setIsPollingForQuiz(false);
     };
   }, [videoProgress.isCompleted, currentVideo?.id, quizUnlocked, api]);
+
 
   const handleQuizComplete = async (score: number, answers: any[]) => {
     try {

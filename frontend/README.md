@@ -127,6 +127,10 @@ frontend/src/
 │   └── pages/             # Shared pages
 │       ├── Login.tsx
 │       ├── Signup.tsx
+│       ├── VerifyEmail.tsx
+│       ├── ForgotPassword.tsx
+│       ├── ResetPassword.tsx
+│       ├── ChangePassword.tsx
 │       └── NotFound.tsx
 ├── api/                   # API integration layer
 │   ├── index.ts          # API client configuration
@@ -206,6 +210,10 @@ The application uses **nested routing** with **role-based access control**:
   <Route path="/" element={<LandingRedirect />} />
   <Route path="/login" element={<Login />} />
   <Route path="/signup" element={<Signup />} />
+  <Route path="/verify-email" element={<VerifyEmail />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/reset-password" element={<ResetPassword />} />
+  <Route path="/change-password" element={<ChangePassword />} />
 
   {/* Admin routes with layout */}
   <Route path="/admin/*" element={
@@ -247,6 +255,7 @@ The student interface provides a clean, focused learning experience:
 - **Quiz Interface**: Interactive quiz taking with immediate feedback
 - **Progress Tracking**: Visual progress indicators and analytics
 - **Profile Management**: View personal information
+- **Email Verification**: Account verification through email links
 
 #### Pages
 - `/dashboard` - Student dashboard with course overview
@@ -256,6 +265,10 @@ The student interface provides a clean, focused learning experience:
 - `/progress` - Personal learning progress and analytics
 - `/quizzes` - Quiz history and performance
 - `/profile` - Profile management
+- `/change-password` - Change account password
+- `/verify-email` - Email verification page
+- `/forgot-password` - Password reset request
+- `/reset-password` - Password reset with token
 
 ### Admin Interface
 
@@ -383,12 +396,12 @@ const response = await api.get('/courses');
 
 Organized by feature area:
 
-- **authAPI**: Authentication
+- **authAPI**: Authentication, email verification, password reset
 - **courseAPI**: Course-related operations
 - **videoAPI**: Video content management
 - **quizAPI**: Quiz functionality
 - **analyticsAPI**: Student analytics tracking
-- **userAPI**: User management
+- **userAPI**: User management, profile updates, password changes
 - **adminAnalyticsAPI**: Reporting analytics to admins
 - **assignmentAPI**: Individual and bulk course assigmnent
 - **metadataAPI**: Metadata for courses

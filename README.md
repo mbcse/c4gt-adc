@@ -30,6 +30,7 @@ The Rohtak Guided Learning Tracker is a modern educational platform built with a
 - **Organizational Hierarchy**: Support for state, district, block, and school-level organization
 - **Real-time Analytics**: Comprehensive dashboards for administrators and instructors
 - **Video Integration**: Support for YouTube video content with progress tracking
+- **Email Verification System**: User account verification and password management
 
 ### System Architecture Overview
 
@@ -155,16 +156,37 @@ c4gt-adc/
 
 ### Backend Environment Variables
 ```env
-DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
-JWT_SECRET="your-jwt-secret"
-CORS_ORIGIN="http://localhost:8080"
+# Server Config
 PORT=5000
-NODE_ENV="development"
+NODE_ENV=development
+
+# Database
+DATABASE_URL=your_database_url
+
+# Authentication
+JWT_SECRET=your_jwt_secret
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# CORS Settings
+CORS_ORIGIN=http://localhost:8080
+
+# External APIs
+YOUTUBE_API_KEY=your_youtube_data_api_key
+
+# Nodemailer service credentials
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_USER=user@example.com
+EMAIL_PASS=your_smtp_app_password
 ```
 
 ### Frontend Environment Variables
 ```env
-VITE_API_URL="http://localhost:5000"
+VITE_API_URL=http://localhost:5000
+VITE_ENVIRONMENT=development
 ```
 
 ## User Roles & Permissions
@@ -221,5 +243,7 @@ VITE_API_URL="http://localhost:5000"
 - **Input Validation**: Comprehensive input validation and sanitization
 - **CORS Protection**: Configured CORS policies for secure cross-origin requests
 - **Security Headers**: Helmet.js for security headers and protection
+- **Email Verification**: User account verification through secure email tokens
+- **Password Security**: Secure password reset with time-limited tokens
 
 ---

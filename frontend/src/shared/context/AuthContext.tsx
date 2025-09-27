@@ -7,8 +7,9 @@ type AuthContextType = {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (data: LoginData) => Promise<void>;
-  signup: (data: SignupData) => Promise<void>;
+  signup: (data: SignupData) => Promise<{ message: string }>;
   logout: () => void;
 };
 
@@ -21,12 +22,14 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("authToken"));
+  const [loading, setLoading] = useState(true);
   const isAuthenticated = Boolean(token);
 
   // Fetch user profile when token changes (validate token & sync user state)
   useEffect(() => {
     if (!token) {
       setUser(null);
+      setLoading(false); 
       return;
     }
 
@@ -36,6 +39,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(response.user);
       } catch (error) {
         logout(); // Token invalid or expired — clear auth state
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -48,22 +53,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem("authToken", data.token);
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || error.message || 'Login failed. Please try again.';
+      throw new Error(errorMessage);
     }
   }, []);
 
-  const signup = useCallback(
-    async (signupData: SignupData) => {
+const signup = useCallback(
+    async (signupData: SignupData): Promise<{ message: string }> => {
       try {
-        await authAPI.signup(signupData);
-        // Auto-login after signup
-        await login({ email: signupData.email, password: signupData.password });
+        const response = await authAPI.signup(signupData);
+        return response;
       } catch (error) {
-        throw error;
+        const errorMessage = (error as any).response?.data?.error || (error as any).message || 'Signup failed';
+        throw new Error(errorMessage);
       }
     },
-    [login]
+    []
   );
 
   const logout = useCallback(() => {
@@ -73,7 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -22,6 +22,7 @@ This is the backend API server for the Rohtak Guided Learning Tracker platform. 
 - `express-validator`: Request validation
 - `helmet`: Security headers
 - `compression`: Response compression
+- `nodemailer`: Email service for user verification
 
 ## Architecture Overview
 
@@ -108,6 +109,12 @@ CORS_ORIGIN="frontend-url"
 
 # Youtube Data API key
 YOUTUBE_API_KEY="your-youtube-api-key"
+
+# Email Configuration (for user verification and notifications)
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USER="your-email@gmail.com"
+EMAIL_PASS="your-app-password"
 ```
 
 ## Core Modules
@@ -197,12 +204,16 @@ Handles user authentication and registration:
 - **Signup**: User registration with role assignment and organization validation
 - **Login**: JWT-based authentication with user context
 - **Signup Options**: Provides organizational hierarchy for registration
+- **Email Verification**: User account verification through email tokens
+- **Forgot Password**: Password reset request with email notification
+- **Reset Password**: Password reset with secure token validation
 
 ### User Controller (`userController.js`)
 Manages user profile operations:
 
 - **Profile Retrieval**: User profile with activity summary
 - **Profile Updates**: Basic profile modification
+- **Change Password**: Secure password change with old password verification
 
 ### Video Controller (`videoController.js`)
 Comprehensive video management with anti-gaming features:
@@ -229,7 +240,7 @@ Quiz system management:
 ### Admin Controllers
 Specialized controllers for administrative functions:
 
-- **User Management**: CRUD operations for admin users
+- **User Management**: CRUD operations for admin users with email notifications
 - **Student Management**: Student tracking
 - **Course Management**: Course creation and assignment
 - **Quiz Management**: Quiz creation and administration
@@ -323,6 +334,14 @@ Real-time activity tracking:
 ### Video Helper Service (`videoHelper.js`)
 - **VideoHelper**: Video processing and validation utilities
 
+### Email Service (`email.js`)
+Email notification system for user management:
+
+- **Verification Emails**: User account verification with secure tokens
+- **Password Reset Emails**: Password reset notifications with time-limited tokens
+- **Welcome Emails**: New user notifications for admin-created accounts
+- **SMTP Configuration**: Configurable email service integration
+
 ## Database Integration
 
 ### Prisma ORM Configuration
@@ -350,6 +369,8 @@ generator client {
 - Organization unit association
 - Grade assignment for students
 - Comprehensive user tracking
+- Email verification system with verification tokens
+- Password reset functionality with time-limited tokens
 
 **Organization Unit Model**
 - Hierarchical structure (STATE → DISTRICT → BLOCK → SCHOOL)
@@ -433,11 +454,16 @@ generator client {
 POST /api/auth/signup          # User registration
 POST /api/auth/login           # User authentication
 GET  /api/auth/signup-options  # Registration options
+POST /api/auth/verify-email    # Email verification
+POST /api/auth/forgot-password # Password reset request
+POST /api/auth/reset-password  # Password reset
 ```
 
 ### User Endpoints
 ```
 GET /api/user/profile          # User profile with activity
+PUT /api/user/profile          # Update user profile
+POST /api/user/change-password # Change user password
 ```
 
 ### Video Endpoints

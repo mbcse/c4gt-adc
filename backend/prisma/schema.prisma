@@ -41,6 +41,11 @@ model User {
   password     String
   role         Role
   createdAt    DateTime           @default(now())
+
+  verified            Boolean? @default(false)
+  verificationToken   String?
+  resetToken          String?  @unique
+  resetTokenExpiry    DateTime? 
   
   organizationUnitId Int?
   organizationUnit   OrganizationUnit? @relation(fields: [organizationUnitId], references: [id], onDelete: SetNull)

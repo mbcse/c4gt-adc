@@ -19,7 +19,6 @@ interface GetUsersParams {
 }
 
 export const userAPI = {
-  // GET /users with optional filtering & pagination, accepts axios client for proper baseURL
   getUsers: async (
     params?: GetUsersParams,
     client = api
@@ -28,7 +27,7 @@ export const userAPI = {
     return response.data;
   },
 
-  // POST /users for user creation (unchanged, restricted access)
+  // POST /users for user creation
   createUser: async (
     userData: { name: string; email: string; password: string; role: string },
     client = api
@@ -37,13 +36,23 @@ export const userAPI = {
     return response.data;
   },
 
-  // PUT /users/:id/role to update user role (unchanged, restricted access)
+  // PUT /users/:id/role to update user role 
   updateUserRole: async (
     userId: number,
     role: string,
     client = api
   ) => {
     const response = await client.put(`/users/${userId}/role`, { role });
+    return response.data;
+  },
+
+  getProfile: async (): Promise<{ user: User }> => {
+    const response = await api.get('/api/user/profile');
+    return response.data;
+  },
+
+  changePassword: async (oldPassword: string, newPassword: string): Promise<{ message: string }> => {
+    const response = await api.post('/api/user/change-password', { oldPassword, newPassword });
     return response.data;
   },
 

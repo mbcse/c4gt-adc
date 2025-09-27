@@ -87,14 +87,13 @@ export default function UserManagement() {
   // Get available roles based on current user's role
   const getAvailableRoles = () => {
     if (isSuperAdmin) {
-      return userRoles.filter(role => ['ADMIN', 'INSTRUCTOR'].includes(role.value));
+      return userRoles.filter(role => ['SUPERADMIN', 'ADMIN', 'INSTRUCTOR'].includes(role.value));
     }
     if (isAdmin) {
       return userRoles.filter(role => role.value === 'INSTRUCTOR');
     }
     return [];
   };
-
   // Get viewable roles for the cards
   const getViewableRoles = () => {
     if (isSuperAdmin) {
@@ -185,6 +184,12 @@ export default function UserManagement() {
         <div className="text-sm text-gray-500">
           Manage system users and their permissions
         </div>
+        <button
+          onClick={() => navigate("/change-password")}
+          className="btn btn-secondary"
+        >
+          Change My Password
+        </button>
       </div>
 
       {/* Role Cards */}
@@ -285,35 +290,35 @@ export default function UserManagement() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {users.map((user) => (
-                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                      {users.map((u) => ( // Changed variable to 'u' to avoid conflict with context 'user'
+                        <tr key={u.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div>
-                              <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                              <div className="text-sm text-gray-500">{user.email}</div>
+                              <div className="text-sm font-medium text-gray-900">{u.name}</div>
+                              <div className="text-sm text-gray-500">{u.email}</div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                              {user.role}
+                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${userRoles.find(r => r.value === u.role)?.color.replace('bg-', 'bg-').replace('text-', 'text-') || 'bg-gray-100 text-gray-800'}`}>
+                              {u.role}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {user.organizationUnit?.name || 'N/A'}
+                            {u.organizationUnit?.name || 'N/A'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {user.createdAt
-                              ? new Date(user.createdAt).toLocaleDateString()
-                              : "N/A"}
+                            {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "N/A"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
-                              onClick={() => handleDeleteUser(user.id)}
-                              title="Delete user"
-                            >
-                              Delete
-                            </button>
+                            {u.role !== 'SUPERADMIN' && (
+                              <button
+                                className="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50 transition-colors"
+                                onClick={() => handleDeleteUser(u.id)}
+                                title="Delete user"
+                              >
+                                Delete
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))}

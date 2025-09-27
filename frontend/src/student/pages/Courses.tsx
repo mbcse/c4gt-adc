@@ -479,7 +479,6 @@ export default function Courses() {
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
                   <Card
-                    // FIX: Added flex, flex-col, and h-full to make the card a flex container that fills its grid cell
                     className="flex flex-col h-full relative overflow-hidden bg-white border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group hover:-translate-y-3 hover:scale-105 transform-gpu"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/85 group-hover:from-white/98 group-hover:via-white/95 group-hover:to-white/90 transition-all duration-500"></div>
@@ -544,9 +543,7 @@ export default function Courses() {
                       )}
 
                       {/* Course Content */}
-                      {/* FIX: Added flex, flex-col, and flex-grow to make this section fill available space */}
                       <div className="p-7 flex flex-col flex-grow">
-                        {/* FIX: Added flex-grow to this inner div to push the buttons to the bottom */}
                         <div className="flex-grow">
                           <div className="flex items-start justify-between mb-3">
                             <h3 className="font-bold text-slate-900 text-xl group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2">
@@ -557,19 +554,18 @@ export default function Courses() {
                             <span className="inline-block w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mr-2"></span>
                             {course.createdBy || "Unknown"}
                           </p>
-                          
-                          <div className="relative mb-2">
-                            <Progress
-                              value={course.progress}
-                              className="h-3 rounded-full bg-slate-200 shadow-inner"
-                            />
-                            <div
-                              className={`absolute inset-0 bg-gradient-to-r ${progressBg} rounded-full opacity-90 transition-all duration-300`}
-                              style={{ width: `${course.progress}%` }}
-                            />
-                          </div>
-                          <div className="text-sm text-slate-700 mb-4 font-medium">
-                            {course.progress}% Complete • {formatDuration(course.totalWatchTime)} watched
+
+                          {/* Progress Bar */}
+                          <div className="mb-3">
+                            <div className="relative w-full h-3 bg-slate-200 rounded-full overflow-hidden shadow-inner">
+                              <div
+                                className={`absolute top-0 left-0 h-full bg-gradient-to-r ${progressBg}`}
+                                style={{ width: `${course.progress}%` }}
+                              />
+                            </div>
+                            <p className="mt-2 text-sm text-slate-700 font-medium">
+                              {course.progress}% Complete • {formatDuration(course.totalWatchTime)} watched
+                            </p>
                           </div>
 
                           <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>

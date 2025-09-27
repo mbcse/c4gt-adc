@@ -12,21 +12,25 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use((config) => {
-  if (!config.headers) config.headers = {} as AxiosRequestHeaders;
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response, 
   (error) => {
-    if (error.response?.status === 401) {
+    const isPublicPage = window.location.pathname === '/login' || window.location.pathname === '/signup';
+    
+    if (error.response?.status === 401 && !isPublicPage) {
       localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      window.location.href = '/login'; 
     }
     return Promise.reject(error);
   }

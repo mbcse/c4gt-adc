@@ -37,9 +37,9 @@ const Login: React.FC = () => {
     setError("");
     setIsLoading(true);
     try {
-      await login(form);
+      await login({ email: form.email, password: form.password });
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      setError(err.message || "Login failed. Please try again.");
       setIsLoading(false);
     }
   };
@@ -118,9 +118,6 @@ const Login: React.FC = () => {
                     className="w-24 h-auto mb-3 object-contain"
                     loading="lazy"
                   />
-                  <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl mb-2">
-                    <GraduationCap className="h-6 w-6 text-white" />
-                  </div>
                   <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Rohtak Guided Learning Tracker
                   </h1>
@@ -180,6 +177,13 @@ const Login: React.FC = () => {
                       </button>
                     </div>
                   </div>
+
+                  <div className="text-right">
+                    <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
+                      Forgot Password?
+                    </Link>
+                  </div>
+
 
                   <Button
                     type="submit"

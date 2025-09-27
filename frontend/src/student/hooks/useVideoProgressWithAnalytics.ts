@@ -123,6 +123,14 @@ export function useVideoProgressWithAnalytics({
               default:
                 setError(err.response.data?.error || 'Failed to save progress');
             }
+            useEffect(() => {
+              return () => {
+                if (updateTimeoutRef.current) {
+                  clearTimeout(updateTimeoutRef.current);
+                  updateTimeoutRef.current = undefined;
+                }
+              };
+            }, []);
             return;
           }
 
@@ -191,6 +199,9 @@ export function useVideoProgressWithAnalytics({
 
   const handlePlay = useCallback(
     (currentTime: number) => {
+      // Start new watch interval
+      const playTimestamp = Date.now();
+      pauseEventsRef.current.push([playTimestamp, null]);
       sendAnalyticsEvent("PLAY", { currentTime });
     },
     [sendAnalyticsEvent]
@@ -198,8 +209,15 @@ export function useVideoProgressWithAnalytics({
 
   const handlePause = useCallback(
     (currentTime: number) => {
-      const pauseEvent = { timestamp: Date.now(), currentTime };
-      pauseEventsRef.current.push(pauseEvent);
+      // Close last open interval
+      const pauseTimestamp = Date.now();
+      const intervals = pauseEventsRef.current;
+      for (let i = intervals.length - 1; i >= 0; i--) {
+        if (Array.isArray(intervals[i]) && intervals[i][1] === null) {
+          intervals[i][1] = pauseTimestamp;
+          break;
+        }
+      }
       sendAnalyticsEvent("PAUSE", { currentTime });
     },
     [sendAnalyticsEvent]
@@ -241,12 +259,22 @@ export function useVideoProgressWithAnalytics({
 
   // **Handle video ended event with immediate backend sync**
   const handleEnded = useCallback(async () => {
+    // Close any open intervals on video end
+    const endTimestamp = Date.now();
+    const intervals = pauseEventsRef.current;
+
+    intervals.forEach(interval => {
+      if (Array.isArray(interval) && interval[1] === null) {
+        interval[1] = endTimestamp;
+      }
+    });
+
     const finalProgress = {
       watchedPercentage: 100,
       isCompleted: true,
       totalWatchTime: duration,
       skipEvents: skipEventsRef.current,
-      pauseEvents: pauseEventsRef.current,
+      pauseEvents: intervals,
     };
 
     maxWatchedTimeRef.current = duration;
@@ -312,7 +340,54 @@ export function useVideoProgressWithAnalytics({
   const resetViolationState = useCallback(() => {
     setIsViolationActive(false);
     skipEventsRef.current = [];
+    // Close any open intervals when resetting violations
+    const resetTimestamp = Date.now();
+    pauseEventsRef.current.forEach(interval => {
+      if (Array.isArray(interval) && interval[1] === null) {
+        interval[1] = resetTimestamp;
+      }
+    });
   }, []);
+
+useEffect(() => {
+  const handleVisibilityChange = () => {
+    const now = Date.now();
+    
+    if (document.hidden) {
+      const intervals = pauseEventsRef.current;
+      for (let i = intervals.length - 1; i >= 0; i--) {
+        if (Array.isArray(intervals[i]) && intervals[i][1] === null) {
+          intervals[i][1] = now;
+          break;
+        }
+      }
+      sendAnalyticsEvent("TAB_HIDDEN", { timestamp: now });
+    } else {
+      pauseEventsRef.current.push([now, null]);
+      sendAnalyticsEvent("TAB_VISIBLE", { timestamp: now });
+    }
+  };
+
+  // Handle page unload/reload
+  const handleBeforeUnload = () => {
+    const now = Date.now();
+    // Close any open intervals before page unloads
+    pauseEventsRef.current.forEach(interval => {
+      if (Array.isArray(interval) && interval[1] === null) {
+        interval[1] = now;
+      }
+    });
+  };
+
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, [sendAnalyticsEvent]);
+
 
   return {
     progress,

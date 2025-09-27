@@ -1,6 +1,7 @@
 // controllers/userController.js
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
+const bcrypt = require("bcrypt");
 
 exports.getProfile = async (req, res) => {
   try {
@@ -98,4 +99,40 @@ exports.updateProfile = async (req, res) => {
     console.error("Failed to update profile", err);
     return res.status(500).json({ error: "Internal server error" });
   }
+};
+
+exports.changePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.userId;
+
+    if (!oldPassword || !newPassword) {
+        return res.status(400).json({ error: "Old and new passwords are required." });
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({ error: "New password must be at least 6 characters long." });
+    }
+
+    try {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Incorrect old password." });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedNewPassword },
+        });
+
+        res.status(200).json({ message: "Password changed successfully." });
+    } catch (error) {
+        console.error("Change password error:", error);
+        res.status(500).json({ error: "Failed to change password." });
+    }
 };

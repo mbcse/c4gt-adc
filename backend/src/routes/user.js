@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const requireAuth = require("../middlewares/requireAuth");
+const userController = require("../controllers/userController");
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
@@ -176,5 +177,7 @@ router.get("/profile", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch profile and recent activity" });
   }
 });
+
+router.post("/change-password", requireAuth, userController.changePassword);
 
 module.exports = router;

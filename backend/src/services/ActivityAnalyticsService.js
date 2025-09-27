@@ -25,17 +25,32 @@ class ActivityAnalyticsService {
 
       const watchLogs = await prisma.watchLog.findMany({
         where: { userId, updatedAt: { gte: startDate, lte: endDate } },
-        select: { totalWatchTime: true, updatedAt: true, isCompleted: true },
+        select: {
+          totalWatchTime: true,
+          updatedAt: true,
+          isCompleted: true,
+          pauseEvents: true
+        },
       });
 
       const activityMap = new Map();
       watchLogs.forEach((log) => {
-        const dateKey = log.updatedAt.toISOString().split('T')[0];
-        if (!activityMap.has(dateKey)) {
-          activityMap.set(dateKey, { date: dateKey, studyTime: 0, lessons: 0, intensity: 0 });
+        const dateStr = log.updatedAt.toISOString().split('T')[0];
+        const dayStart = new Date(dateStr + 'T00:00:00.000Z');
+        const dayEnd = new Date(dateStr + 'T23:59:59.999Z');
+
+        if (!activityMap.has(dateStr)) {
+          activityMap.set(dateStr, { date: dateStr, studyTime: 0, lessons: 0, intensity: 0 });
         }
-        const activity = activityMap.get(dateKey);
-        activity.studyTime += log.totalWatchTime / 3600;
+        const activity = activityMap.get(dateStr);
+
+        if (log.pauseEvents && Array.isArray(log.pauseEvents)) {
+          const intervalTime = this.calculateIntervalWatchTime(log.pauseEvents, dayStart, dayEnd);
+          activity.studyTime += intervalTime / 3600; // Convert to hours
+        } else {
+          activity.studyTime += log.totalWatchTime / 3600;
+        }
+
         if (log.isCompleted) activity.lessons++;
       });
 
@@ -58,7 +73,18 @@ class ActivityAnalyticsService {
       const activityByDayOfWeek = new Array(7).fill(0);
       watchLogs.forEach(log => {
         const dayOfWeek = (log.updatedAt.getDay() + 6) % 7;
-        activityByDayOfWeek[dayOfWeek] += log.totalWatchTime;
+
+        if (log.pauseEvents && Array.isArray(log.pauseEvents)) {
+          const dayStart = new Date(log.updatedAt);
+          dayStart.setHours(0, 0, 0, 0);
+          const dayEnd = new Date(log.updatedAt);
+          dayEnd.setHours(23, 59, 59, 999);
+
+          const intervalTime = this.calculateIntervalWatchTime(log.pauseEvents, dayStart, dayEnd);
+          activityByDayOfWeek[dayOfWeek] += intervalTime;
+        } else {
+          activityByDayOfWeek[dayOfWeek] += log.totalWatchTime;
+        }
       });
 
       return {
@@ -199,6 +225,34 @@ class ActivityAnalyticsService {
       return "N/A";
     }
   }
+
+  // Helper function to calculate total watch time from intervals
+  calculateIntervalWatchTime(intervals, startDate, endDate) {
+    if (!Array.isArray(intervals)) return 0;
+
+    let totalTime = 0;
+    const start = startDate.getTime();
+    const end = endDate.getTime();
+
+    intervals.forEach(interval => {
+      if (!Array.isArray(interval) || interval.length < 2) return;
+
+      const [playTime, pauseTime] = interval;
+      if (!playTime || !pauseTime) return; // Skip incomplete intervals
+
+      // Calculate overlap with the date range
+      const overlapStart = Math.max(playTime, start);
+      const overlapEnd = Math.min(pauseTime, end);
+
+      if (overlapStart < overlapEnd) {
+        totalTime += (overlapEnd - overlapStart) / 1000; // Convert to seconds
+      }
+    });
+
+    return totalTime;
+  }
+
+
 }
 
 module.exports = new ActivityAnalyticsService();
