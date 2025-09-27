@@ -43,75 +43,59 @@ class CompletionService {
       const allCourseIds = Array.from(enrolledCoursesMap.values()).flatMap(courseMap => Array.from(courseMap.keys()));
       const uniqueCourseIds = [...new Set(allCourseIds)];
 
-      const [watchLogs, quizAttempts, coursesWithStructure] = await Promise.all([
-        prisma.watchLog.findMany({
+      const [videoProgress, quizProgress, courseStructures] = await Promise.all([
+        // Aggregate completed videos per student per course
+        prisma.watchLog.groupBy({
+          by: ['userId', 'videoId'],
           where: { userId: { in: studentIds }, isCompleted: true, ...(dateFilter && { updatedAt: dateFilter }) },
-          select: { userId: true, videoId: true }
+          _count: { videoId: true }
         }),
-        prisma.quizAttempt.findMany({
-          where: { userId: { in: studentIds }, ...(dateFilter && { completedAt: dateFilter }) },
-          select: { userId: true, quizId: true }
+        // Aggregate completed quizzes per student per course
+        prisma.quizAttempt.groupBy({
+            by: ['userId', 'quizId'],
+            where: { userId: { in: studentIds }, ...(dateFilter && { completedAt: dateFilter }) },
+            _count: { quizId: true }
         }),
+        // Get course structures
         prisma.course.findMany({
-          where: { id: { in: uniqueCourseIds } },
-          include: {
-            courseVideos: {
-              include: {
-                video: {
-                  select: {
-                    id: true,
-                    quiz: {
-                      select: {
-                        id: true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+          where: { id: { in: allCourseIds } },
+          include: { courseVideos: { select: { video: { select: { id: true, quiz: { select: { id: true } } } } } } }
         })
       ]);
 
-      const courseStructureMap = new Map(coursesWithStructure.map(c => [c.id, c]));
-
+      const courseStructureMap = new Map();
+      courseStructures.forEach(c => {
+        courseStructureMap.set(c.id, {
+          totalVideos: c.courseVideos.length,
+          totalQuizzes: c.courseVideos.filter(cv => cv.video.quiz).length,
+          videoIds: new Set(c.courseVideos.map(cv => cv.video.id)),
+          quizIds: new Set(c.courseVideos.map(cv => cv.video.quiz?.id).filter(Boolean)),
+        });
+      });
+      
       const studentsWithProgress = students.map(student => {
         const studentEnrolledCourses = Array.from((enrolledCoursesMap.get(student.id) || new Map()).values());
-
+        
         const courseProgress = studentEnrolledCourses.map(enrolledCourse => {
-          const course = courseStructureMap.get(enrolledCourse.courseId);
-          if (!course) return null;
+          const structure = courseStructureMap.get(enrolledCourse.courseId);
+          if (!structure) return null;
 
-          const courseVideos = course.courseVideos.map(cv => cv.video);
-          const courseVideoIds = new Set(courseVideos.map(v => v.id));
-
-          const courseQuizIds = new Set(courseVideos.map(v => v.quiz?.id).filter(Boolean));
-
-          const completedVideos = watchLogs.filter(log => log.userId === student.id && courseVideoIds.has(log.videoId)).length;
-          const completedQuizzes = quizAttempts.filter(att => att.userId === student.id && courseQuizIds.has(att.quizId)).length;
-
-          const totalVideos = courseVideoIds.size;
-          const totalQuizzes = courseQuizIds.size;
-
-          const videoCompletionRate = totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;
-          const quizCompletionRate = totalQuizzes > 0 ? (completedQuizzes / totalQuizzes) * 100 : 100;
-
-          const overallCompletionRate = totalQuizzes > 0
-            ? (videoCompletionRate * 0.7) + (quizCompletionRate * 0.3)
-            : videoCompletionRate;
+          const completedVideos = videoProgress.filter(p => p.userId === student.id && structure.videoIds.has(p.videoId)).length;
+          const completedQuizzes = quizProgress.filter(p => p.userId === student.id && structure.quizIds.has(p.quizId)).length;
+          
+          const videoCompletionRate = structure.totalVideos > 0 ? (completedVideos / structure.totalVideos) * 100 : 0;
+          const quizCompletionRate = structure.totalQuizzes > 0 ? (completedQuizzes / structure.totalQuizzes) * 100 : 100;
+          const overallCompletionRate = structure.totalQuizzes > 0 ? (videoCompletionRate * 0.7) + (quizCompletionRate * 0.3) : videoCompletionRate;
 
           return {
-            courseId: course.id,
-            courseTitle: course.title,
+            courseId: enrolledCourse.courseId,
+            courseTitle: enrolledCourse.courseTitle,
             completionRate: Math.round(overallCompletionRate),
             isCompleted: overallCompletionRate >= 95
           };
         }).filter(Boolean);
 
-        return {
-          ...student,
-          courseProgress
-        };
+        return { ...student, courseProgress };
       });
 
       return {

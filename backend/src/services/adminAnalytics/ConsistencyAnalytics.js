@@ -1,4 +1,4 @@
-const { PrismaClient } = require("../../../generated/prisma");
+const { PrismaClient, Prisma } = require("../../../generated/prisma");
 const prisma = new PrismaClient();
 
 const { buildUserFilter, buildDateFilter } = require('../../utils/filterUtils');
@@ -15,43 +15,54 @@ class ConsistencyService {
   async getConsistencyRates(filters = {}, user) {
     try {
       const userFilter = await buildUserFilter(filters, user);
-      const dateFilter = buildDateFilter(filters);
-
+      
       const students = await prisma.user.findMany({
         where: userFilter,
         include: {
-          watchLogs: {
-            where: dateFilter ? { updatedAt: dateFilter } : undefined,
-            select: { updatedAt: true, totalWatchTime: true }
-          },
           grade: true,
-          organizationUnit: {
-            include: {
-              parent: true
-            }
-          }
+          organizationUnit: { include: { parent: true } }
         }
       });
 
+      if (students.length === 0) {
+        return {
+          byGrade: [], bySchool: [], byBlock: [],
+          overall: { totalStudents: 0, avgConsistency: 0 },
+          individual: []
+        };
+      }
+
+      const studentIds = students.map(s => s.id);
+      
+      let startDate, endDate;
+      if (filters.startDate && filters.endDate) {
+          startDate = new Date(filters.startDate);
+          endDate = new Date(filters.endDate);
+      } else {
+          const firstLog = await prisma.watchLog.findFirst({
+              where: { userId: { in: studentIds } },
+              orderBy: { updatedAt: 'asc' },
+              select: { updatedAt: true }
+          });
+          startDate = firstLog ? firstLog.updatedAt : new Date();
+          endDate = new Date();
+      }
+
+      const totalDays = Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)));
+
+      const activeDaysResult = await prisma.$queryRaw`
+        SELECT userId, COUNT(DISTINCT DATE(updatedAt)) as activeDays
+        FROM WatchLog
+        WHERE userId IN (${Prisma.join(studentIds)})
+        AND updatedAt >= ${startDate}
+        AND updatedAt <= ${endDate}
+        GROUP BY userId
+      `;
+      
+      const activeDaysMap = new Map(activeDaysResult.map(r => [r.userId, Number(r.activeDays)]));
+
       const consistencyData = students.map(student => {
-        const logs = student.watchLogs;
-
-        // Group activity by date
-        const dailyActivity = new Map();
-        logs.forEach(log => {
-          const date = log.updatedAt.toISOString().split('T')[0];
-          if (!dailyActivity.has(date)) {
-            dailyActivity.set(date, 0);
-          }
-          dailyActivity.set(date, dailyActivity.get(date) + log.totalWatchTime);
-        });
-
-        const activeDays = dailyActivity.size;
-        // Calculate total days in the filtered period, default to 30
-        const totalDays = (filters.startDate && filters.endDate)
-          ? Math.ceil((new Date(filters.endDate) - new Date(filters.startDate)) / (1000 * 60 * 60 * 24))
-          : 30;
-
+        const activeDays = activeDaysMap.get(student.id) || 0;
         const consistencyRate = totalDays > 0 ? (activeDays / totalDays) * 100 : 0;
 
         return {
@@ -66,7 +77,6 @@ class ConsistencyService {
         };
       });
 
-      // Aggregate consistency rates
       return {
         byGrade: aggregateConsistencyByGrade(consistencyData),
         bySchool: aggregateConsistencyBySchool(consistencyData),

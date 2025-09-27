@@ -1,0 +1,822 @@
+[
+  {
+    "name": "GMSSSS LAKHANMAJRA",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GSSS SUNDERPUR",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GGSSS Lakhan Majra",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GGSSS BAINSI",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GHS Chandi",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GGSSS Chandi",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GSSS Chiri",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GGSSS Chiri",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GSSS Gharawathi",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GGSSS KHARAINTI",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GSSS KHARAK JATAN",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GHS BAINSI",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GHS Gugaheri",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "PM SHRI GSSS TITOLI",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GSSS KHARANTI",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "GHS NANDAL",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "Gms sisroli",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "Gms indergarh",
+    "type": "SCHOOL",
+    "parentId": 3
+  },
+  {
+    "name": "G.S.S.S.Anwal",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Baniyani",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.G.S.S.S.Baniyani",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Bhalianandpur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Garnawthi",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S Gudhan",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S Kahanaur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.G.S.S.S Kahanaur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.M.S.S.S.S.Kalanaur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.G.S.S.S.Kalanaur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Katesra",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Lahli",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Marodhijattan",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Nigana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Sundana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S Saimpal",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Kakrana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S Kherari",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S.Pilana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.S.S.S. Sangahera",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.G.H.S.Anwal",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Basana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Ballab",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Garhiballab",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Jindran",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Masudpur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.H.S.Patwapur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.G.H.S.Sundana",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.M.S. Kalanaur Kalan",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "G.M. S Jethpur",
+    "type": "SCHOOL",
+    "parentId": 4
+  },
+  {
+    "name": "GGMS Ajaib",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GMS Bhaini Surjan",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GMS Bedwa",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGMS Farmana B. Pur",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGMS Farmana New",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GMS Imligarh",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGMS Madina",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GMS Mokhra Kheri Roz",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGHS Bharan",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GHS Bhaini Bharon",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGHS BHAINI MATO",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGHS GORAWAR",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GHS KHARKARA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GHS MURADPUR TEKNA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS Bhaini Maharajpur",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS AJAIB",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS BEHLBA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS BEHLBA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS BHAINI CHANDERPAL",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS BHARAN",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS FARMANA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS FARMANA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS GORAWAR",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS KHARKARA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS Kheri Meham",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS Kishan Garh",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS MADINA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS MADINA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS MEHAM",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS MEHAM",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS MOKHRA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS MOKHRA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS NARAINA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS NINDANA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS NINDANA",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS SAIMAN",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS SAIMAN",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GSSS SISAR KHAS",
+    "type": "SCHOOL",
+    "parentId": 5
+  },
+  {
+    "name": "GGSSS ASSAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS BAHUAKBERPUR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS BALAND",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS BHALOUT",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS BOHAR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS GANDHI NAGAR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS HISSAR ROAD",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS KANSALA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS KARONTHA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS KHIDWALI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS MAINA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS MODEL TOWN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS RURKI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GMSSS SANGHI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GMSSSS BHIWANI ROAD RTK",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS ASSAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BAHUAKBERPUR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BAKEHTA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BHAGWATIPUR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BHALOUT",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BRAHMANWAS",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS CHAMARIAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS DHAMAR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS DOBH",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS GADDI KHERI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS GANDHI NAGAR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS GHILOUR KALAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS HAMAYUPUR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS JASSIA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS KAHNI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS KARONTHA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS KHIDWALI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GGSSS KILOI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS LADHOUT",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS MAKRAULI KALAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS MUNGAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS PEHRAWAR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS RITAULI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS RITHAL",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS RURKEE",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS SAMARGOPALPUR",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS SANGHI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS SINGHPURA KHURD",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS SUNARIAN",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS KILOI",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS SUKHPURA",
+    "type": "SCHOOL",
+    "parentId": 6
+  },
+  {
+    "name": "GSSS BALIANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS CHULIANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS DATTAUR",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS HASSANGARH",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS ISMAILA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS KHARAWAR",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS KHERI SADH",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS MORKHERI",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS PAKASMA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS PAKASMA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS SAMPLA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS SAMCHANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS SAMPLA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS KHARAWAR",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS ATAIL",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS ISMAILA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS GANDHRA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGSSS GANDHRA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GSSS KAROR",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS HASSANGARH",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS KULTANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS NAYA BANS",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS NONAND",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGHS ATAIL",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGHS BALIANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS GARHI SAMPLA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGHS SAMCHANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGHS GIJHI",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS GIJHI",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS B.KALAN",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GHS B.KHURD",
+    "type": "SCHOOL",
+    "parentId": 7
+  },
+  {
+    "name": "GGHS CHULIANA",
+    "type": "SCHOOL",
+    "parentId": 7
+  }
+]

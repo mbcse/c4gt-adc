@@ -37,7 +37,7 @@ export default function VideoPage() {
       try {
         setIsLoading(true);
         setError(null);
-        const { videos } = await videoAPI.getCourseVideos(Number(courseId));
+        const { videos } = await videoAPI.getCourseVideos(Number(courseId), 1, 1000);
         setVideos(Array.isArray(videos) ? videos : []);
         if (videoId) {
           const foundVideo = videos.find((v) => v.id.toString() === videoId);

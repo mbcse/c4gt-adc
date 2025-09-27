@@ -63,7 +63,7 @@ backend/
 - PostgreSQL (v13 or higher)
 - npm or yarn
 
-### Installation
+### Installation (Local Dev)
 
 1. **Install dependencies**
    ```bash
@@ -115,6 +115,13 @@ EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
 EMAIL_USER="your-email@gmail.com"
 EMAIL_PASS="your-app-password"
+```
+
+When running in Docker, prefer:
+```env
+NODE_ENV=production
+PORT=5000
+DATABASE_URL="database_conn_string"
 ```
 
 ## Core Modules
@@ -189,7 +196,6 @@ The routing system follows a modular approach with clear separation of concerns:
 #### 6. Analytics Routes (`/api/analytics/*`)
 - **Student Analytics**: Comprehensive student performance metrics
 - **Activity Tracking**: Study patterns and trends
-- **Event Logging**: Real-time activity event logging
 
 #### 7. Quiz Routes (`/api/quizzes/*`)
 - **Quiz Management**: Quiz listing and attempts
@@ -323,13 +329,6 @@ External API integration for video management:
 - **Playlist Management**: Playlist parsing and video extraction
 - **Duration Parsing**: ISO 8601 duration format handling
 - **Thumbnail Generation**: Video thumbnail URL generation
-
-### Event Logger Service (`eventLoggerService.js`)
-Real-time activity tracking:
-
-- **Progress Events**: Video watch progress logging
-- **Session Tracking**: User session management
-- **Device Detection**: Multi-device session handling
 
 ### Video Helper Service (`videoHelper.js`)
 - **VideoHelper**: Video processing and validation utilities
@@ -482,13 +481,19 @@ GET /api/courses/:courseId    # Course details
 
 ### Analytics Endpoints
 ```
-GET  /api/analytics/student/summary                    # Student summary
-GET  /api/analytics/student/activity-trends            # Activity trends
-GET  /api/analytics/student/course-progress            # Course progress
-GET  /api/analytics/student/quiz-analytics             # Quiz analytics
-POST /api/analytics/event                              # Event logging
-GET  /api/analytics/student/activity-calendar          # Activity calendar
-GET  /api/analytics/student/study-time-patterns        # Study patterns
+GET  /api/analytics/student/summary                                # Student summary
+GET  /api/analytics/student/activity-trends                        # Activity trends
+GET  /api/analytics/student/course-progress                        # Course progress
+GET  /api/analytics/student/quiz-analytics                         # Quiz analytics
+GET  /api/analytics/student/course-completion                      # Course completion stats
+GET  /api/analytics/student/activity-calendar                      # Activity calendar
+GET  /api/analytics/student/study-time-patterns                    # Study patterns
+GET  /api/analytics/student/lesson-completion-patterns             # Lesson completion patterns
+GET  /api/analytics/student/available-courses                      # Available courses for student
+GET  /api/analytics/student/course-video-progress/:courseId        # Video progress for course
+GET  /api/analytics/student/course-quiz-analytics[?courseId]       # Quiz analytics per course/all
+GET  /api/analytics/student/detailed-quiz-performance[?courseId]   # Detailed quiz performance
+GET  /api/analytics/student/peak-study-hours                       # Peak study hours
 ```
 
 ### Quiz Endpoints
@@ -638,6 +643,43 @@ CORS_ORIGIN=https://your-frontend-domain.com
 PORT=5000
 ```
 
+## Docker Usage
+
+The backend includes a `Dockerfile` for containerized deployment:
+
+1. Build the image:
+   ```bash
+   docker build -t adc-backend ./backend
+   ```
+2. Run the container:
+   ```bash
+   docker run -p 5000:5000 --env-file ./backend/.env adc-backend
+   ```
+
+Alternatively, use the root `docker-compose.yml` to run backend and frontend together. Ensure `backend/.env` contains a valid `DATABASE_URL` and production-ready settings.
+
+## Data Seeding via Admin APIs
+
+Scripts in `scripts/` help bootstrap metadata, org units, and courses. Replace `admin_token_here` with a valid Admin JWT before running.
+
+- Seed metadata:
+  ```bash
+  node scripts/seedMetadata.js
+  ```
+- Seed org units sequentially:
+  ```bash
+  node scripts/seedOrgUnits.js scripts/1-state.json
+  node scripts/seedOrgUnits.js scripts/2-district.json
+  node scripts/seedOrgUnits.js scripts/3-blocks.json
+  node scripts/seedOrgUnits.js scripts/4-schools.json
+  ```
+- Bulk add courses from YouTube playlists:
+  ```bash
+  node scripts/bulkAddCourses.js
+  ```
+
+Ensure the backend is running at `http://localhost:5000` or adjust the script base URLs accordingly.
+
 ## API Documentation
 
 ### Error Handling
@@ -679,6 +721,7 @@ List endpoints support pagination:
   }
 }
 ```
+
 ## Monitoring & Analytics
 
 ### Health Monitoring

@@ -8,5 +8,6 @@ router.get('/', requireAuth, requireRole(['ADMIN', 'SUPERADMIN']), adminUsersCon
 router.post('/', requireAuth, requireRole(['ADMIN', 'SUPERADMIN']), adminUsersController.createUser);
 router.put('/:id/role', requireAuth, requireRole(['SUPERADMIN']), adminUsersController.updateUserRole);
 router.delete('/:id', requireAuth, requireRole(['ADMIN', 'SUPERADMIN']), adminUsersController.deleteUser);
+router.post('/organization-units', requireAuth, requireRole(['ADMIN', 'SUPERADMIN']), adminUsersController.createOrganizationUnit);
 
 module.exports = router;

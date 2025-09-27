@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: databse_conn_string # Replace with actual connection string
+      NODE_ENV: "production"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend_app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend

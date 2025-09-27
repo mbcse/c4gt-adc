@@ -54,7 +54,7 @@ The Rohtak Guided Learning Tracker is a modern educational platform built with a
                                 │
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     Database Layer (PostgreSQL)                 │
+│                     Database Layer (Prisma ORM)                 │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐│
 │  │    User     │ │   Course    │ │   Video     │ │  Analytics  ││
 │  │ Management  │ │ Management  │ │ Tracking    │ │    Data     ││
@@ -122,7 +122,7 @@ c4gt-adc/
 - PostgreSQL (v13 or higher)
 - npm or yarn package manager
 
-### Installation
+### Installation (Local Dev)
 
 1. **Clone the repository**
    ```bash
@@ -151,6 +151,23 @@ c4gt-adc/
 4. **Access the Application**
    - Frontend: http://localhost:8080
    - Backend API: http://localhost:5000
+
+### Run with Docker Compose (Production-like)
+
+1. Create environment files:
+   - Backend: `backend/.env` (see Backend Environment Variables below; set `DATABASE_URL` to a reachable database instance)
+   - Frontend: `frontend/.env` (e.g., `VITE_API_URL=http://localhost:5000`)
+
+2. Build and start services:
+   ```bash
+   docker compose up -d --build
+   ```
+
+3. Access:
+   - Frontend: http://localhost:8080
+   - Backend API: http://localhost:5000
+
+Note: The compose file expects an external database via `DATABASE_URL`. Provide valid credentials in `backend/.env` or compose `environment`.
 
 ## 🔧 Environment Configuration
 
@@ -182,6 +199,8 @@ EMAIL_PORT=587
 EMAIL_USER=user@example.com
 EMAIL_PASS=your_smtp_app_password
 ```
+
+When running via Docker, set `NODE_ENV=production` and ensure `DATABASE_URL` points to a production-ready database service.
 
 ### Frontend Environment Variables
 ```env
@@ -234,6 +253,35 @@ VITE_ENVIRONMENT=development
 - **Course Analytics**: Course completion rates and engagement statistics
 - **Organizational Analytics**: District and school-level performance insights
 - **Real-time Reporting**: Live updates on learning progress and engagement
+
+## Data Seeding Scripts
+
+Located in `backend/scripts/` and powered by admin APIs. Replace `admin_token_here` in the scripts with a valid Admin JWT before running.
+
+- Seed metadata (categories, tags, skill levels, grades, languages):
+  ```bash
+  cd backend
+  node scripts/seedMetadata.js
+  ```
+
+- Seed organization units level-by-level using provided JSON files:
+  ```bash
+  cd backend
+  node scripts/seedOrgUnits.js scripts/1-state.json
+  node scripts/seedOrgUnits.js scripts/2-district.json
+  node scripts/seedOrgUnits.js scripts/3-blocks.json
+  node scripts/seedOrgUnits.js scripts/4-schools.json
+  ```
+
+- Bulk add courses from YouTube playlists:
+  - Prepare `backend/scripts/courses.json` with IDs from metadata and tags
+  - Run:
+  ```bash
+  cd backend
+  node scripts/bulkAddCourses.js
+  ```
+
+These scripts call the running backend at `http://localhost:5000`. Ensure the server is up and your Admin token is valid.
 
 ## Security Features
 

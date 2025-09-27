@@ -1,52 +1,73 @@
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
+function calculateIntervalWatchTime(log, startDate, endDate) {
+  const intervals = log.pauseEvents;
+  if (!Array.isArray(intervals)) return 0;
+
+  let totalTime = 0;
+  const start = startDate.getTime();
+  const end = endDate.getTime();
+
+  intervals.forEach(interval => {
+    if (!Array.isArray(interval) || interval.length === 0) return;
+    const [playTime, rawPauseTime] = interval;
+    const pauseTime = rawPauseTime === null ? new Date(log.updatedAt).getTime() : rawPauseTime;
+
+    if (!playTime || !pauseTime) return;
+
+    const overlapStart = Math.max(playTime, start);
+    const overlapEnd = Math.min(pauseTime, end);
+
+    if (overlapStart < overlapEnd) {
+      totalTime += (overlapEnd - overlapStart) / 1000; // to seconds
+    }
+  });
+  return totalTime;
+}
+
 class CoreAnalyticsService {
-async getStudentSummary(userId) {
+  async getStudentSummary(userId) {
     try {
-      const watchStats = await prisma.watchLog.aggregate({
-        where: { userId },
-        _sum: { totalWatchTime: true },
-        _count: { id: true },
-      });
+      const [watchStats, completedVideosCount, quizStats, activityData, courseCounts, nextLesson] = await Promise.all([
 
-      const completedVideos = await prisma.watchLog.count({
-        where: { userId, isCompleted: true },
-      });
+        prisma.watchLog.aggregate({
+          where: { userId },
+          _sum: { totalWatchTime: true },
+        }),
 
-      const quizStats = await prisma.quizAttempt.aggregate({
-        where: { userId },
-        _avg: { score: true },
-        _count: { id: true },
-      });
+        prisma.watchLog.count({
+          where: { userId, isCompleted: true },
+        }),
 
-      const totalQuizzes = quizStats._count.id || 0;
-      
-      const activityData = await this.calculateStreak(userId);
-
-      const { startedCourses, completedCourses } = await this.getCourseCounts(userId);
-
-      const [
-        nextLesson
-      ] = await Promise.all([
+        prisma.quizAttempt.aggregate({
+          where: { userId },
+          _avg: { score: true },
+          _count: { id: true },
+        }),
+        
+        this.calculateStreak(userId),
+        
+        this.getCourseCounts(userId),
+        
         this.getNextLesson(userId)
       ]);
 
+      const { startedCourses, completedCourses } = courseCounts;
       const totalTimeInHours = (watchStats._sum.totalWatchTime || 0) / 3600;
-      const totalStudyTime = Math.round(totalTimeInHours * 100) / 100;
 
       return {
-        totalStudyTime: totalStudyTime,
-        totalLessons: completedVideos,
-        currentStreak: activityData.current,            
-        longestStreak: activityData.longest,   
+        totalStudyTime: Math.round(totalTimeInHours * 100) / 100,
+        totalLessons: completedVideosCount,
+        currentStreak: activityData.current,
+        longestStreak: activityData.longest,
         averageQuizScore: Math.round((quizStats._avg.score || 0) * 10) / 10,
-        totalQuizzes,
+        totalQuizzes: quizStats._count.id || 0,
         enrolledCourses: startedCourses,
         completedCourses,
         completionRate: startedCourses > 0 ? Math.round((completedCourses / startedCourses) * 100) : 0,
-        lessonsCompletedThisWeek: activityData.lessonsCompletedThisWeek, 
-        studyTimeThisWeek: activityData.studyTimeThisWeek, 
+        lessonsCompletedThisWeek: activityData.lessonsCompletedThisWeek,
+        studyTimeThisWeek: activityData.studyTimeThisWeek,
         nextLesson: nextLesson
       };
     } catch (error) {
@@ -65,7 +86,7 @@ async getStudentSummary(userId) {
 
       const assignedCourseIds = assignedCourses.map(a => a.courseId);
 
-      // Get courses where user has watch logs (even if not assigned)
+      // Get courses where user has watch logs 
       const watchedCourses = await prisma.watchLog.findMany({
         where: { userId },
         include: {
@@ -149,27 +170,30 @@ async getStudentSummary(userId) {
     }
   }
 
-async calculateStreak(userId) {
+  async calculateStreak(userId) {
     try {
       const logs = await prisma.watchLog.findMany({
         where: { userId },
-        select: { updatedAt: true, totalWatchTime: true, isCompleted: true },
+        select: { updatedAt: true, isCompleted: true, pauseEvents: true },
         orderBy: { updatedAt: "desc" },
       });
 
       const activityDaySet = new Set(
-        logs.map((log) => log.updatedAt.toISOString().split("T")[0])
+        logs.map((log) => {
+          const logDate = new Date(log.updatedAt);
+          return `${logDate.getFullYear()}-${String(logDate.getMonth() + 1).padStart(2, '0')}-${String(logDate.getDate()).padStart(2, '0')}`;
+        })
       );
-      
+
       let currentStreak = 0;
       let longestStreak = 0, tempStreak = 1;
       const today = new Date();
       let checkDate = new Date(today);
-      while (activityDaySet.has(checkDate.toISOString().split("T")[0])) {
+      while (activityDaySet.has(`${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`)) {
         currentStreak++;
         checkDate.setDate(checkDate.getDate() - 1);
       }
-      const activityDays = Array.from(activityDaySet).sort().reverse(); 
+      const activityDays = Array.from(activityDaySet).sort().reverse();
       for (let i = 0; i < activityDays.length - 1; i++) {
         const date1 = new Date(activityDays[i]);
         const date2 = new Date(activityDays[i + 1]);
@@ -181,18 +205,21 @@ async calculateStreak(userId) {
       }
       longestStreak = Math.max(longestStreak, tempStreak);
 
-      
+
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      sevenDaysAgo.setHours(0, 0, 0, 0); 
-      
-      const weeklyLogs = logs.filter(log => log.updatedAt >= sevenDaysAgo); 
+      sevenDaysAgo.setHours(0, 0, 0, 0);
+
+      const weeklyLogs = logs.filter(log => new Date(log.updatedAt) >= sevenDaysAgo);
 
       const lessonsCompletedThisWeek = weeklyLogs.filter(log => log.isCompleted).length;
-      const studyTimeInSeconds = weeklyLogs.reduce((sum, log) => sum + log.totalWatchTime, 0);
 
-      const studyTimeInHours = studyTimeInSeconds / 3600;
-      const studyTimeThisWeek = Math.round((studyTimeInSeconds / 60) * 10) / 10;
+    let studyTimeInSeconds = 0;
+      weeklyLogs.forEach(log => {
+        studyTimeInSeconds += calculateIntervalWatchTime(log, sevenDaysAgo, new Date());
+      });
+
+      const studyTimeThisWeek = Math.round((studyTimeInSeconds / 3600) * 10) / 10;
 
       return {
         current: currentStreak,
@@ -200,7 +227,7 @@ async calculateStreak(userId) {
         lessonsCompletedThisWeek,
         studyTimeThisWeek,
       };
-      
+
     } catch (error) {
       console.error("Error calculating streak and weekly stats:", error);
       return { current: 0, longest: 0, lessonsCompletedThisWeek: 0, studyTimeThisWeek: 0 };

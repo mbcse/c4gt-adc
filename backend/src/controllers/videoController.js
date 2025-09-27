@@ -12,7 +12,7 @@ const ANTI_GAMING_CONFIG = {
 
 const validateProgressIntegrity = (current, previous, video, realTimeElapsed) => {
   const issues = [];
-  
+
   // Speed validation 
   const watchTimeIncrease = current.totalWatchTime - (previous?.totalWatchTime || 0);
   if (realTimeElapsed > ANTI_GAMING_CONFIG.MIN_UPDATE_INTERVAL && watchTimeIncrease > 0) {
@@ -25,7 +25,7 @@ const validateProgressIntegrity = (current, previous, video, realTimeElapsed) =>
       });
     }
   }
-  
+
   // Large skip detection
   const skipDistance = Math.abs(current.totalWatchTime - (previous?.totalWatchTime || 0));
   if (skipDistance > ANTI_GAMING_CONFIG.SUSPICIOUS_SKIP_THRESHOLD && realTimeElapsed < 10) {
@@ -35,7 +35,7 @@ const validateProgressIntegrity = (current, previous, video, realTimeElapsed) =>
       threshold: ANTI_GAMING_CONFIG.SUSPICIOUS_SKIP_THRESHOLD
     });
   }
-  
+
   // Duration overflow
   if (current.totalWatchTime > video.duration * 1.05) {
     issues.push({
@@ -44,7 +44,7 @@ const validateProgressIntegrity = (current, previous, video, realTimeElapsed) =>
       videoDuration: video.duration
     });
   }
-  
+
   return issues;
 };
 
@@ -120,11 +120,11 @@ const getCourseVideos = async (req, res) => {
         hasQuiz: true,
         isUnlocked: cv.video.watchLogs[0]?.isCompleted || false,
         attemptCount: cv.video.quiz.attempts?.length || 0,
-        bestScore: cv.video.quiz.attempts?.length > 0 
-          ? Math.max(...cv.video.quiz.attempts.map(a => a.score)) 
+        bestScore: cv.video.quiz.attempts?.length > 0
+          ? Math.max(...cv.video.quiz.attempts.map(a => a.score))
           : 0,
-        lastAttempt: cv.video.quiz.attempts?.length > 0 
-          ? cv.video.quiz.attempts[cv.video.quiz.attempts.length - 1] 
+        lastAttempt: cv.video.quiz.attempts?.length > 0
+          ? cv.video.quiz.attempts[cv.video.quiz.attempts.length - 1]
           : null
       } : { hasQuiz: false }
     }));
@@ -182,7 +182,7 @@ const getVideo = async (req, res) => {
       return res.status(404).json({ error: 'Video not found' });
     }
 
-    const isAssigned = video.courseVideos.some(cv => 
+    const isAssigned = video.courseVideos.some(cv =>
       cv.course.assignments.some(a => a.userId === userId)
     );
 
@@ -283,55 +283,59 @@ const updateProgress = async (req, res) => {
       isCompleted
     };
 
-    const validationIssues = validateProgressIntegrity(
-      currentProgress,
-      existingLog,
-      video,
-      realTimeElapsed
-    );
+    const skipValidation = pauseEvents && pauseEvents.length > 0 &&
+      pauseEvents.some(event => event[1] !== null);
 
-    // Handle violations 
-    if (validationIssues.length > 0) {
-      const speedViolation = validationIssues.find(issue => issue.type === 'SPEED_VIOLATION');
-      const skipViolation = validationIssues.find(issue => issue.type === 'LARGE_SKIP');
-      const overflowViolation = validationIssues.find(issue => issue.type === 'DURATION_OVERFLOW');
+    if (!skipValidation) {
+      const validationIssues = validateProgressIntegrity(
+        currentProgress,
+        existingLog,
+        video,
+        realTimeElapsed
+      );
 
-      if (speedViolation) {
-        return res.status(400).json({
-          error: `Playback speed too high (${speedViolation.detectedSpeed.toFixed(2)}x). Please watch at normal speed (max 1.5x) for effective learning.`,
-          code: 'SPEED_VIOLATION',
-          details: {
-            detectedSpeed: speedViolation.detectedSpeed,
-            maxAllowed: 1.5,
-          }
-        });
+      // Handle violations 
+      if (validationIssues.length > 0) {
+        const speedViolation = validationIssues.find(issue => issue.type === 'SPEED_VIOLATION');
+        const skipViolation = validationIssues.find(issue => issue.type === 'LARGE_SKIP');
+        const overflowViolation = validationIssues.find(issue => issue.type === 'DURATION_OVERFLOW');
+
+        if (speedViolation) {
+          return res.status(400).json({
+            error: `Playback speed too high (${speedViolation.detectedSpeed.toFixed(2)}x). Please watch at normal speed (max 1.5x) for effective learning.`,
+            code: 'SPEED_VIOLATION',
+            details: {
+              detectedSpeed: speedViolation.detectedSpeed,
+              maxAllowed: 1.5,
+            }
+          });
+        }
+
+        if (overflowViolation) {
+          return res.status(400).json({
+            error: 'Watch time cannot exceed video duration. Please watch the video normally.',
+            code: 'DURATION_OVERFLOW'
+          });
+        }
+
+        if (skipViolation) {
+          return res.status(400).json({
+            error: 'Excessive skipping detected. Please watch the video sequentially for better learning.',
+            code: 'EXCESSIVE_SKIPPING',
+            details: {
+              skipDistance: skipViolation.skipDistance,
+            }
+          });
+        }
+
+        // For first-time or minor violations, just warn but continue
+        console.warn(`Minor violation for user ${userId}, video ${videoId}:`, validationIssues[0].type);
       }
-
-      if (overflowViolation) {
-        return res.status(400).json({
-          error: 'Watch time cannot exceed video duration. Please watch the video normally.',
-          code: 'DURATION_OVERFLOW'
-        });
-      }
-
-      if (skipViolation) {
-        return res.status(400).json({
-          error: 'Excessive skipping detected. Please watch the video sequentially for better learning.',
-          code: 'EXCESSIVE_SKIPPING',
-          details: {
-            skipDistance: skipViolation.skipDistance,
-          }
-        });
-      }
-
-      // For first-time or minor violations, just warn but continue
-      console.warn(`Minor violation for user ${userId}, video ${videoId}:`, validationIssues[0].type);
     }
 
-    // Preserve existing clamping and validation logic
     const clampedWatchedPercentage = Math.min(Math.max(watchedPercentage, 0), 100);
     let clampedTotalWatchTime = Math.max(totalWatchTime, 0);
-    
+
     // Duration validation
     if (clampedTotalWatchTime > video.duration * 1.1) {
       return res.status(400).json({
@@ -339,7 +343,7 @@ const updateProgress = async (req, res) => {
         code: 'DURATION_EXCEEDED'
       });
     }
-    
+
     // Prevent backwards progress (account for buffering issues)
     if (existingLog && clampedTotalWatchTime < existingLog.totalWatchTime - 5) {
       clampedTotalWatchTime = existingLog.totalWatchTime;
@@ -348,11 +352,46 @@ const updateProgress = async (req, res) => {
     // Enhanced completion validation
     const actualPercentage = (clampedTotalWatchTime / video.duration) * 100;
     let completionStatus = isCompleted || clampedWatchedPercentage >= 95;
-    
+
     // Only mark as completed if minimum threshold is met
     if (completionStatus && actualPercentage < ANTI_GAMING_CONFIG.COMPLETION_THRESHOLD) {
       completionStatus = false;
     }
+
+    const deduplicateAndMergeEvents = (existing, incoming) => {
+      if (!incoming || incoming.length === 0) {
+        return existing || [];
+      }
+
+      // Create a map to track events by their start timestamp
+      const eventMap = new Map();
+
+      // Add existing events to the map
+      (existing || []).forEach(event => {
+        eventMap.set(event[0], event);
+      });
+
+      // Update/add incoming events 
+      incoming.forEach(event => {
+        const startTime = event[0];
+        const existingEvent = eventMap.get(startTime);
+
+        // If incoming event is more complete (has end time), use it
+        if (!existingEvent || (event[1] !== null && existingEvent[1] === null)) {
+          eventMap.set(startTime, event);
+        }
+      });
+
+      // Convert back to array and sort by start time
+      return Array.from(eventMap.values())
+        .sort((a, b) => a[0] - b[0])
+        .slice(-100);
+    };
+
+    const mergedPauseEvents = deduplicateAndMergeEvents(
+      existingLog?.pauseEvents,
+      pauseEvents
+    );
 
     // Update or create progress
     const progress = await prisma.watchLog.upsert({
@@ -364,7 +403,7 @@ const updateProgress = async (req, res) => {
         isCompleted: completionStatus || existingLog?.isCompleted || false,
         totalWatchTime: Math.max(clampedTotalWatchTime, existingLog?.totalWatchTime || 0),
         skipEvents: [...(existingLog?.skipEvents || []), ...skipEvents].slice(-100),
-        pauseEvents: [...(existingLog?.pauseEvents || []), ...pauseEvents].slice(-100),
+        pauseEvents: mergedPauseEvents,
         lastUpdateTime: now,
         updatedAt: now
       },
@@ -375,7 +414,7 @@ const updateProgress = async (req, res) => {
         isCompleted: completionStatus,
         totalWatchTime: clampedTotalWatchTime,
         skipEvents,
-        pauseEvents,
+        pauseEvents: pauseEvents || [],
         lastUpdateTime: now
       }
     });
@@ -430,7 +469,7 @@ const getCourseProgress = async (req, res) => {
     // Calculate quiz statistics
     const videosWithQuizzes = courseVideos.filter(cv => cv.video.quiz);
     const totalQuizzes = videosWithQuizzes.length;
-    const completedQuizzes = videosWithQuizzes.filter(cv => 
+    const completedQuizzes = videosWithQuizzes.filter(cv =>
       cv.video.quiz.attempts && cv.video.quiz.attempts.length > 0
     ).length;
 
@@ -447,7 +486,7 @@ const getCourseProgress = async (req, res) => {
     const quizCompletionPercentage = totalQuizzes > 0 ? (completedQuizzes / totalQuizzes) * 100 : 100; // 100% if no quizzes
 
     // Calculate overall completion percentage (weighted: 70% video, 30% quiz)
-    const overallCompletionPercentage = totalQuizzes > 0 
+    const overallCompletionPercentage = totalQuizzes > 0
       ? (videoCompletionPercentage * 0.7) + (quizCompletionPercentage * 0.3)
       : videoCompletionPercentage;
 

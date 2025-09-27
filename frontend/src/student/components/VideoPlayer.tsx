@@ -44,6 +44,7 @@ export function VideoPlayer({
 
   const hasSeekedOnceRef = useRef(false);
   const hasSeekedOnPlayRef = useRef(false);
+  const wasPlayingBeforeSeek = useRef(false);
 
   useEffect(() => {
     hasSeekedOnceRef.current = false;
@@ -56,17 +57,16 @@ export function VideoPlayer({
   // Handle speed violations from hook
   const handleSpeedViolation = useCallback((speed: number) => {
     console.warn("Speed violation callback triggered:", speed);
-    // console.log("Current showSpeedWarning state:", showSpeedWarning);
     setDetectedSpeed(speed);
     setShowSpeedWarning(true);
     setIsPlaying(false); // Pause the video
   }, [setIsPlaying, showSpeedWarning]);
 
   const handleSeekViolation = useCallback(() => {
-  console.warn("Seek violation callback triggered");
-  setShowSeekWarning(true);
-  setIsPlaying(false); // Pause the video
-}, [setIsPlaying]);
+    console.warn("Seek violation callback triggered");
+    setShowSeekWarning(true);
+    setIsPlaying(false); // Pause the video
+  }, [setIsPlaying]);
 
   const {
     progress,
@@ -80,8 +80,8 @@ export function VideoPlayer({
     handleEnded,
     setPlayerRef,
     resetViolationState,
-  } = useVideoProgressWithAnalytics({ 
-    videoId, 
+  } = useVideoProgressWithAnalytics({
+    videoId,
     duration: actualDuration,
     playbackRate,
     onBackendProgressUpdate: onProgressUpdate,
@@ -91,77 +91,73 @@ export function VideoPlayer({
 
   const handlePlayerReady = useCallback(() => {
     setIsPlayerReady(true);
-    
-    // Set the player reference for speed monitoring with a slight delay
-    // to ensure the internal player is fully initialized
+
+    // Set the player reference for speed monitoring with a slight delay to ensure the internal player is fully initialized
     if (setPlayerRef) {
       setTimeout(() => {
         if (playerRef.current) {
-          // console.log('Setting player ref for speed monitoring');
           setPlayerRef(playerRef.current);
         }
       }, 300);
     }
-    
+
     if (onReady) onReady();
   }, [onReady, setPlayerRef]);
 
-    // Also set player ref when it becomes available
+  // Also set player ref when it becomes available
   useEffect(() => {
     if (isPlayerReady && playerRef.current && setPlayerRef) {
-      // console.log('Player ready - setting ref for speed monitoring');
       setPlayerRef(playerRef.current);
     }
   }, [isPlayerReady, setPlayerRef]);
 
   // Sync external seekPosition, only perform seeks when player is ready
-useEffect(() => {
-  if (!isPlayerReady || !seekPosition || hasSeekedOnceRef.current) return;
+  useEffect(() => {
+    if (!isPlayerReady || !seekPosition || hasSeekedOnceRef.current) return;
 
-  const performSeek = () => {
-    if (playerRef.current) {
-      const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
+    const performSeek = () => {
+      if (playerRef.current) {
+        const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
 
-      if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
-        internalPlayer.currentTime = seekPosition;
+        if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
+          internalPlayer.currentTime = seekPosition;
 
-        const checkSeekComplete = () => {
-          if (Math.abs(internalPlayer.currentTime - seekPosition) < 0.5) {
+          const checkSeekComplete = () => {
+            if (Math.abs(internalPlayer.currentTime - seekPosition) < 0.5) {
+              hasSeekedOnceRef.current = true;
+              setHasSeeked(true);
+              setCurrentTime(seekPosition);
+              setLastValidPosition(seekPosition);
+            } else {
+              setTimeout(checkSeekComplete, 100);
+            }
+          };
+          checkSeekComplete();
+
+        } else if (typeof playerRef.current.seekTo === 'function') {
+          playerRef.current.seekTo(seekPosition, 'seconds');
+          setTimeout(() => {
             hasSeekedOnceRef.current = true;
             setHasSeeked(true);
             setCurrentTime(seekPosition);
             setLastValidPosition(seekPosition);
-          } else {
-            setTimeout(checkSeekComplete, 100);
-          }
-        };
-        checkSeekComplete();
-
-      } else if (typeof playerRef.current.seekTo === 'function') {
-        playerRef.current.seekTo(seekPosition, 'seconds');
-        setTimeout(() => {
-          hasSeekedOnceRef.current = true;
-          setHasSeeked(true);
-          setCurrentTime(seekPosition);
-          setLastValidPosition(seekPosition);
-        }, 300);
+          }, 300);
+        }
       }
-    }
-  };
+    };
 
-  const timeoutId = setTimeout(performSeek, 500);
-  return () => clearTimeout(timeoutId);
-}, [seekPosition, isPlayerReady]);
+    const timeoutId = setTimeout(performSeek, 500);
+    return () => clearTimeout(timeoutId);
+  }, [seekPosition, isPlayerReady]);
 
   const onPlay = useCallback(() => {
     setIsPlaying(true);
-    handlePlay(currentTime);
+    handlePlay();
     if (
       !hasSeekedOnPlayRef.current &&
       seekPosition &&
       playerRef.current
     ) {
-      // console.log('Seeking on play event fallback to', seekPosition);
       const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
       if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
         internalPlayer.currentTime = seekPosition;
@@ -178,12 +174,13 @@ useEffect(() => {
   const onPause = useCallback(() => {
     setIsSeeking(false);
     setIsPlaying(false);
-    handlePause(currentTime);
+    handlePause();
   }, [setIsPlaying, handlePause, currentTime]);
 
   const onSeeking = useCallback(() => {
     setIsSeeking(true);
-  }, []);
+    wasPlayingBeforeSeek.current = playing;
+  }, [playing]);
 
   const onSeeked = useCallback(() => {
     setIsSeeking(false);
@@ -192,7 +189,11 @@ useEffect(() => {
       const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
       if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
         const newTime = internalPlayer.currentTime;
-        handleSeek(currentTime, newTime);
+        const skipDistance = Math.abs(newTime - currentTime);
+        if (skipDistance > 2) {
+          handleSeek(currentTime, newTime);
+        }
+        
         setCurrentTime(newTime);
       }
     }
@@ -228,7 +229,7 @@ useEffect(() => {
     }
 
     setCurrentTime(playedSeconds);
-    
+
     // Update last valid position only if we're not in a speed violation state
     if (!showSpeedWarning) {
       setLastValidPosition(playedSeconds);
@@ -246,40 +247,40 @@ useEffect(() => {
   }, [isSeeking, hasSeeked, handleProgress, actualDuration, showSpeedWarning]);
 
   const onTimeUpdate = useCallback((state: any) => {
-  if (isSeeking) return;
+    if (isSeeking) return;
 
-  let playedSeconds = 0;
-  let played = 0;
+    let playedSeconds = 0;
+    let played = 0;
 
-  if (state.playedSeconds !== undefined) {
-    playedSeconds = state.playedSeconds;
-    played = state.played || 0;
-  } else if (state.target?.currentTime !== undefined) {
-    playedSeconds = state.target.currentTime;
-    played = state.target.currentTime / actualDuration;
-  } else if (playerRef.current) {
-    const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
-    if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
-      playedSeconds = internalPlayer.currentTime;
-      played = playedSeconds / actualDuration;
+    if (state.playedSeconds !== undefined) {
+      playedSeconds = state.playedSeconds;
+      played = state.played || 0;
+    } else if (state.target?.currentTime !== undefined) {
+      playedSeconds = state.target.currentTime;
+      played = state.target.currentTime / actualDuration;
+    } else if (playerRef.current) {
+      const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
+      if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
+        playedSeconds = internalPlayer.currentTime;
+        played = playedSeconds / actualDuration;
+      }
     }
-  }
 
-  setCurrentTime(playedSeconds);
+    setCurrentTime(playedSeconds);
 
-  if (!showSpeedWarning) {
-    setLastValidPosition(playedSeconds);
-  }
+    if (!showSpeedWarning) {
+      setLastValidPosition(playedSeconds);
+    }
 
-  const progressState = {
-    played,
-    playedSeconds,
-    loaded: state.loaded || (state.target?.buffered.length > 0 ? state.target.buffered.end(0) / actualDuration : 0),
-    loadedSeconds: state.loadedSeconds || (state.target?.buffered.length > 0 ? state.target.buffered.end(0) : 0),
-  };
+    const progressState = {
+      played,
+      playedSeconds,
+      loaded: state.loaded || (state.target?.buffered.length > 0 ? state.target.buffered.end(0) / actualDuration : 0),
+      loadedSeconds: state.loadedSeconds || (state.target?.buffered.length > 0 ? state.target.buffered.end(0) : 0),
+    };
 
-  handleProgress(progressState);
-}, [isSeeking, actualDuration, showSpeedWarning, handleProgress]);
+    handleProgress(progressState);
+  }, [isSeeking, actualDuration, showSpeedWarning, handleProgress]);
 
 
   const onEnded = useCallback(() => {
@@ -312,34 +313,6 @@ useEffect(() => {
     }
   }, [setIsPlaying]);
 
-// const handleSpeedWarningClose = useCallback(() => {
-//   setShowSpeedWarning(false);
-
-//   if (resetViolationState) {
-//     resetViolationState();
-//   }
-
-//   const seekToSeconds = Math.max(0, Math.min(lastPersistedSeconds, actualDuration));
-
-//   hasSeekedOnceRef.current = true;
-//   setHasSeeked(true);
-  
-//   const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
-//   if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
-//     internalPlayer.currentTime = seekToSeconds;
-//     setCurrentTime(seekToSeconds);
-//     setLastValidPosition(seekToSeconds);
-//   } else if (typeof playerRef.current.seekTo === 'function') {
-//     playerRef.current.seekTo(seekToSeconds, 'seconds');
-//     setCurrentTime(seekToSeconds);
-//     setLastValidPosition(seekToSeconds);
-//   }
-//    setPlaybackRate(1);
-//   setTimeout(() => {
-//     setIsPlaying(true);
-//   }, 100);
-// }, [setIsPlaying, lastPersistedSeconds, actualDuration, resetViolationState]);
-
   const resetAndResumePlayer = useCallback(() => {
     if (resetViolationState) {
       resetViolationState();
@@ -349,33 +322,36 @@ useEffect(() => {
 
     hasSeekedOnceRef.current = true;
     setHasSeeked(true);
-    
+
     const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
     if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
+      const oldTime = internalPlayer.currentTime;
       internalPlayer.currentTime = seekToSeconds;
       setCurrentTime(seekToSeconds);
       setLastValidPosition(seekToSeconds);
+      handleSeek(oldTime, seekToSeconds);
     } else if (typeof playerRef.current.seekTo === 'function') {
+      const oldTime = currentTime;
       playerRef.current.seekTo(seekToSeconds, 'seconds');
       setCurrentTime(seekToSeconds);
       setLastValidPosition(seekToSeconds);
+      handleSeek(oldTime, seekToSeconds);
     }
-    
+
     setPlaybackRate(1);
     setTimeout(() => {
       setIsPlaying(true);
     }, 100);
-  }, [resetViolationState, lastPersistedSeconds, actualDuration, setIsPlaying]);
+  }, [resetViolationState, lastPersistedSeconds, actualDuration, setIsPlaying, handleSeek, currentTime]);
 
-    const handleSpeedWarningClose = useCallback(() => {
-    setShowSpeedWarning(false); // 1. Close the speed modal
-    resetAndResumePlayer();     // 2. Run the reset logic
+  const handleSpeedWarningClose = useCallback(() => {
+    setShowSpeedWarning(false);
+    resetAndResumePlayer();
   }, [resetAndResumePlayer]);
 
-  // NEW: Handler for the SEEK modal button
   const handleSeekWarningClose = useCallback(() => {
-    setShowSeekWarning(false); // 1. Close the seek modal
-    resetAndResumePlayer();    // 2. Run the same reset logic
+    setShowSeekWarning(false);
+    resetAndResumePlayer();
   }, [resetAndResumePlayer]);
 
 
@@ -409,7 +385,7 @@ useEffect(() => {
           onPause={onPause}
           onSeeking={onSeeking}
           onSeeked={onSeeked}
-          onProgress={onProgress}
+          // onProgress={onProgress}
           onTimeUpdate={onTimeUpdate}
           onEnded={onEnded}
           onError={onError}
@@ -422,12 +398,11 @@ useEffect(() => {
         />
       </div>
 
-{/* --- MODAL RENDERING --- */}
+      {/* --- MODAL RENDERING --- */}
 
       {/* MODAL 1: Playback Speed Warning */}
       {showSpeedWarning && (
-        <Modal open={showSpeedWarning} onOpenChange={() => {}}>
-          {/* No onOpenChange prop, so it can only be closed by the button below */}
+        <Modal open={showSpeedWarning} onOpenChange={() => { }}>
           <div className="text-center p-6">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -439,7 +414,7 @@ useEffect(() => {
                 Playback Speed Warning
               </h3>
             </div>
-            
+
             <div className="text-left space-y-3 mb-6">
               <p className="text-gray-700">
                 <strong>Speed detected:</strong> {detectedSpeed.toFixed(2)}x<br />
@@ -452,7 +427,7 @@ useEffect(() => {
                 For effective learning and proper progress tracking, please watch at normal speed and avoid large skips.
               </p>
             </div>
-            
+
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left">
               <p className="text-sm text-blue-800">
                 <strong>What happens now?</strong><br />
@@ -461,9 +436,9 @@ useEffect(() => {
                 • Please resume watching at normal speed
               </p>
             </div>
-            
+
             <button
-              onClick={handleSpeedWarningClose} 
+              onClick={handleSpeedWarningClose}
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               I Understand - Resume Normal Playback
@@ -474,8 +449,7 @@ useEffect(() => {
 
       {/* MODAL 2: Excessive Seek/Skip Warning */}
       {showSeekWarning && (
-        <Modal open={showSeekWarning} onOpenChange={() => {}}>
-          {/* No onOpenChange prop, so it can only be closed by the button below */}
+        <Modal open={showSeekWarning} onOpenChange={() => { }}>
           <div className="text-center p-6">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -487,7 +461,7 @@ useEffect(() => {
                 Watch Behavior Notice
               </h3>
             </div>
-            
+
             <div className="text-left space-y-3 mb-6">
               <p className="text-gray-700">
                 <strong>Issue:</strong> Excessive video skipping detected
@@ -499,7 +473,7 @@ useEffect(() => {
                 For effective learning and proper progress tracking, please watch at normal speed and avoid large skips.
               </p>
             </div>
-            
+
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left">
               <p className="text-sm text-blue-800">
                 <strong>What happens now?</strong><br />
@@ -508,9 +482,9 @@ useEffect(() => {
                 • Please resume watching at normal speed
               </p>
             </div>
-            
+
             <button
-              onClick={handleSeekWarningClose} 
+              onClick={handleSeekWarningClose}
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               I Understand - Resume Normal Playback

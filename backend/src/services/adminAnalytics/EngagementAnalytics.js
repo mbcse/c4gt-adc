@@ -1,4 +1,4 @@
-const { PrismaClient } = require("../../../generated/prisma");
+const { PrismaClient,Prisma } = require("../../../generated/prisma");
 const prisma = new PrismaClient();
 
 const { buildUserFilter, buildDateFilter, getEnrolledCoursesForStudents } = require('../../utils/filterUtils');
@@ -18,9 +18,39 @@ class EngagementService {
         _sum: { totalWatchTime: true },
         _count: { id: true }
       });
+
+ const studentsForTrend = await prisma.user.findMany({
+        where: userFilter,
+        select: { id: true }
+      });
+      const studentIdsForTrend = studentsForTrend.map(s => s.id);
+
+      let activeStudentsTrend = [];
+      if (studentIdsForTrend.length > 0) {
+        const trendResult = await prisma.$queryRaw`
+          SELECT DATE(updatedAt) as date, COUNT(DISTINCT userId) as count
+          FROM WatchLog
+          WHERE userId IN (${Prisma.join(studentIdsForTrend)})
+          ${dateFilter ? Prisma.raw(`AND updatedAt >= '${filters.startDate}' AND updatedAt <= '${filters.endDate}'`) : Prisma.empty}
+          GROUP BY DATE(updatedAt)
+          ORDER BY date ASC
+        `;
+
+        activeStudentsTrend = trendResult.map(row => {
+            const date = new Date(row.date);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return {
+                date: `${year}-${month}-${day}`,
+                count: Number(row.count) 
+            };
+        });
+      }
+
       const totalWatchHours = Math.round(((watchLogStats._sum.totalWatchTime || 0) / 3600) * 10) / 10;
       const avgSessionDuration = watchLogStats._count.id > 0 ? Math.round(((watchLogStats._avg.totalWatchTime || 0) / 60) * 10) / 10 : 0;
-
+      
       const studentsForEnrollment = await prisma.user.findMany({ 
         where: userFilter, 
         select: { 
@@ -32,35 +62,6 @@ class EngagementService {
       const studentIds = studentsForEnrollment.map(s => s.id);
       const enrolledCoursesByStudent = await getEnrolledCoursesForStudents(studentIds, dateFilter);
       const courseEnrollmentStats = this._calculateCourseEnrollmentStats(enrolledCoursesByStudent, studentsForEnrollment);
-
-      const watchLogsForTrend = await prisma.watchLog.findMany({
-        where: {
-          user: userFilter,
-          ...(dateFilter && { updatedAt: dateFilter })
-        },
-        select: {
-          updatedAt: true,
-          userId: true
-        },
-        orderBy: {
-          updatedAt: 'asc'
-        }
-      });
-
-      const trend = new Map();
-      watchLogsForTrend.forEach(log => {
-        const date = log.updatedAt.toISOString().split('T')[0]; // Group by day
-        if (!trend.has(date)) {
-          trend.set(date, new Set());
-        }
-        trend.get(date).add(log.userId);
-      });
-
-      const activeStudentsTrend = Array.from(trend.entries()).map(([date, userSet]) => ({
-        date,
-        count: userSet.size
-      }));
-      
 
       return {
         activeStudentsCount,

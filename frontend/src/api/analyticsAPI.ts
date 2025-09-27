@@ -136,7 +136,40 @@ export interface CourseVideoProgress {
   videos: VideoProgress[];
 }
 
+function sendBeacon(url: string, data: any) {
+  // Get auth token
+  const token = localStorage.getItem('authToken'); 
+  
+  if (!token) {
+    console.warn('No auth token available for beacon request');
+    return;
+  }
+
+  const fullUrl = `${api.defaults.baseURL}${url}`;
+  
+  fetch(fullUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`, // Include auth header
+    },
+    body: JSON.stringify(data),
+    keepalive: true // This ensures the request continues even if page unloads
+  }).catch(err => {
+    console.warn('Beacon request failed:', err);
+  });
+}
+
 export const analyticsAPI = {
+
+  logVideoProgressBeacon: (
+    videoId: number,
+    progressData: any
+  ) => {
+    const url = `/api/videos/${videoId}/progress`;
+    sendBeacon(url, progressData);
+  },
+  
   getStudentSummary: async (): Promise<StudentSummary> => {
     const response = await api.get('/api/analytics/student/summary');
     return response.data.data;

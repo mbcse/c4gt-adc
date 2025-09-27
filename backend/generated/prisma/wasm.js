@@ -263,20 +263,77 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.OrganizationUnitOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  verificationToken: 'verificationToken',
+  resetToken: 'resetToken'
+};
+
+exports.Prisma.CategoryOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.SkillLevelOrderByRelevanceFieldEnum = {
+  level: 'level'
+};
+
+exports.Prisma.GradeOrderByRelevanceFieldEnum = {
+  value: 'value'
+};
+
+exports.Prisma.LanguageOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.TagOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.CourseOrderByRelevanceFieldEnum = {
+  title: 'title',
+  description: 'description',
+  createdBy: 'createdBy',
+  thumbnailUrl: 'thumbnailUrl'
+};
+
+exports.Prisma.VideoOrderByRelevanceFieldEnum = {
+  title: 'title',
+  platform: 'platform',
+  videoUrl: 'videoUrl',
+  videoId: 'videoId',
+  thumbnailUrl: 'thumbnailUrl',
+  description: 'description'
 };
 
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.WatchLogOrderByRelevanceFieldEnum = {
+  lastUserAgent: 'lastUserAgent',
+  lastEventType: 'lastEventType'
+};
+
+exports.Prisma.QuizOrderByRelevanceFieldEnum = {
+  generatedBy: 'generatedBy'
 };
 exports.UnitType = exports.$Enums.UnitType = {
   STATE: 'STATE',

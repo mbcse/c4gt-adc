@@ -1,5 +1,9 @@
 const { PrismaClient } = require("../../generated/prisma");
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  transactionOptions: {
+    timeout: 60000,
+  },
+});
 const { extractYouTubeVideoId, getYouTubeThumbnail } = require("../utils/video");
 const { upsertVideoWithTx, addVideosToCourseTx } = require('../helpers/videoHelper');
 const videoHelper = require('../helpers/videoHelper');
@@ -30,8 +34,8 @@ exports.listCourses = async (req, res) => {
     if (req.query.search) {
       const search = req.query.search;
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        { title: { contains: search } },
+        { description: { contains: search } }
       ];
     }
 
@@ -169,7 +173,7 @@ exports.updateCourse = async (req, res) => {
     languageId,
     tagIds = [],
     thumbnailUrl,
-    courseVideos = []
+    courseVideos
   } = req.body;
 
   try {
@@ -191,7 +195,7 @@ exports.updateCourse = async (req, res) => {
       });
 
       // Sync course videos if array provided
-      if (Array.isArray(courseVideos)) {
+      if (courseVideos !== undefined) {
         // Delete existing links
         await tx.courseVideo.deleteMany({ where: { courseId } });
 

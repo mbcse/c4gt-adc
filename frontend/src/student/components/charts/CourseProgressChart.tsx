@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BookText } from 'lucide-react';
 import {
   PieChart,
   Pie,
@@ -32,6 +33,30 @@ const CourseProgressChart: React.FC = () => {
     }
   }, [selectedCourseId, fetchCourseVideoProgress]);
 
+    // Handle the initial loading state when fetching the list of courses.
+  if (loading && availableCourses.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center text-gray-500">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
+          <p className="text-sm">Loading available courses...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // After loading, if there are no available courses, show empty state message.
+  if (!loading && availableCourses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 text-center text-gray-500">
+        <BookText className="w-12 h-12 text-green-400 mb-4" />
+        <h3 className="text-lg font-semibold text-gray-700">No Courses Started Yet</h3>
+        <p className="text-sm">Your progress will appear here once you start a course.</p>
+      </div>
+    );
+  }
+
+  // Handle the loading state for when a specific course's progress is being fetched.
   if (loading || !courseVideoProgress) {
     return (
       <div className="flex items-center justify-center h-64">

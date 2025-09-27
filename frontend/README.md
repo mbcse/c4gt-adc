@@ -26,7 +26,7 @@ frontend/
 - Node.js (v18 or higher)
 - npm or yarn package manager
 
-### Installation
+### Installation (Local Dev)
 
 1. **Install dependencies**
    ```bash
@@ -58,6 +58,13 @@ VITE_API_URL=http://localhost:5000
 VITE_APP_NAME="C4GT ADC"
 VITE_APP_VERSION="1.0.0"
 ```
+
+When running via Docker Compose, set:
+```env
+VITE_API_URL=http://localhost:5000
+VITE_ENVIRONMENT=production
+```
+and use the root `docker-compose.yml` to build and run both services.
 
 ## Technology Stack
 

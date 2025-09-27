@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useApi } from "@/api/index";
+import { analyticsAPI } from "@/api/analyticsAPI";
 
 interface UseVideoProgressWithAnalyticsProps {
   videoId: number;
@@ -37,10 +38,26 @@ export function useVideoProgressWithAnalytics({
 
   const lastUpdateTime = useRef<number>(0);
   const skipEventsRef = useRef<any[]>([]);
-  const pauseEventsRef = useRef<any[]>([]);
+  const pauseEventsRef = useRef<[number, number | null][]>([]);
   const updateTimeoutRef = useRef<NodeJS.Timeout>();
   const maxWatchedTimeRef = useRef<number>(0);
   const [isViolationActive, setIsViolationActive] = useState(false);
+
+  const isPlayingRef = useRef<boolean>(false);
+
+  const progressRef = useRef(progress);
+
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
+
+  const closeOpenIntervals = useCallback((timestamp: number) => {
+    const intervals = pauseEventsRef.current;
+    if (intervals.length > 0 && intervals[intervals.length - 1][1] === null) {
+      intervals[intervals.length - 1][1] = timestamp;
+    }
+    isPlayingRef.current = false;
+  }, []);
 
   // Check speed violation on playbackRate changes
   useEffect(() => {
@@ -59,18 +76,6 @@ export function useVideoProgressWithAnalytics({
   const setPlayerRef = useCallback((playerRef: any) => {
   }, []);
 
-  // Unified analytics event sender
-  const sendAnalyticsEvent = useCallback(
-    async (eventType: string, data: any) => {
-      try {
-        await api.post("/analytics/event", { eventType, videoId, ...data });
-      } catch (err) {
-        console.error("Failed to send analytics event", err);
-      }
-    },
-    [api, videoId]
-  );
-
   const retryAttempts = useRef(0);
 
   const debouncedUpdate = useCallback(
@@ -79,12 +84,15 @@ export function useVideoProgressWithAnalytics({
         clearTimeout(updateTimeoutRef.current);
       }
 
-      const progressToSend = { ...progressData };
-      progressToSend.skipEvents = (progressToSend.skipEvents || []).slice(-MAX_EVENTS);
-      progressToSend.pauseEvents = (progressToSend.pauseEvents || []).slice(-MAX_EVENTS);
-
       updateTimeoutRef.current = setTimeout(async () => {
         try {
+
+          const progressToSend = {
+            ...progressData,
+            skipEvents: skipEventsRef.current.slice(-MAX_EVENTS),
+            pauseEvents: pauseEventsRef.current.slice(-MAX_EVENTS)
+          };
+
           const response = await api.post(`/videos/${videoId}/progress`, progressToSend);
           setError(null);
           setLastPersistedSeconds(progressToSend.totalWatchTime || 0);
@@ -144,7 +152,7 @@ export function useVideoProgressWithAnalytics({
         }
       }, 5000);
     },
-    [api, videoId, onSpeedViolation]
+    [api, videoId, onSpeedViolation, onSeekViolation]
   );
 
   // Handle progress event with immediate UI updates
@@ -174,53 +182,66 @@ export function useVideoProgressWithAnalytics({
           watchedPercentage,
           totalWatchTime: newMaxWatchTime,
           isCompleted: watchedPercentage >= 95,
-          skipEvents: skipEventsRef.current,
-          pauseEvents: pauseEventsRef.current,
+          // skipEvents: skipEventsRef.current,
+          // pauseEvents: pauseEventsRef.current,
         };
 
-        setProgress(prev => ({ ...prev, ...newProgress }));
+        setProgress(prev => ({
+          ...prev,
+          ...newProgress,
+          skipEvents: skipEventsRef.current,
+          pauseEvents: pauseEventsRef.current,
+        }));
 
         if (onBackendProgressUpdate) {
-          onBackendProgressUpdate(newProgress);
+          onBackendProgressUpdate({
+            ...newProgress,
+            skipEvents: skipEventsRef.current,
+            pauseEvents: pauseEventsRef.current,
+          });
         }
 
         const now = Date.now();
         if (now - lastUpdateTime.current > 5000) {
           lastUpdateTime.current = now;
 
-          sendAnalyticsEvent("PROGRESS_UPDATE", newProgress);
-
           debouncedUpdate(newProgress);
         }
       }
     },
-    [duration, sendAnalyticsEvent, debouncedUpdate, onBackendProgressUpdate, isViolationActive]
+    [duration, debouncedUpdate, onBackendProgressUpdate, isViolationActive]
   );
 
   const handlePlay = useCallback(
-    (currentTime: number) => {
-      // Start new watch interval
+    () => {
+      isPlayingRef.current = true;
       const playTimestamp = Date.now();
       pauseEventsRef.current.push([playTimestamp, null]);
-      sendAnalyticsEvent("PLAY", { currentTime });
     },
-    [sendAnalyticsEvent]
+    []
   );
 
   const handlePause = useCallback(
-    (currentTime: number) => {
-      // Close last open interval
-      const pauseTimestamp = Date.now();
-      const intervals = pauseEventsRef.current;
-      for (let i = intervals.length - 1; i >= 0; i--) {
-        if (Array.isArray(intervals[i]) && intervals[i][1] === null) {
-          intervals[i][1] = pauseTimestamp;
-          break;
+    () => {
+      if (isPlayingRef.current) {
+        const pauseTimestamp = Date.now();
+        closeOpenIntervals(pauseTimestamp);
+
+        const immediateUpdate = {
+          watchedPercentage: progress.watchedPercentage,
+          totalWatchTime: progress.totalWatchTime,
+          isCompleted: progress.isCompleted,
+        };
+
+        // Cancel any existing timeout and send immediately
+        if (updateTimeoutRef.current) {
+          clearTimeout(updateTimeoutRef.current);
         }
+
+        debouncedUpdate(immediateUpdate); 
       }
-      sendAnalyticsEvent("PAUSE", { currentTime });
     },
-    [sendAnalyticsEvent]
+    [closeOpenIntervals]
   );
 
   const handleSeek = useCallback(
@@ -231,7 +252,11 @@ export function useVideoProgressWithAnalytics({
 
       const skipEvent = { timestamp: Date.now(), from, to };
       skipEventsRef.current.push(skipEvent);
-      sendAnalyticsEvent("SEEK", { seekFrom: from, seekTo: to });
+
+      if (isPlayingRef.current) {
+        const seekTimestamp = Date.now();
+        closeOpenIntervals(seekTimestamp);
+      }
 
       const skipDistance = Math.abs(to - from);
       const isForwardSkip = to > from;
@@ -253,28 +278,25 @@ export function useVideoProgressWithAnalytics({
         }
         return;
       }
+      if (isPlayingRef.current) {
+        const seekTimestamp = Date.now();
+        pauseEventsRef.current.push([seekTimestamp, null]);
+      }
     },
-    [sendAnalyticsEvent, onSpeedViolation, isViolationActive, onSeekViolation]
+    [onSpeedViolation, isViolationActive, onSeekViolation, closeOpenIntervals]
   );
 
   // **Handle video ended event with immediate backend sync**
   const handleEnded = useCallback(async () => {
-    // Close any open intervals on video end
     const endTimestamp = Date.now();
-    const intervals = pauseEventsRef.current;
-
-    intervals.forEach(interval => {
-      if (Array.isArray(interval) && interval[1] === null) {
-        interval[1] = endTimestamp;
-      }
-    });
+    closeOpenIntervals(endTimestamp);
 
     const finalProgress = {
       watchedPercentage: 100,
       isCompleted: true,
       totalWatchTime: duration,
       skipEvents: skipEventsRef.current,
-      pauseEvents: intervals,
+      pauseEvents: pauseEventsRef.current,
     };
 
     maxWatchedTimeRef.current = duration;
@@ -285,17 +307,14 @@ export function useVideoProgressWithAnalytics({
       onBackendProgressUpdate(finalProgress);
     }
 
-    sendAnalyticsEvent("ENDED", {});
-
     // Immediately update backend on video end
     try {
       await api.post(`/videos/${videoId}/progress`, finalProgress);
       setLastPersistedSeconds(finalProgress.totalWatchTime || duration);
-      // console.log("Video completion saved immediately");
     } catch (err) {
       console.error("Failed to save completion:", err);
     }
-  }, [api, videoId, duration, onBackendProgressUpdate, sendAnalyticsEvent]);
+  }, [api, videoId, duration, onBackendProgressUpdate, closeOpenIntervals]);
 
   // Load initial progress from backend
   useEffect(() => {
@@ -333,60 +352,61 @@ export function useVideoProgressWithAnalytics({
     if (videoId > 0) loadProgress();
 
     return () => {
+      const cleanupTimestamp = Date.now();
+      closeOpenIntervals(cleanupTimestamp);
       if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
     };
-  }, [api, videoId, onBackendProgressUpdate]);
+  }, [api, videoId, onBackendProgressUpdate, closeOpenIntervals]);
 
   const resetViolationState = useCallback(() => {
     setIsViolationActive(false);
     skipEventsRef.current = [];
     // Close any open intervals when resetting violations
     const resetTimestamp = Date.now();
-    pauseEventsRef.current.forEach(interval => {
-      if (Array.isArray(interval) && interval[1] === null) {
-        interval[1] = resetTimestamp;
+    closeOpenIntervals(resetTimestamp);
+  }, [closeOpenIntervals]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const finalProgress = { ...progressRef.current };
+
+      const lastInterval = finalProgress.pauseEvents[finalProgress.pauseEvents.length - 1];
+      if (lastInterval && lastInterval[1] === null) {
+        lastInterval[1] = Date.now();
       }
-    });
+
+      if (finalProgress.totalWatchTime > lastPersistedSeconds &&
+        localStorage.getItem('authToken')) { // Check auth before sending
+        analyticsAPI.logVideoProgressBeacon(videoId, finalProgress);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        handlePause();
+      } else if (isPlayingRef.current) {
+        handlePlay();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      handleBeforeUnload();
+    };
+  }, [videoId, lastPersistedSeconds, closeOpenIntervals, handlePause, handlePlay]);
+
+  useEffect(() => {
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+        updateTimeoutRef.current = undefined;
+      }
+    };
   }, []);
-
-useEffect(() => {
-  const handleVisibilityChange = () => {
-    const now = Date.now();
-    
-    if (document.hidden) {
-      const intervals = pauseEventsRef.current;
-      for (let i = intervals.length - 1; i >= 0; i--) {
-        if (Array.isArray(intervals[i]) && intervals[i][1] === null) {
-          intervals[i][1] = now;
-          break;
-        }
-      }
-      sendAnalyticsEvent("TAB_HIDDEN", { timestamp: now });
-    } else {
-      pauseEventsRef.current.push([now, null]);
-      sendAnalyticsEvent("TAB_VISIBLE", { timestamp: now });
-    }
-  };
-
-  // Handle page unload/reload
-  const handleBeforeUnload = () => {
-    const now = Date.now();
-    // Close any open intervals before page unloads
-    pauseEventsRef.current.forEach(interval => {
-      if (Array.isArray(interval) && interval[1] === null) {
-        interval[1] = now;
-      }
-    });
-  };
-
-  document.addEventListener('visibilitychange', handleVisibilityChange);
-  window.addEventListener('beforeunload', handleBeforeUnload);
-
-  return () => {
-    document.removeEventListener('visibilitychange', handleVisibilityChange);
-    window.removeEventListener('beforeunload', handleBeforeUnload);
-  };
-}, [sendAnalyticsEvent]);
 
 
   return {

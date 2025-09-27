@@ -1,0 +1,252 @@
+{
+  "categories": [
+    {
+      "name": "Physics"
+    },
+    {
+      "name": "Chemistry"
+    },
+    {
+      "name": "Mathematics"
+    },
+    {
+      "name": "Biology"
+    },
+    {
+      "name": "Computer Science"
+    },
+    {
+      "name": "Programming"
+    },
+    {
+      "name": "Web Development"
+    },
+    {
+      "name": "Data Science"
+    },
+    {
+      "name": "Machine Learning"
+    },
+    {
+      "name": "Artificial Intelligence"
+    },
+    {
+      "name": "JEE Preparation"
+    },
+    {
+      "name": "NEET Preparation"
+    },
+    {
+      "name": "CBSE"
+    },
+    {
+      "name": "Commerce"
+    },
+    {
+      "name": "Accountancy"
+    },
+    {
+      "name": "Business Studies"
+    },
+    {
+      "name": "Economics"
+    },
+    {
+      "name": "English"
+    },
+    {
+      "name": "Hindi"
+    },
+    {
+      "name": "Social Science"
+    },
+    {
+      "name": "History"
+    },
+    {
+      "name": "Geography"
+    },
+    {
+      "name": "Political Science"
+    },
+    {
+      "name": "General Knowledge"
+    }
+  ],
+  "skillLevels": [
+    {
+      "level": "Beginner"
+    },
+    {
+      "level": "Intermediate"
+    },
+    {
+      "level": "Expert"
+    }
+  ],
+  "grades": [
+    {
+      "value": "Grade 6"
+    },
+    {
+      "value": "Grade 7"
+    },
+    {
+      "value": "Grade 8"
+    },
+    {
+      "value": "Grade 9"
+    },
+    {
+      "value": "Grade 10"
+    },
+    {
+      "value": "Grade 11"
+    },
+    {
+      "value": "Grade 12"
+    }
+  ],
+  "languages": [
+    {
+      "name": "English"
+    },
+    {
+      "name": "Hindi"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Class 11"
+    },
+    {
+      "name": "Class 12"
+    },
+    {
+      "name": "Class 9"
+    },
+    {
+      "name": "Class 10"
+    },
+    {
+      "name": "Class 6"
+    },
+    {
+      "name": "Class 7"
+    },
+    {
+      "name": "Class 8"
+    },
+    {
+      "name": "JEE Main"
+    },
+    {
+      "name": "JEE Advanced"
+    },
+    {
+      "name": "NEET"
+    },
+    {
+      "name": "CBSE Board"
+    },
+    {
+      "name": "One Shot"
+    },
+    {
+      "name": "Complete Course"
+    },
+    {
+      "name": "Foundation"
+    },
+    {
+      "name": "Advanced Topics"
+    },
+    {
+      "name": "Crash Course"
+    },
+    {
+      "name": "Board Exam"
+    },
+    {
+      "name": "Competitive Exam"
+    },
+    {
+      "name": "Python"
+    },
+    {
+      "name": "Java"
+    },
+    {
+      "name": "JavaScript"
+    },
+    {
+      "name": "C Language"
+    },
+    {
+      "name": "Web Development"
+    },
+    {
+      "name": "Full Stack"
+    },
+    {
+      "name": "Data Analysis"
+    },
+    {
+      "name": "Machine Learning"
+    },
+    {
+      "name": "AI"
+    },
+    {
+      "name": "Calculus"
+    },
+    {
+      "name": "Algebra"
+    },
+    {
+      "name": "Geometry"
+    },
+    {
+      "name": "Organic Chemistry"
+    },
+    {
+      "name": "Inorganic Chemistry"
+    },
+    {
+      "name": "Physical Chemistry"
+    },
+    {
+      "name": "Mechanics"
+    },
+    {
+      "name": "Thermodynamics"
+    },
+    {
+      "name": "Optics"
+    },
+    {
+      "name": "Electromagnetics"
+    },
+    {
+      "name": "Cell Biology"
+    },
+    {
+      "name": "Genetics"
+    },
+    {
+      "name": "Ecology"
+    },
+    {
+      "name": "Hindi Medium"
+    },
+    {
+      "name": "English Medium"
+    },
+    {
+      "name": "Free Course"
+    },
+    {
+      "name": "Premium Content"
+    }
+  ]
+}
