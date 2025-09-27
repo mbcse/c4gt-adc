@@ -18,7 +18,7 @@ import Achievements from "./student/pages/Achievements";
 import Leaderboard from "./student/pages/Leaderboard";
 import Profile from "./student/pages/Profile";
 import VideoPage from "./student/pages/VideoPage";
-import CourseVideoRedirect from "./student/pages/CourseVideoRedirect";
+import CourseVideoRouteHandler from "./student/components/CourseVideoRouteHandler";
 
 // Admin layout + pages (layout wraps pages via <Outlet />)
 import AdminLayout from "./admin/components/Layout";
@@ -30,6 +30,7 @@ import QuizAnalytics from "./admin/pages/QuizAnalytics";
 import Reports from "./admin/pages/Reports";
 import UserManagement from "./admin/pages/UserManagement";
 import ManageNotifications from "./admin/pages/Notifications";
+import CourseDetailPage from "@/admin/pages/CourseDetailPage";
 
 // Shared
 import Login from "./shared/pages/Login";
@@ -68,6 +69,7 @@ const App: React.FC = () => {
               <Route path="reports" element={<Reports />} />
               <Route path="users" element={<UserManagement />} />
               <Route path="notifications" element={<ManageNotifications />} />
+              <Route path="courses/:id" element={<CourseDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
@@ -81,7 +83,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="courses" element={<MyCourses />} />
                     <Route path="courses/:courseId" element={<CoursePage />} />
-                    <Route path="courses/:courseId/video" element={<CourseVideoRedirect />} />
+                    <Route path="courses/:courseId/video" element={<CourseVideoRouteHandler />} />
                     <Route path="courses/:courseId/video/:videoId" element={<VideoPage />} />
                     <Route path="progress" element={<MyProgress />} />
                     <Route path="quizzes" element={<Quizzes />} />

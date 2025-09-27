@@ -43,8 +43,9 @@ export default function Index() {
     async function fetchTopCourses() {
       try {
         setLoading(true);
-        const courses = await courseAPI.getAllCourses(api);
-
+        const response = await courseAPI.getAllCourses(api, 1, 10); // page 1, limit 10
+        const courses = response.data || [];
+  
         // Sort by progress descending, pick top 3, shape data for dashboard
         const top3 = courses
           .sort((a: any, b: any) => b.progress - a.progress)
@@ -67,10 +68,9 @@ export default function Index() {
               "📚"
             ),
             instructor: course.creatorName || course.createdBy || "Unknown",
-            // You can customize timeLeft if you have watch-time tracking
             timeLeft: "N/A",
           }));
-
+  
         setAssignedCourses(top3);
       } catch (error) {
         console.error("Failed to fetch courses for dashboard", error);
@@ -78,7 +78,7 @@ export default function Index() {
         setLoading(false);
       }
     }
-
+  
     fetchTopCourses();
   }, [api]);
 

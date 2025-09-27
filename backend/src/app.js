@@ -10,6 +10,8 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const videoRoutes = require('./routes/videoRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const metadataRoutes = require('./routes/metadata');
+const analyticsRoutes = require('./routes/analytics');
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:8080',
@@ -17,7 +19,7 @@ app.use(cors({
 }));
 
 app.use(helmet());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
 // Admin routes
 app.use('/api/admin', adminRoutes);
@@ -27,6 +29,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/metadata', metadataRoutes);
+app.use('/api/analytics', analyticsRoutes);
+
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

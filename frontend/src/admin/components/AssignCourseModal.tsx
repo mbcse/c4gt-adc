@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { assignmentAPI } from '@/api/assignmentAPI';
 import { userAPI } from '@/api/userAPI';
+import { useApi } from "@/api/index";
 
 interface User {
   id: number;
@@ -12,10 +13,11 @@ interface User {
 interface AssignCourseModalProps {
   courseId: number;
   onClose: () => void;
-  client?: any; // Axios instance to use for API calls
 }
 
-export default function AssignCourseModal({ courseId, onClose, client }: AssignCourseModalProps) {
+export function AssignCourseModal({ courseId, onClose}: AssignCourseModalProps) {
+  const api = useApi();
+
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,8 +27,7 @@ export default function AssignCourseModal({ courseId, onClose, client }: AssignC
     async function fetchUsers() {
       setLoading(true);
       try {
-        // Pass the axios client to ensure baseURL and headers are correct
-        const res = await userAPI.getUsers({ role: 'STUDENT' }, client);
+        const res = await userAPI.getUsers({ role: 'STUDENT' }, api);
         setUsers(res.users);
       } catch {
         alert('Failed to load users');
@@ -35,7 +36,7 @@ export default function AssignCourseModal({ courseId, onClose, client }: AssignC
       }
     }
     fetchUsers();
-  }, [client]);
+  }, [api]);
 
   const toggleUserSelection = (userId: number) => {
     setSelectedUserIds(prev =>
@@ -51,7 +52,7 @@ export default function AssignCourseModal({ courseId, onClose, client }: AssignC
     setAssigning(true);
     try {
       for (const userId of selectedUserIds) {
-        await assignmentAPI.assignCourseToUser(courseId, userId, client);
+        await assignmentAPI.assignCourseToUser(courseId, userId, api);
       }
       alert('Users assigned successfully');
       onClose();

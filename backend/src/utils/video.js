@@ -19,4 +19,10 @@ function getYouTubeThumbnail(videoId) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-module.exports = { extractYouTubeVideoId, getYouTubeThumbnail };
+const extractYouTubePlaylistId = (url) => {
+  const regex = /[?&]list=([^&#]*)/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
+
+module.exports = { extractYouTubeVideoId, getYouTubeThumbnail, extractYouTubePlaylistId };

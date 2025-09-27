@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Course" ALTER COLUMN "createdBy" DROP NOT NULL,
-ALTER COLUMN "createdBy" SET DATA TYPE TEXT;

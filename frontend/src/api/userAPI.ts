@@ -1,5 +1,4 @@
 import api from './index';
-import type { AxiosInstance } from 'axios';
 
 export interface User {
   id: number;
@@ -7,9 +6,9 @@ export interface User {
   email: string;
   role: string;
   createdAt?: string;
-  enrolledCourses?: number;   // added to match backend enhanced field
-  progress?: number;          // added to match backend enhanced field
-  lastActive?: string;        // added to match backend enhanced field
+  enrolledCourses?: number;   
+  progress?: number;          
+  lastActive?: string;  
 }
 
 interface GetUsersParams {
@@ -23,7 +22,7 @@ export const userAPI = {
   // GET /users with optional filtering & pagination, accepts axios client for proper baseURL
   getUsers: async (
     params?: GetUsersParams,
-    client: AxiosInstance = api
+    client = api
   ): Promise<{ users: User[]; totalCount: number }> => {
     const response = await client.get('/users', { params });
     return response.data;
@@ -32,7 +31,7 @@ export const userAPI = {
   // POST /users for user creation (unchanged, restricted access)
   createUser: async (
     userData: { name: string; email: string; password: string; role: string },
-    client: AxiosInstance = api
+    client = api
   ) => {
     const response = await client.post('/users', userData);
     return response.data;
@@ -42,11 +41,10 @@ export const userAPI = {
   updateUserRole: async (
     userId: number,
     role: string,
-    client: AxiosInstance = api
+    client = api
   ) => {
     const response = await client.put(`/users/${userId}/role`, { role });
     return response.data;
   },
 
-  // Additional user-related API calls can go here...
 };

@@ -9,6 +9,7 @@ const progressRoutes = require('./adminProgress');
 const quizRoutes = require('./adminQuizAnalytics');
 const reportsRoutes = require('./adminReports');
 const notificationsRoutes = require('./adminNotifications.js');
+const adminMetadataRoutes = require('./adminMetadata');
 
 const router = express.Router();
 
@@ -35,5 +36,8 @@ router.use('/reports', requireRole(['ADMIN', 'SUPERADMIN']), reportsRoutes);
 
 // ADMIN and SUPERADMIN notifications routes
 router.use('/notifications', requireRole(['ADMIN', 'SUPERADMIN']), notificationsRoutes);
+
+router.use('/metadata', requireRole(['ADMIN', 'SUPERADMIN']), adminMetadataRoutes);
+
 
 module.exports = router;

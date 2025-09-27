@@ -5,7 +5,7 @@ import { useAuth } from '@/shared/context/AuthContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// Static axios instance (optional, if you need global static instance)
+// Static axios instance (global static instance)
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -78,5 +78,4 @@ export function useApi(): AxiosInstance {
   }, [token, user?.role]);
 }
 
-// Optionally export the static instance for general use
 export default api;

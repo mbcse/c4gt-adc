@@ -129,6 +129,31 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.SkillLevelScalarFieldEnum = {
+  id: 'id',
+  level: 'level'
+};
+
+exports.Prisma.GradeScalarFieldEnum = {
+  id: 'id',
+  value: 'value'
+};
+
+exports.Prisma.LanguageScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.CourseScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -136,7 +161,10 @@ exports.Prisma.CourseScalarFieldEnum = {
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   thumbnailUrl: 'thumbnailUrl',
-  category: 'category'
+  categoryId: 'categoryId',
+  skillLevelId: 'skillLevelId',
+  gradeId: 'gradeId',
+  languageId: 'languageId'
 };
 
 exports.Prisma.CourseAssignmentScalarFieldEnum = {
@@ -160,7 +188,9 @@ exports.Prisma.VideoScalarFieldEnum = {
   videoUrl: 'videoUrl',
   videoId: 'videoId',
   duration: 'duration',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  thumbnailUrl: 'thumbnailUrl',
+  description: 'description'
 };
 
 exports.Prisma.WatchLogScalarFieldEnum = {
@@ -190,6 +220,15 @@ exports.Prisma.QuizAttemptScalarFieldEnum = {
   quizId: 'quizId',
   score: 'score',
   completedAt: 'completedAt'
+};
+
+exports.Prisma.AnalyticsEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  eventType: 'eventType',
+  data: 'data',
+  timestamp: 'timestamp'
 };
 
 exports.Prisma.SortOrder = {
@@ -225,13 +264,19 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Category: 'Category',
+  SkillLevel: 'SkillLevel',
+  Grade: 'Grade',
+  Language: 'Language',
+  Tag: 'Tag',
   Course: 'Course',
   CourseAssignment: 'CourseAssignment',
   CourseVideo: 'CourseVideo',
   Video: 'Video',
   WatchLog: 'WatchLog',
   Quiz: 'Quiz',
-  QuizAttempt: 'QuizAttempt'
+  QuizAttempt: 'QuizAttempt',
+  AnalyticsEvent: 'AnalyticsEvent'
 };
 
 /**

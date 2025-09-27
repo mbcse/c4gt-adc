@@ -1,6 +1,6 @@
 // src/api/auth/authAPI.ts
 import api from './index';
-import type { Role } from '@/types/common';
+import type { Role } from '@/types/index';
 
 export interface User {
   id: string | number;

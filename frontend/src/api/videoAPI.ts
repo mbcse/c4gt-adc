@@ -1,4 +1,3 @@
-// src/api/video/videoAPI.ts
 import api from './index';
 
 export interface VideoProgress {
@@ -31,9 +30,21 @@ export interface CourseProgress {
 
 
 export const videoAPI = {
-  getCourseVideos: async (courseId: number): Promise<Video[]> => {
-    const response = await api.get(`/api/videos/courses/${courseId}`);
-    return response.data.videos;
+  getCourseVideos: async (
+    courseId: number,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{
+    success: boolean;
+    total: number;
+    page: number;
+    totalPages: number;
+    videos: Video[];
+  }> => {
+    const response = await api.get(`/api/videos/courses/${courseId}`, {
+      params: { page, limit },
+    });
+    return response.data;
   },
 
   getVideo: async (videoId: number): Promise<Video> => {

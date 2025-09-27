@@ -24,37 +24,119 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "@/student/components/DashboardLayout";
 import { courseAPI } from "@/api/courseAPI";
 import { useApi } from '@/api/index';
-
+import { metadataAPI } from '@/api/metadataAPI';
 
 export default function Courses() {
   const api = useApi();
 
   const [allCourses, setAllCourses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
 
   const [sortBy, setSortBy] = useState<"progress" | "name" | "date">("progress");
   const [filterBy, setFilterBy] = useState<"all" | "in-progress" | "completed" | "not-started">("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [skillLevels, setSkillLevels] = useState<{ id: number; level: string }[]>([]);
+  const [grades, setGrades] = useState<{ id: number; value: string }[]>([]);
+  const [languages, setLanguages] = useState<{ id: number; name: string }[]>([]);
+  const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState<number | undefined>(undefined);
+  const [selectedGrade, setSelectedGrade] = useState<number | undefined>(undefined);
+  const [selectedLanguage, setSelectedLanguage] = useState<number | undefined>(undefined);
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [assignedFilter, setAssignedFilter] = useState<"all" | "assigned" | "unassigned">("all");
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    async function fetchCourses() {
-      try {
-        setLoading(true);
-        const courses = await courseAPI.getAllCourses(api);
-        setAllCourses(courses?.courses ?? courses);
-      } catch (err: any) {
-        setError(err.message || "Failed to load courses");
-      } finally {
-        setLoading(false);
-      }
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const filters: any = {
+        categoryId: selectedCategory,
+        skillLevelId: selectedSkillLevel,
+        gradeId: selectedGrade,
+        languageId: selectedLanguage,
+        tagIds: selectedTagIds.length ? selectedTagIds : undefined,
+        search: searchQuery.trim() || undefined,
+      };
+
+      if (assignedFilter === "assigned") filters.assigned = true;
+      else if (assignedFilter === "unassigned") filters.assigned = false;
+
+      const response = await courseAPI.getAllCourses(api, 1, limit, filters);
+      setAllCourses(response.data);
+      setHasMore(response.page < response.totalPages);
+      setPage(1);
+    } catch (err: any) {
+      setError(err.message || "Failed to load courses");
+    } finally {
+      setLoading(false);
     }
-    fetchCourses();
-  }, [api]);
+  };
+  fetchCourses();
+}, [
+  api,
+  limit,
+  selectedCategory,
+  selectedSkillLevel,
+  selectedGrade,
+  selectedLanguage,
+  selectedTagIds,
+  assignedFilter,
+  searchQuery,
+]);
+
+
+  useEffect(() => {
+  async function fetchMetadata() {
+    try {
+      const [cats, skills, grans, langs, tgs] = await Promise.all([
+        metadataAPI.getCategories(),
+        metadataAPI.getSkillLevels(),
+        metadataAPI.getGrades(),
+        metadataAPI.getLanguages(),
+        metadataAPI.getTags(),
+      ]);
+      setCategories(cats);
+      setSkillLevels(skills);
+      setGrades(grans);
+      setLanguages(langs);
+      setTags(tgs);
+    } catch (err) {
+      console.error("Failed to load metadata:", err);
+    }
+  }
+  fetchMetadata();
+}, [api]);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (loading || !hasMore) return;
+      if (window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.offsetHeight) {
+        setPage(prevPage => prevPage + 1);
+      }
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore]);
+  
 
   const sortCourses = (courses: typeof allCourses) => {
     return [...courses].sort((a, b) => {
@@ -278,6 +360,79 @@ export default function Courses() {
             </div>
           </div>
 
+          <div className="flex flex-wrap gap-4 items-center mb-6">
+  <select
+    value={assignedFilter}
+    onChange={e => setAssignedFilter(e.target.value as any)}
+    className="px-3 py-2 border rounded"
+  >
+    <option value="all">All Courses</option>
+    <option value="assigned">Assigned Courses</option>
+    <option value="unassigned">Unassigned Courses</option>
+  </select>
+
+  <select
+    value={selectedCategory ?? ""}
+    onChange={e => setSelectedCategory(e.target.value ? Number(e.target.value) : undefined)}
+    className="px-3 py-2 border rounded"
+  >
+    <option value="">All Categories</option>
+    {categories.map(cat => (
+      <option key={cat.id} value={cat.id}>{cat.name}</option>
+    ))}
+  </select>
+
+  <select
+    value={selectedSkillLevel ?? ""}
+    onChange={e => setSelectedSkillLevel(e.target.value ? Number(e.target.value) : undefined)}
+    className="px-3 py-2 border rounded"
+  >
+    <option value="">All Skill Levels</option>
+    {skillLevels.map(sl => (
+      <option key={sl.id} value={sl.id}>{sl.level}</option>
+    ))}
+  </select>
+
+  <select
+    value={selectedGrade ?? ""}
+    onChange={e => setSelectedGrade(e.target.value ? Number(e.target.value) : undefined)}
+    className="px-3 py-2 border rounded"
+  >
+    <option value="">All Grades</option>
+    {grades.map(gr => (
+      <option key={gr.id} value={gr.id}>{gr.value}</option>
+    ))}
+  </select>
+
+  <select
+    value={selectedLanguage ?? ""}
+    onChange={e => setSelectedLanguage(e.target.value ? Number(e.target.value) : undefined)}
+    className="px-3 py-2 border rounded"
+  >
+    <option value="">All Languages</option>
+    {languages.map(lang => (
+      <option key={lang.id} value={lang.id}>{lang.name}</option>
+    ))}
+  </select>
+
+  <div className="flex flex-wrap gap-2 max-w-xs max-h-24 overflow-auto border p-2 rounded">
+    {tags.map(tag => (
+      <label key={tag.id} className="inline-flex items-center gap-1 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={selectedTagIds.includes(tag.id)}
+          onChange={e => {
+            if (e.target.checked) setSelectedTagIds([...selectedTagIds, tag.id]);
+            else setSelectedTagIds(selectedTagIds.filter(id => id !== tag.id));
+          }}
+        />
+        <span className="text-sm">{tag.name}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+
           {/* Course Card Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredAndSortedCourses.map((course) => {
@@ -361,6 +516,12 @@ export default function Courses() {
                       </div>
                     </div>
 
+                    {course.isAssigned && (
+  <Badge className="bg-indigo-100 text-indigo-800 absolute top-4 right-4 rounded-lg px-2 py-1 text-xs font-semibold z-20">
+    Assigned
+  </Badge>
+)}
+
                     {/* Course Content */}
                     <div className="p-7">
                       <div className="mb-6">
@@ -430,6 +591,20 @@ export default function Courses() {
               );
             })}
           </div>
+
+          {/* Loading indicator */}
+          {loading && (
+            <div className="text-center py-6 text-gray-600">
+              Loading more courses...
+            </div>
+          )}
+
+          {/* End of list message */}
+          {!hasMore && !loading && (
+            <div className="text-center py-6 text-gray-600">
+              You have reached the end.
+            </div>
+          )}
 
           {filteredAndSortedCourses.length === 0 && (
             <div className="text-center py-20">

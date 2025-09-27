@@ -43,4 +43,5 @@ router.get('/courses/:courseId/progress',
   videoController.getCourseProgress
 );
 
+
 module.exports = router;

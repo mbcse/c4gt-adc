@@ -18,47 +18,82 @@ model User {
   assignments  CourseAssignment[]
   quizAttempts QuizAttempt[]
   watchLogs    WatchLog[]
+
+  AnalyticsEvent AnalyticsEvent[]
 }
 
-enum Role {
-  SUPERADMIN
-  ADMIN
-  INSTRUCTOR
-  STUDENT
+model Category {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  courses  Course[]
+}
+
+model SkillLevel {
+  id       Int      @id @default(autoincrement())
+  level    String   @unique
+  courses  Course[]
+}
+
+model Grade {
+  id       Int      @id @default(autoincrement())
+  value    String   @unique
+  courses  Course[]
+}
+
+model Language {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  courses  Course[]
+}
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  courses Course[] @relation("CourseTags")
 }
 
 model Course {
-  id           Int                @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   title        String
   description  String?
   createdBy    String?
-  createdAt    DateTime
+  createdAt    DateTime    @default(now())
   thumbnailUrl String?
-  assignments  CourseAssignment[]
-  courseVideos CourseVideo[]
-  category     String?
+  category     Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId   Int?
+  skillLevel   SkillLevel? @relation(fields: [skillLevelId], references: [id], onDelete: SetNull)
+  skillLevelId Int?
+  grade        Grade?      @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  gradeId      Int?
+  language     Language?   @relation(fields: [languageId], references: [id], onDelete: SetNull)
+  languageId   Int?
+  tags         Tag[]       @relation("CourseTags")
+  assignments  CourseAssignment[] 
+  courseVideos CourseVideo[]     
 }
+
 
 model CourseAssignment {
   id         Int      @id @default(autoincrement())
-  course     Course   @relation(fields: [courseId], references: [id])
   courseId   Int
-  user       User     @relation(fields: [userId], references: [id])
   userId     Int
   assignedAt DateTime
-
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@unique([courseId, userId], name: "courseId_userId")
 }
 
 model CourseVideo {
   id       Int    @id @default(autoincrement())
-  course   Course @relation(fields: [courseId], references: [id])
   courseId Int
-  video    Video  @relation(fields: [videoId], references: [id])
   videoId  Int
   order    Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  video    Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
 
   @@index([courseId, order])
+  @@unique([courseId, videoId])
 }
 
 model Video {
@@ -69,24 +104,28 @@ model Video {
   videoId      String        @unique
   duration     Int
   createdAt    DateTime
+  thumbnailUrl String?
+  description  String? 
   courseVideos CourseVideo[]
-  watchLogs    WatchLog[]
   quiz         Quiz?
+  watchLogs    WatchLog[]
+
+  AnalyticsEvent AnalyticsEvent[]
 }
 
 model WatchLog {
   id                Int      @id @default(autoincrement())
-  user              User     @relation(fields: [userId], references: [id])
   userId            Int
-  video             Video    @relation(fields: [videoId], references: [id])
   videoId           Int
-  totalWatchTime    Int // in seconds
+  totalWatchTime    Int
   isCompleted       Boolean  @default(false)
   watchedPercentage Float    @default(0.0)
   skipEvents        Json     @default("[]")
   pauseEvents       Json     @default("[]")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video             Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
 
   @@unique([userId, videoId])
   @@index([userId, updatedAt(sort: Desc)])
@@ -95,20 +134,41 @@ model WatchLog {
 
 model Quiz {
   id          Int           @id @default(autoincrement())
-  video       Video         @relation(fields: [videoId], references: [id])
   videoId     Int           @unique
   generatedBy String?
   createdAt   DateTime
   questions   Json
+  video       Video         @relation(fields: [videoId], references: [id], onDelete: Cascade)
   attempts    QuizAttempt[]
 }
 
 model QuizAttempt {
   id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id])
   userId      Int
-  quiz        Quiz     @relation(fields: [quizId], references: [id])
   quizId      Int
   score       Float
   completedAt DateTime
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsEvent {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  videoId   Int
+  eventType String
+  data      Json
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  @@index([videoId, eventType])
+  @@index([userId, timestamp(sort: Desc)])
+}
+
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  INSTRUCTOR
+  STUDENT
 }
