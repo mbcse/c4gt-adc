@@ -2,10 +2,15 @@ const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 const { getYouTubeThumbnail } = require("../utils/video");
 
+/**
+ * Get detailed information for a single course.
+ */
 exports.getCourseDetails = async (req, res) => {
   try {
     const courseId = parseInt(req.params.courseId);
-    if (isNaN(courseId)) return res.status(400).json({ error: 'Invalid course ID' });
+    if (isNaN(courseId)) {
+      return res.status(400).json({ error: "Invalid course ID" });
+    }
 
     const course = await prisma.course.findUnique({
       where: { id: courseId },
@@ -14,36 +19,59 @@ exports.getCourseDetails = async (req, res) => {
         title: true,
         description: true,
         createdAt: true,
+        thumbnailUrl: true,
+        category: true,
+        createdBy: true,
+        courseVideos: {
+          include: {
+            video: true,
+          },
+          orderBy: { order: "asc" },
+        },
       },
     });
 
-    if (!course) return res.status(404).json({ error: 'Course not found' });
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
+    }
 
-    res.json({ course });
+    return res.json({ course });
   } catch (error) {
     console.error("Failed to get course details:", error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
+/**
+ * Get all courses mapped to include progress per user if applicable.
+ * If the `req.user.userId` is available, includes watch progress data.
+ */
 exports.getAllCourses = async (req, res) => {
   try {
     const userId = req.user?.userId;
 
-    const courses = await prisma.course.findMany({
+    const courses = await prisma.course.findMany({where: {
+        assignments: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
       include: {
         courseVideos: {
           include: {
             video: {
               include: {
-                watchLogs: {
-                  where: { userId },
-                  select: {
-                    isCompleted: true,
-                    watchedPercentage: true,
-                    updatedAt: true,
-                  },
-                },
+                watchLogs: userId
+                  ? {
+                      where: { userId },
+                      select: {
+                        isCompleted: true,
+                        watchedPercentage: true,
+                        updatedAt: true,
+                      },
+                    }
+                  : false,
               },
             },
           },
@@ -52,24 +80,27 @@ exports.getAllCourses = async (req, res) => {
       orderBy: { createdAt: "desc" },
     });
 
-    const mappedCourses = courses.map(course => {
+    // Map and compute course progress per user
+    const mappedCourses = courses.map((course) => {
       const totalLessons = course.courseVideos.length;
-      const completedLessons = course.courseVideos.filter(cv =>
-        cv.video.watchLogs.some(log => log.isCompleted)
+      const completedLessons = course.courseVideos.filter((cv) =>
+        cv.video.watchLogs.some((log) => log.isCompleted)
       ).length;
 
-      const progress = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+      const progress = totalLessons
+        ? Math.round((completedLessons / totalLessons) * 100)
+        : 0;
 
       let status = "not-started";
       if (progress === 100) status = "completed";
       else if (progress > 0) status = "in-progress";
 
-      // last activity
-      const allWatchLogDates = course.courseVideos.flatMap(cv =>
-        cv.video.watchLogs.map(wl => wl.updatedAt)
+      // Determine last activity date
+      const allWatchLogDates = course.courseVideos.flatMap((cv) =>
+        cv.video.watchLogs.map((wl) => wl.updatedAt)
       );
       const lastActivityDate = allWatchLogDates.length
-        ? new Date(Math.max(...allWatchLogDates.map(d => new Date(d))))
+        ? new Date(Math.max(...allWatchLogDates.map((d) => new Date(d))))
         : null;
       const lastActivity = lastActivityDate
         ? lastActivityDate.toLocaleDateString()
@@ -86,22 +117,40 @@ exports.getAllCourses = async (req, res) => {
         status,
         enrolledDate: course.createdAt.toISOString(),
         lastActivity,
-        createdBy: course.createdBy || "Unknown"
+        createdBy: course.createdBy || "Unknown",
+        category: course.category || "",
       };
     });
 
-    res.json({ courses: mappedCourses });
+    return res.json(mappedCourses );
   } catch (error) {
     console.error("Failed to get courses:", error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
+/**
+ * Create a new course with optional videos and thumbnail extracted from first video.
+ * Expects in body:
+ *  - title (string),
+ *  - description (string, optional),
+ *  - createdBy (string, add this when calling),
+ *  - category (string, optional),
+ *  - courseVideos (array of { videoId: string }) (optional)
+ */
 exports.createCourse = async (req, res) => {
-  const { title, description, courseVideos } = req.body;
+  const { title, description, createdBy, category, courseVideos = [] } = req.body;
 
-  const firstVideoId = courseVideos && courseVideos.length > 0 ? courseVideos[0].videoId : null;
-  const thumbnailUrl = getYouTubeThumbnail(firstVideoId);
+  if (!title) {
+    return res.status(400).json({ error: "Title is required" });
+  }
+
+  // Get thumbnail URL from first video's YouTube videoId if available
+  const firstVideoId =
+    courseVideos.length > 0 && courseVideos[0].videoId
+      ? courseVideos[0].videoId
+      : null;
+  const thumbnailUrl = firstVideoId ? getYouTubeThumbnail(firstVideoId) : null;
 
   try {
     const course = await prisma.course.create({
@@ -109,20 +158,28 @@ exports.createCourse = async (req, res) => {
         title,
         description,
         createdBy,
+        category,
         thumbnailUrl,
         createdAt: new Date(),
         courseVideos: {
-          create: courseVideos.map(cv => ({ videoId: cv.videoId })),
+          create: courseVideos.map((cv, idx) => ({
+            video: {
+              connect: { videoId: cv.videoId }, // assumes videoId is unique in Video table
+            },
+            order: idx + 1,
+          })),
         },
       },
       include: {
-        courseVideos: true,
+        courseVideos: {
+          include: { video: true },
+        },
       },
     });
 
-    res.json({ course });
+    return res.status(201).json({ course });
   } catch (err) {
     console.error("Error creating course:", err);
-    res.status(500).json({ error: "Failed to create course" });
+    return res.status(500).json({ error: "Failed to create course" });
   }
 };

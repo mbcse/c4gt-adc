@@ -135,7 +135,8 @@ exports.Prisma.CourseScalarFieldEnum = {
   description: 'description',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
-  thumbnailUrl: 'thumbnailUrl'
+  thumbnailUrl: 'thumbnailUrl',
+  category: 'category'
 };
 
 exports.Prisma.CourseAssignmentScalarFieldEnum = {

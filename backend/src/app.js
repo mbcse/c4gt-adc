@@ -1,51 +1,65 @@
 require('dotenv').config();
-const cors = require("cors");
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+
 const app = express();
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:8080',
-  // credentials: true
-}));
-
-app.use(express.json());
-
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/user");
-const instructorRoutes = require("./routes/instructor");
-const adminRoutes = require("./routes/admin");
-const superadminRoutes = require("./routes/superadmin");
+const adminRoutes = require('./routes/admin/index');
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 const videoRoutes = require('./routes/videoRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 
-app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/instructor", instructorRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/superadmin", superadminRoutes);
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:8080',
+  credentials: true
+}));
+
+app.use(helmet());
+app.use(express.json());
+
+// Admin routes
+app.use('/api/admin', adminRoutes);
+
+// Other API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/courses', courseRoutes);
 
-app.use('/api/videos', (error, req, res, next) => {
-  console.error('Video API Error:', error);
-  
-  if (error.name === 'ValidationError') {
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// centralised error handling
+app.use((err, req, res, next) => {
+  console.error(`Error in ${req.method} ${req.originalUrl}:`, err);
+
+  if (err.name === 'ValidationError') {
     return res.status(400).json({
       error: 'Invalid request data',
-      details: error.message
+      details: err.message
     });
   }
-  
-  if (error.code === 'P2002') {
+
+  if (err.code === 'P2002') { // Prisma unique constraint violation
     return res.status(409).json({
       error: 'Data conflict occurred'
     });
   }
-  
-  res.status(500).json({
-    error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? error.message : undefined
+
+  const statusCode = err.status || 500;
+  res.status(statusCode).json({
+    error: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
+});
+
+// 404 handler for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({ message: `Route ${req.originalUrl} not found` });
 });
 
 module.exports = app;

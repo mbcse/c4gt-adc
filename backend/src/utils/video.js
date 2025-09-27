@@ -1,9 +1,8 @@
-// utils/video.js
-function extractYouTubeId(url) {
+function extractYouTubeVideoId(url) {
   if (!url) return null;
   try {
     const urlObj = new URL(url.trim());
-    if (urlObj.hostname === "youtu.be") {
+    if (urlObj.hostname === "youtu.be" || urlObj.hostname === "www.youtu.be") {
       return urlObj.pathname.replace("/", "");
     }
     if (urlObj.hostname.includes("youtube.com")) {
@@ -20,4 +19,4 @@ function getYouTubeThumbnail(videoId) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-module.exports = { extractYouTubeId, getYouTubeThumbnail };
+module.exports = { extractYouTubeVideoId, getYouTubeThumbnail };
