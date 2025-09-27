@@ -129,24 +129,25 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.ModuleScalarFieldEnum = {
+exports.Prisma.CourseScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
   createdBy: 'createdBy',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  thumbnailUrl: 'thumbnailUrl'
 };
 
-exports.Prisma.ModuleAssignmentScalarFieldEnum = {
+exports.Prisma.CourseAssignmentScalarFieldEnum = {
   id: 'id',
-  moduleId: 'moduleId',
+  courseId: 'courseId',
   userId: 'userId',
   assignedAt: 'assignedAt'
 };
 
-exports.Prisma.ModuleVideoScalarFieldEnum = {
+exports.Prisma.CourseVideoScalarFieldEnum = {
   id: 'id',
-  moduleId: 'moduleId',
+  courseId: 'courseId',
   videoId: 'videoId',
   order: 'order'
 };
@@ -170,7 +171,8 @@ exports.Prisma.WatchLogScalarFieldEnum = {
   watchedPercentage: 'watchedPercentage',
   skipEvents: 'skipEvents',
   pauseEvents: 'pauseEvents',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.QuizScalarFieldEnum = {
@@ -222,9 +224,9 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Module: 'Module',
-  ModuleAssignment: 'ModuleAssignment',
-  ModuleVideo: 'ModuleVideo',
+  Course: 'Course',
+  CourseAssignment: 'CourseAssignment',
+  CourseVideo: 'CourseVideo',
   Video: 'Video',
   WatchLog: 'WatchLog',
   Quiz: 'Quiz',

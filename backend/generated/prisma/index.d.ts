@@ -19,20 +19,20 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model Module
+ * Model Course
  * 
  */
-export type Module = $Result.DefaultSelection<Prisma.$ModulePayload>
+export type Course = $Result.DefaultSelection<Prisma.$CoursePayload>
 /**
- * Model ModuleAssignment
+ * Model CourseAssignment
  * 
  */
-export type ModuleAssignment = $Result.DefaultSelection<Prisma.$ModuleAssignmentPayload>
+export type CourseAssignment = $Result.DefaultSelection<Prisma.$CourseAssignmentPayload>
 /**
- * Model ModuleVideo
+ * Model CourseVideo
  * 
  */
-export type ModuleVideo = $Result.DefaultSelection<Prisma.$ModuleVideoPayload>
+export type CourseVideo = $Result.DefaultSelection<Prisma.$CourseVideoPayload>
 /**
  * Model Video
  * 
@@ -209,34 +209,34 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.module`: Exposes CRUD operations for the **Module** model.
+   * `prisma.course`: Exposes CRUD operations for the **Course** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Modules
-    * const modules = await prisma.module.findMany()
+    * // Fetch zero or more Courses
+    * const courses = await prisma.course.findMany()
     * ```
     */
-  get module(): Prisma.ModuleDelegate<ExtArgs, ClientOptions>;
+  get course(): Prisma.CourseDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.moduleAssignment`: Exposes CRUD operations for the **ModuleAssignment** model.
+   * `prisma.courseAssignment`: Exposes CRUD operations for the **CourseAssignment** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more ModuleAssignments
-    * const moduleAssignments = await prisma.moduleAssignment.findMany()
+    * // Fetch zero or more CourseAssignments
+    * const courseAssignments = await prisma.courseAssignment.findMany()
     * ```
     */
-  get moduleAssignment(): Prisma.ModuleAssignmentDelegate<ExtArgs, ClientOptions>;
+  get courseAssignment(): Prisma.CourseAssignmentDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.moduleVideo`: Exposes CRUD operations for the **ModuleVideo** model.
+   * `prisma.courseVideo`: Exposes CRUD operations for the **CourseVideo** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more ModuleVideos
-    * const moduleVideos = await prisma.moduleVideo.findMany()
+    * // Fetch zero or more CourseVideos
+    * const courseVideos = await prisma.courseVideo.findMany()
     * ```
     */
-  get moduleVideo(): Prisma.ModuleVideoDelegate<ExtArgs, ClientOptions>;
+  get courseVideo(): Prisma.CourseVideoDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.video`: Exposes CRUD operations for the **Video** model.
@@ -718,9 +718,9 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    Module: 'Module',
-    ModuleAssignment: 'ModuleAssignment',
-    ModuleVideo: 'ModuleVideo',
+    Course: 'Course',
+    CourseAssignment: 'CourseAssignment',
+    CourseVideo: 'CourseVideo',
     Video: 'Video',
     WatchLog: 'WatchLog',
     Quiz: 'Quiz',
@@ -743,7 +743,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "module" | "moduleAssignment" | "moduleVideo" | "video" | "watchLog" | "quiz" | "quizAttempt"
+      modelProps: "user" | "course" | "courseAssignment" | "courseVideo" | "video" | "watchLog" | "quiz" | "quizAttempt"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -821,225 +821,225 @@ export namespace Prisma {
           }
         }
       }
-      Module: {
-        payload: Prisma.$ModulePayload<ExtArgs>
-        fields: Prisma.ModuleFieldRefs
+      Course: {
+        payload: Prisma.$CoursePayload<ExtArgs>
+        fields: Prisma.CourseFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ModuleFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload> | null
+            args: Prisma.CourseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ModuleFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           findFirst: {
-            args: Prisma.ModuleFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload> | null
+            args: Prisma.CourseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ModuleFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           findMany: {
-            args: Prisma.ModuleFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>[]
+            args: Prisma.CourseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>[]
           }
           create: {
-            args: Prisma.ModuleCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           createMany: {
-            args: Prisma.ModuleCreateManyArgs<ExtArgs>
+            args: Prisma.CourseCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.ModuleCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>[]
+            args: Prisma.CourseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>[]
           }
           delete: {
-            args: Prisma.ModuleDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           update: {
-            args: Prisma.ModuleUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           deleteMany: {
-            args: Prisma.ModuleDeleteManyArgs<ExtArgs>
+            args: Prisma.CourseDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ModuleUpdateManyArgs<ExtArgs>
+            args: Prisma.CourseUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.ModuleUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>[]
+            args: Prisma.CourseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>[]
           }
           upsert: {
-            args: Prisma.ModuleUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModulePayload>
+            args: Prisma.CourseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CoursePayload>
           }
           aggregate: {
-            args: Prisma.ModuleAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateModule>
+            args: Prisma.CourseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCourse>
           }
           groupBy: {
-            args: Prisma.ModuleGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ModuleGroupByOutputType>[]
+            args: Prisma.CourseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CourseGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ModuleCountArgs<ExtArgs>
-            result: $Utils.Optional<ModuleCountAggregateOutputType> | number
+            args: Prisma.CourseCountArgs<ExtArgs>
+            result: $Utils.Optional<CourseCountAggregateOutputType> | number
           }
         }
       }
-      ModuleAssignment: {
-        payload: Prisma.$ModuleAssignmentPayload<ExtArgs>
-        fields: Prisma.ModuleAssignmentFieldRefs
+      CourseAssignment: {
+        payload: Prisma.$CourseAssignmentPayload<ExtArgs>
+        fields: Prisma.CourseAssignmentFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ModuleAssignmentFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload> | null
+            args: Prisma.CourseAssignmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ModuleAssignmentFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           findFirst: {
-            args: Prisma.ModuleAssignmentFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload> | null
+            args: Prisma.CourseAssignmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ModuleAssignmentFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           findMany: {
-            args: Prisma.ModuleAssignmentFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>[]
+            args: Prisma.CourseAssignmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>[]
           }
           create: {
-            args: Prisma.ModuleAssignmentCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           createMany: {
-            args: Prisma.ModuleAssignmentCreateManyArgs<ExtArgs>
+            args: Prisma.CourseAssignmentCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.ModuleAssignmentCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>[]
+            args: Prisma.CourseAssignmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>[]
           }
           delete: {
-            args: Prisma.ModuleAssignmentDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           update: {
-            args: Prisma.ModuleAssignmentUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           deleteMany: {
-            args: Prisma.ModuleAssignmentDeleteManyArgs<ExtArgs>
+            args: Prisma.CourseAssignmentDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ModuleAssignmentUpdateManyArgs<ExtArgs>
+            args: Prisma.CourseAssignmentUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.ModuleAssignmentUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>[]
+            args: Prisma.CourseAssignmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>[]
           }
           upsert: {
-            args: Prisma.ModuleAssignmentUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleAssignmentPayload>
+            args: Prisma.CourseAssignmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseAssignmentPayload>
           }
           aggregate: {
-            args: Prisma.ModuleAssignmentAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateModuleAssignment>
+            args: Prisma.CourseAssignmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCourseAssignment>
           }
           groupBy: {
-            args: Prisma.ModuleAssignmentGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ModuleAssignmentGroupByOutputType>[]
+            args: Prisma.CourseAssignmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CourseAssignmentGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ModuleAssignmentCountArgs<ExtArgs>
-            result: $Utils.Optional<ModuleAssignmentCountAggregateOutputType> | number
+            args: Prisma.CourseAssignmentCountArgs<ExtArgs>
+            result: $Utils.Optional<CourseAssignmentCountAggregateOutputType> | number
           }
         }
       }
-      ModuleVideo: {
-        payload: Prisma.$ModuleVideoPayload<ExtArgs>
-        fields: Prisma.ModuleVideoFieldRefs
+      CourseVideo: {
+        payload: Prisma.$CourseVideoPayload<ExtArgs>
+        fields: Prisma.CourseVideoFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.ModuleVideoFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload> | null
+            args: Prisma.CourseVideoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.ModuleVideoFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           findFirst: {
-            args: Prisma.ModuleVideoFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload> | null
+            args: Prisma.CourseVideoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.ModuleVideoFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           findMany: {
-            args: Prisma.ModuleVideoFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>[]
+            args: Prisma.CourseVideoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>[]
           }
           create: {
-            args: Prisma.ModuleVideoCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           createMany: {
-            args: Prisma.ModuleVideoCreateManyArgs<ExtArgs>
+            args: Prisma.CourseVideoCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.ModuleVideoCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>[]
+            args: Prisma.CourseVideoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>[]
           }
           delete: {
-            args: Prisma.ModuleVideoDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           update: {
-            args: Prisma.ModuleVideoUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           deleteMany: {
-            args: Prisma.ModuleVideoDeleteManyArgs<ExtArgs>
+            args: Prisma.CourseVideoDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.ModuleVideoUpdateManyArgs<ExtArgs>
+            args: Prisma.CourseVideoUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.ModuleVideoUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>[]
+            args: Prisma.CourseVideoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>[]
           }
           upsert: {
-            args: Prisma.ModuleVideoUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ModuleVideoPayload>
+            args: Prisma.CourseVideoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CourseVideoPayload>
           }
           aggregate: {
-            args: Prisma.ModuleVideoAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateModuleVideo>
+            args: Prisma.CourseVideoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCourseVideo>
           }
           groupBy: {
-            args: Prisma.ModuleVideoGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ModuleVideoGroupByOutputType>[]
+            args: Prisma.CourseVideoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CourseVideoGroupByOutputType>[]
           }
           count: {
-            args: Prisma.ModuleVideoCountArgs<ExtArgs>
-            result: $Utils.Optional<ModuleVideoCountAggregateOutputType> | number
+            args: Prisma.CourseVideoCountArgs<ExtArgs>
+            result: $Utils.Optional<CourseVideoCountAggregateOutputType> | number
           }
         }
       }
@@ -1424,9 +1424,9 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
-    module?: ModuleOmit
-    moduleAssignment?: ModuleAssignmentOmit
-    moduleVideo?: ModuleVideoOmit
+    course?: CourseOmit
+    courseAssignment?: CourseAssignmentOmit
+    courseVideo?: CourseVideoOmit
     video?: VideoOmit
     watchLog?: WatchLogOmit
     quiz?: QuizOmit
@@ -1551,7 +1551,7 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
   }
 
   /**
@@ -1570,42 +1570,42 @@ export namespace Prisma {
 
 
   /**
-   * Count Type ModuleCountOutputType
+   * Count Type CourseCountOutputType
    */
 
-  export type ModuleCountOutputType = {
+  export type CourseCountOutputType = {
     assignments: number
-    moduleVideos: number
+    courseVideos: number
   }
 
-  export type ModuleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    assignments?: boolean | ModuleCountOutputTypeCountAssignmentsArgs
-    moduleVideos?: boolean | ModuleCountOutputTypeCountModuleVideosArgs
+  export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignments?: boolean | CourseCountOutputTypeCountAssignmentsArgs
+    courseVideos?: boolean | CourseCountOutputTypeCountCourseVideosArgs
   }
 
   // Custom InputTypes
   /**
-   * ModuleCountOutputType without action
+   * CourseCountOutputType without action
    */
-  export type ModuleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleCountOutputType
+     * Select specific fields to fetch from the CourseCountOutputType
      */
-    select?: ModuleCountOutputTypeSelect<ExtArgs> | null
+    select?: CourseCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * ModuleCountOutputType without action
+   * CourseCountOutputType without action
    */
-  export type ModuleCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleAssignmentWhereInput
+  export type CourseCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseAssignmentWhereInput
   }
 
   /**
-   * ModuleCountOutputType without action
+   * CourseCountOutputType without action
    */
-  export type ModuleCountOutputTypeCountModuleVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleVideoWhereInput
+  export type CourseCountOutputTypeCountCourseVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseVideoWhereInput
   }
 
 
@@ -1614,12 +1614,12 @@ export namespace Prisma {
    */
 
   export type VideoCountOutputType = {
-    moduleVideos: number
+    courseVideos: number
     watchLogs: number
   }
 
   export type VideoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    moduleVideos?: boolean | VideoCountOutputTypeCountModuleVideosArgs
+    courseVideos?: boolean | VideoCountOutputTypeCountCourseVideosArgs
     watchLogs?: boolean | VideoCountOutputTypeCountWatchLogsArgs
   }
 
@@ -1637,8 +1637,8 @@ export namespace Prisma {
   /**
    * VideoCountOutputType without action
    */
-  export type VideoCountOutputTypeCountModuleVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleVideoWhereInput
+  export type VideoCountOutputTypeCountCourseVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseVideoWhereInput
   }
 
   /**
@@ -1936,7 +1936,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      assignments: Prisma.$ModuleAssignmentPayload<ExtArgs>[]
+      assignments: Prisma.$CourseAssignmentPayload<ExtArgs>[]
       quizAttempts: Prisma.$QuizAttemptPayload<ExtArgs>[]
       watchLogs: Prisma.$WatchLogPayload<ExtArgs>[]
     }
@@ -2341,7 +2341,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    assignments<T extends User$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignments<T extends User$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizAttempts<T extends User$quizAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$quizAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     watchLogs<T extends User$watchLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$watchLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WatchLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2771,23 +2771,23 @@ export namespace Prisma {
    */
   export type User$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
-    where?: ModuleAssignmentWhereInput
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
-    cursor?: ModuleAssignmentWhereUniqueInput
+    include?: CourseAssignmentInclude<ExtArgs> | null
+    where?: CourseAssignmentWhereInput
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
+    cursor?: CourseAssignmentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ModuleAssignmentScalarFieldEnum | ModuleAssignmentScalarFieldEnum[]
+    distinct?: CourseAssignmentScalarFieldEnum | CourseAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -2858,387 +2858,395 @@ export namespace Prisma {
 
 
   /**
-   * Model Module
+   * Model Course
    */
 
-  export type AggregateModule = {
-    _count: ModuleCountAggregateOutputType | null
-    _avg: ModuleAvgAggregateOutputType | null
-    _sum: ModuleSumAggregateOutputType | null
-    _min: ModuleMinAggregateOutputType | null
-    _max: ModuleMaxAggregateOutputType | null
+  export type AggregateCourse = {
+    _count: CourseCountAggregateOutputType | null
+    _avg: CourseAvgAggregateOutputType | null
+    _sum: CourseSumAggregateOutputType | null
+    _min: CourseMinAggregateOutputType | null
+    _max: CourseMaxAggregateOutputType | null
   }
 
-  export type ModuleAvgAggregateOutputType = {
+  export type CourseAvgAggregateOutputType = {
     id: number | null
-    createdBy: number | null
   }
 
-  export type ModuleSumAggregateOutputType = {
+  export type CourseSumAggregateOutputType = {
     id: number | null
-    createdBy: number | null
   }
 
-  export type ModuleMinAggregateOutputType = {
+  export type CourseMinAggregateOutputType = {
     id: number | null
     title: string | null
     description: string | null
-    createdBy: number | null
+    createdBy: string | null
     createdAt: Date | null
+    thumbnailUrl: string | null
   }
 
-  export type ModuleMaxAggregateOutputType = {
+  export type CourseMaxAggregateOutputType = {
     id: number | null
     title: string | null
     description: string | null
-    createdBy: number | null
+    createdBy: string | null
     createdAt: Date | null
+    thumbnailUrl: string | null
   }
 
-  export type ModuleCountAggregateOutputType = {
+  export type CourseCountAggregateOutputType = {
     id: number
     title: number
     description: number
     createdBy: number
     createdAt: number
+    thumbnailUrl: number
     _all: number
   }
 
 
-  export type ModuleAvgAggregateInputType = {
+  export type CourseAvgAggregateInputType = {
     id?: true
-    createdBy?: true
   }
 
-  export type ModuleSumAggregateInputType = {
+  export type CourseSumAggregateInputType = {
     id?: true
-    createdBy?: true
   }
 
-  export type ModuleMinAggregateInputType = {
+  export type CourseMinAggregateInputType = {
     id?: true
     title?: true
     description?: true
     createdBy?: true
     createdAt?: true
+    thumbnailUrl?: true
   }
 
-  export type ModuleMaxAggregateInputType = {
+  export type CourseMaxAggregateInputType = {
     id?: true
     title?: true
     description?: true
     createdBy?: true
     createdAt?: true
+    thumbnailUrl?: true
   }
 
-  export type ModuleCountAggregateInputType = {
+  export type CourseCountAggregateInputType = {
     id?: true
     title?: true
     description?: true
     createdBy?: true
     createdAt?: true
+    thumbnailUrl?: true
     _all?: true
   }
 
-  export type ModuleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Module to aggregate.
+     * Filter which Course to aggregate.
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Modules to fetch.
+     * Determine the order of Courses to fetch.
      */
-    orderBy?: ModuleOrderByWithRelationInput | ModuleOrderByWithRelationInput[]
+    orderBy?: CourseOrderByWithRelationInput | CourseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ModuleWhereUniqueInput
+    cursor?: CourseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Modules from the position of the cursor.
+     * Take `±n` Courses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Modules.
+     * Skip the first `n` Courses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Modules
+     * Count returned Courses
     **/
-    _count?: true | ModuleCountAggregateInputType
+    _count?: true | CourseCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: ModuleAvgAggregateInputType
+    _avg?: CourseAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: ModuleSumAggregateInputType
+    _sum?: CourseSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ModuleMinAggregateInputType
+    _min?: CourseMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ModuleMaxAggregateInputType
+    _max?: CourseMaxAggregateInputType
   }
 
-  export type GetModuleAggregateType<T extends ModuleAggregateArgs> = {
-        [P in keyof T & keyof AggregateModule]: P extends '_count' | 'count'
+  export type GetCourseAggregateType<T extends CourseAggregateArgs> = {
+        [P in keyof T & keyof AggregateCourse]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateModule[P]>
-      : GetScalarType<T[P], AggregateModule[P]>
+        : GetScalarType<T[P], AggregateCourse[P]>
+      : GetScalarType<T[P], AggregateCourse[P]>
   }
 
 
 
 
-  export type ModuleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleWhereInput
-    orderBy?: ModuleOrderByWithAggregationInput | ModuleOrderByWithAggregationInput[]
-    by: ModuleScalarFieldEnum[] | ModuleScalarFieldEnum
-    having?: ModuleScalarWhereWithAggregatesInput
+  export type CourseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseWhereInput
+    orderBy?: CourseOrderByWithAggregationInput | CourseOrderByWithAggregationInput[]
+    by: CourseScalarFieldEnum[] | CourseScalarFieldEnum
+    having?: CourseScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ModuleCountAggregateInputType | true
-    _avg?: ModuleAvgAggregateInputType
-    _sum?: ModuleSumAggregateInputType
-    _min?: ModuleMinAggregateInputType
-    _max?: ModuleMaxAggregateInputType
+    _count?: CourseCountAggregateInputType | true
+    _avg?: CourseAvgAggregateInputType
+    _sum?: CourseSumAggregateInputType
+    _min?: CourseMinAggregateInputType
+    _max?: CourseMaxAggregateInputType
   }
 
-  export type ModuleGroupByOutputType = {
+  export type CourseGroupByOutputType = {
     id: number
     title: string
     description: string | null
-    createdBy: number
+    createdBy: string | null
     createdAt: Date
-    _count: ModuleCountAggregateOutputType | null
-    _avg: ModuleAvgAggregateOutputType | null
-    _sum: ModuleSumAggregateOutputType | null
-    _min: ModuleMinAggregateOutputType | null
-    _max: ModuleMaxAggregateOutputType | null
+    thumbnailUrl: string | null
+    _count: CourseCountAggregateOutputType | null
+    _avg: CourseAvgAggregateOutputType | null
+    _sum: CourseSumAggregateOutputType | null
+    _min: CourseMinAggregateOutputType | null
+    _max: CourseMaxAggregateOutputType | null
   }
 
-  type GetModuleGroupByPayload<T extends ModuleGroupByArgs> = Prisma.PrismaPromise<
+  type GetCourseGroupByPayload<T extends CourseGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ModuleGroupByOutputType, T['by']> &
+      PickEnumerable<CourseGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ModuleGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CourseGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ModuleGroupByOutputType[P]>
-            : GetScalarType<T[P], ModuleGroupByOutputType[P]>
+              : GetScalarType<T[P], CourseGroupByOutputType[P]>
+            : GetScalarType<T[P], CourseGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ModuleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     description?: boolean
     createdBy?: boolean
     createdAt?: boolean
-    assignments?: boolean | Module$assignmentsArgs<ExtArgs>
-    moduleVideos?: boolean | Module$moduleVideosArgs<ExtArgs>
-    _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["module"]>
+    thumbnailUrl?: boolean
+    assignments?: boolean | Course$assignmentsArgs<ExtArgs>
+    courseVideos?: boolean | Course$courseVideosArgs<ExtArgs>
+    _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course"]>
 
-  export type ModuleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     description?: boolean
     createdBy?: boolean
     createdAt?: boolean
-  }, ExtArgs["result"]["module"]>
+    thumbnailUrl?: boolean
+  }, ExtArgs["result"]["course"]>
 
-  export type ModuleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     description?: boolean
     createdBy?: boolean
     createdAt?: boolean
-  }, ExtArgs["result"]["module"]>
+    thumbnailUrl?: boolean
+  }, ExtArgs["result"]["course"]>
 
-  export type ModuleSelectScalar = {
+  export type CourseSelectScalar = {
     id?: boolean
     title?: boolean
     description?: boolean
     createdBy?: boolean
     createdAt?: boolean
+    thumbnailUrl?: boolean
   }
 
-  export type ModuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdBy" | "createdAt", ExtArgs["result"]["module"]>
-  export type ModuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    assignments?: boolean | Module$assignmentsArgs<ExtArgs>
-    moduleVideos?: boolean | Module$moduleVideosArgs<ExtArgs>
-    _count?: boolean | ModuleCountOutputTypeDefaultArgs<ExtArgs>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdBy" | "createdAt" | "thumbnailUrl", ExtArgs["result"]["course"]>
+  export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignments?: boolean | Course$assignmentsArgs<ExtArgs>
+    courseVideos?: boolean | Course$courseVideosArgs<ExtArgs>
+    _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ModuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type ModuleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CourseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
-  export type $ModulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Module"
+  export type $CoursePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Course"
     objects: {
-      assignments: Prisma.$ModuleAssignmentPayload<ExtArgs>[]
-      moduleVideos: Prisma.$ModuleVideoPayload<ExtArgs>[]
+      assignments: Prisma.$CourseAssignmentPayload<ExtArgs>[]
+      courseVideos: Prisma.$CourseVideoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title: string
       description: string | null
-      createdBy: number
+      createdBy: string | null
       createdAt: Date
-    }, ExtArgs["result"]["module"]>
+      thumbnailUrl: string | null
+    }, ExtArgs["result"]["course"]>
     composites: {}
   }
 
-  type ModuleGetPayload<S extends boolean | null | undefined | ModuleDefaultArgs> = $Result.GetResult<Prisma.$ModulePayload, S>
+  type CourseGetPayload<S extends boolean | null | undefined | CourseDefaultArgs> = $Result.GetResult<Prisma.$CoursePayload, S>
 
-  type ModuleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ModuleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ModuleCountAggregateInputType | true
+  type CourseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CourseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CourseCountAggregateInputType | true
     }
 
-  export interface ModuleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Module'], meta: { name: 'Module' } }
+  export interface CourseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Course'], meta: { name: 'Course' } }
     /**
-     * Find zero or one Module that matches the filter.
-     * @param {ModuleFindUniqueArgs} args - Arguments to find a Module
+     * Find zero or one Course that matches the filter.
+     * @param {CourseFindUniqueArgs} args - Arguments to find a Course
      * @example
-     * // Get one Module
-     * const module = await prisma.module.findUnique({
+     * // Get one Course
+     * const course = await prisma.course.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ModuleFindUniqueArgs>(args: SelectSubset<T, ModuleFindUniqueArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends CourseFindUniqueArgs>(args: SelectSubset<T, CourseFindUniqueArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Module that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Course that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ModuleFindUniqueOrThrowArgs} args - Arguments to find a Module
+     * @param {CourseFindUniqueOrThrowArgs} args - Arguments to find a Course
      * @example
-     * // Get one Module
-     * const module = await prisma.module.findUniqueOrThrow({
+     * // Get one Course
+     * const course = await prisma.course.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ModuleFindUniqueOrThrowArgs>(args: SelectSubset<T, ModuleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends CourseFindUniqueOrThrowArgs>(args: SelectSubset<T, CourseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Module that matches the filter.
+     * Find the first Course that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleFindFirstArgs} args - Arguments to find a Module
+     * @param {CourseFindFirstArgs} args - Arguments to find a Course
      * @example
-     * // Get one Module
-     * const module = await prisma.module.findFirst({
+     * // Get one Course
+     * const course = await prisma.course.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ModuleFindFirstArgs>(args?: SelectSubset<T, ModuleFindFirstArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends CourseFindFirstArgs>(args?: SelectSubset<T, CourseFindFirstArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Module that matches the filter or
+     * Find the first Course that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleFindFirstOrThrowArgs} args - Arguments to find a Module
+     * @param {CourseFindFirstOrThrowArgs} args - Arguments to find a Course
      * @example
-     * // Get one Module
-     * const module = await prisma.module.findFirstOrThrow({
+     * // Get one Course
+     * const course = await prisma.course.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ModuleFindFirstOrThrowArgs>(args?: SelectSubset<T, ModuleFindFirstOrThrowArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends CourseFindFirstOrThrowArgs>(args?: SelectSubset<T, CourseFindFirstOrThrowArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Modules that matches the filter.
+     * Find zero or more Courses that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CourseFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Modules
-     * const modules = await prisma.module.findMany()
+     * // Get all Courses
+     * const courses = await prisma.course.findMany()
      * 
-     * // Get first 10 Modules
-     * const modules = await prisma.module.findMany({ take: 10 })
+     * // Get first 10 Courses
+     * const courses = await prisma.course.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const moduleWithIdOnly = await prisma.module.findMany({ select: { id: true } })
+     * const courseWithIdOnly = await prisma.course.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ModuleFindManyArgs>(args?: SelectSubset<T, ModuleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends CourseFindManyArgs>(args?: SelectSubset<T, CourseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Module.
-     * @param {ModuleCreateArgs} args - Arguments to create a Module.
+     * Create a Course.
+     * @param {CourseCreateArgs} args - Arguments to create a Course.
      * @example
-     * // Create one Module
-     * const Module = await prisma.module.create({
+     * // Create one Course
+     * const Course = await prisma.course.create({
      *   data: {
-     *     // ... data to create a Module
+     *     // ... data to create a Course
      *   }
      * })
      * 
      */
-    create<T extends ModuleCreateArgs>(args: SelectSubset<T, ModuleCreateArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends CourseCreateArgs>(args: SelectSubset<T, CourseCreateArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Modules.
-     * @param {ModuleCreateManyArgs} args - Arguments to create many Modules.
+     * Create many Courses.
+     * @param {CourseCreateManyArgs} args - Arguments to create many Courses.
      * @example
-     * // Create many Modules
-     * const module = await prisma.module.createMany({
+     * // Create many Courses
+     * const course = await prisma.course.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ModuleCreateManyArgs>(args?: SelectSubset<T, ModuleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends CourseCreateManyArgs>(args?: SelectSubset<T, CourseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Modules and returns the data saved in the database.
-     * @param {ModuleCreateManyAndReturnArgs} args - Arguments to create many Modules.
+     * Create many Courses and returns the data saved in the database.
+     * @param {CourseCreateManyAndReturnArgs} args - Arguments to create many Courses.
      * @example
-     * // Create many Modules
-     * const module = await prisma.module.createManyAndReturn({
+     * // Create many Courses
+     * const course = await prisma.course.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Modules and only return the `id`
-     * const moduleWithIdOnly = await prisma.module.createManyAndReturn({
+     * // Create many Courses and only return the `id`
+     * const courseWithIdOnly = await prisma.course.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -3248,28 +3256,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends ModuleCreateManyAndReturnArgs>(args?: SelectSubset<T, ModuleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends CourseCreateManyAndReturnArgs>(args?: SelectSubset<T, CourseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Module.
-     * @param {ModuleDeleteArgs} args - Arguments to delete one Module.
+     * Delete a Course.
+     * @param {CourseDeleteArgs} args - Arguments to delete one Course.
      * @example
-     * // Delete one Module
-     * const Module = await prisma.module.delete({
+     * // Delete one Course
+     * const Course = await prisma.course.delete({
      *   where: {
-     *     // ... filter to delete one Module
+     *     // ... filter to delete one Course
      *   }
      * })
      * 
      */
-    delete<T extends ModuleDeleteArgs>(args: SelectSubset<T, ModuleDeleteArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends CourseDeleteArgs>(args: SelectSubset<T, CourseDeleteArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Module.
-     * @param {ModuleUpdateArgs} args - Arguments to update one Module.
+     * Update one Course.
+     * @param {CourseUpdateArgs} args - Arguments to update one Course.
      * @example
-     * // Update one Module
-     * const module = await prisma.module.update({
+     * // Update one Course
+     * const course = await prisma.course.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3279,30 +3287,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ModuleUpdateArgs>(args: SelectSubset<T, ModuleUpdateArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends CourseUpdateArgs>(args: SelectSubset<T, CourseUpdateArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Modules.
-     * @param {ModuleDeleteManyArgs} args - Arguments to filter Modules to delete.
+     * Delete zero or more Courses.
+     * @param {CourseDeleteManyArgs} args - Arguments to filter Courses to delete.
      * @example
-     * // Delete a few Modules
-     * const { count } = await prisma.module.deleteMany({
+     * // Delete a few Courses
+     * const { count } = await prisma.course.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ModuleDeleteManyArgs>(args?: SelectSubset<T, ModuleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends CourseDeleteManyArgs>(args?: SelectSubset<T, CourseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Modules.
+     * Update zero or more Courses.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CourseUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Modules
-     * const module = await prisma.module.updateMany({
+     * // Update many Courses
+     * const course = await prisma.course.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3312,14 +3320,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ModuleUpdateManyArgs>(args: SelectSubset<T, ModuleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends CourseUpdateManyArgs>(args: SelectSubset<T, CourseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Modules and returns the data updated in the database.
-     * @param {ModuleUpdateManyAndReturnArgs} args - Arguments to update many Modules.
+     * Update zero or more Courses and returns the data updated in the database.
+     * @param {CourseUpdateManyAndReturnArgs} args - Arguments to update many Courses.
      * @example
-     * // Update many Modules
-     * const module = await prisma.module.updateManyAndReturn({
+     * // Update many Courses
+     * const course = await prisma.course.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3328,8 +3336,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Modules and only return the `id`
-     * const moduleWithIdOnly = await prisma.module.updateManyAndReturn({
+     * // Update zero or more Courses and only return the `id`
+     * const courseWithIdOnly = await prisma.course.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -3342,56 +3350,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends ModuleUpdateManyAndReturnArgs>(args: SelectSubset<T, ModuleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends CourseUpdateManyAndReturnArgs>(args: SelectSubset<T, CourseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Module.
-     * @param {ModuleUpsertArgs} args - Arguments to update or create a Module.
+     * Create or update one Course.
+     * @param {CourseUpsertArgs} args - Arguments to update or create a Course.
      * @example
-     * // Update or create a Module
-     * const module = await prisma.module.upsert({
+     * // Update or create a Course
+     * const course = await prisma.course.upsert({
      *   create: {
-     *     // ... data to create a Module
+     *     // ... data to create a Course
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Module we want to update
+     *     // ... the filter for the Course we want to update
      *   }
      * })
      */
-    upsert<T extends ModuleUpsertArgs>(args: SelectSubset<T, ModuleUpsertArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends CourseUpsertArgs>(args: SelectSubset<T, CourseUpsertArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Modules.
+     * Count the number of Courses.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleCountArgs} args - Arguments to filter Modules to count.
+     * @param {CourseCountArgs} args - Arguments to filter Courses to count.
      * @example
-     * // Count the number of Modules
-     * const count = await prisma.module.count({
+     * // Count the number of Courses
+     * const count = await prisma.course.count({
      *   where: {
-     *     // ... the filter for the Modules we want to count
+     *     // ... the filter for the Courses we want to count
      *   }
      * })
     **/
-    count<T extends ModuleCountArgs>(
-      args?: Subset<T, ModuleCountArgs>,
+    count<T extends CourseCountArgs>(
+      args?: Subset<T, CourseCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ModuleCountAggregateOutputType>
+          : GetScalarType<T['select'], CourseCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Module.
+     * Allows you to perform aggregations operations on a Course.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CourseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -3411,13 +3419,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ModuleAggregateArgs>(args: Subset<T, ModuleAggregateArgs>): Prisma.PrismaPromise<GetModuleAggregateType<T>>
+    aggregate<T extends CourseAggregateArgs>(args: Subset<T, CourseAggregateArgs>): Prisma.PrismaPromise<GetCourseAggregateType<T>>
 
     /**
-     * Group by Module.
+     * Group by Course.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleGroupByArgs} args - Group by arguments.
+     * @param {CourseGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -3432,14 +3440,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ModuleGroupByArgs,
+      T extends CourseGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ModuleGroupByArgs['orderBy'] }
-        : { orderBy?: ModuleGroupByArgs['orderBy'] },
+        ? { orderBy: CourseGroupByArgs['orderBy'] }
+        : { orderBy?: CourseGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -3488,23 +3496,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ModuleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModuleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CourseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCourseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Module model
+   * Fields of the Course model
    */
-  readonly fields: ModuleFieldRefs;
+  readonly fields: CourseFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Module.
+   * The delegate class that acts as a "Promise-like" for Course.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__CourseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    assignments<T extends Module$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Module$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    moduleVideos<T extends Module$moduleVideosArgs<ExtArgs> = {}>(args?: Subset<T, Module$moduleVideosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignments<T extends Course$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Course$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    courseVideos<T extends Course$courseVideosArgs<ExtArgs> = {}>(args?: Subset<T, Course$courseVideosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3531,850 +3539,851 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Module model
+   * Fields of the Course model
    */
-  interface ModuleFieldRefs {
-    readonly id: FieldRef<"Module", 'Int'>
-    readonly title: FieldRef<"Module", 'String'>
-    readonly description: FieldRef<"Module", 'String'>
-    readonly createdBy: FieldRef<"Module", 'Int'>
-    readonly createdAt: FieldRef<"Module", 'DateTime'>
+  interface CourseFieldRefs {
+    readonly id: FieldRef<"Course", 'Int'>
+    readonly title: FieldRef<"Course", 'String'>
+    readonly description: FieldRef<"Course", 'String'>
+    readonly createdBy: FieldRef<"Course", 'String'>
+    readonly createdAt: FieldRef<"Course", 'DateTime'>
+    readonly thumbnailUrl: FieldRef<"Course", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * Module findUnique
+   * Course findUnique
    */
-  export type ModuleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter, which Module to fetch.
+     * Filter, which Course to fetch.
      */
-    where: ModuleWhereUniqueInput
+    where: CourseWhereUniqueInput
   }
 
   /**
-   * Module findUniqueOrThrow
+   * Course findUniqueOrThrow
    */
-  export type ModuleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter, which Module to fetch.
+     * Filter, which Course to fetch.
      */
-    where: ModuleWhereUniqueInput
+    where: CourseWhereUniqueInput
   }
 
   /**
-   * Module findFirst
+   * Course findFirst
    */
-  export type ModuleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter, which Module to fetch.
+     * Filter, which Course to fetch.
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Modules to fetch.
+     * Determine the order of Courses to fetch.
      */
-    orderBy?: ModuleOrderByWithRelationInput | ModuleOrderByWithRelationInput[]
+    orderBy?: CourseOrderByWithRelationInput | CourseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Modules.
+     * Sets the position for searching for Courses.
      */
-    cursor?: ModuleWhereUniqueInput
+    cursor?: CourseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Modules from the position of the cursor.
+     * Take `±n` Courses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Modules.
+     * Skip the first `n` Courses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Modules.
+     * Filter by unique combinations of Courses.
      */
-    distinct?: ModuleScalarFieldEnum | ModuleScalarFieldEnum[]
+    distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
   }
 
   /**
-   * Module findFirstOrThrow
+   * Course findFirstOrThrow
    */
-  export type ModuleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter, which Module to fetch.
+     * Filter, which Course to fetch.
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Modules to fetch.
+     * Determine the order of Courses to fetch.
      */
-    orderBy?: ModuleOrderByWithRelationInput | ModuleOrderByWithRelationInput[]
+    orderBy?: CourseOrderByWithRelationInput | CourseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Modules.
+     * Sets the position for searching for Courses.
      */
-    cursor?: ModuleWhereUniqueInput
+    cursor?: CourseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Modules from the position of the cursor.
+     * Take `±n` Courses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Modules.
+     * Skip the first `n` Courses.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Modules.
+     * Filter by unique combinations of Courses.
      */
-    distinct?: ModuleScalarFieldEnum | ModuleScalarFieldEnum[]
+    distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
   }
 
   /**
-   * Module findMany
+   * Course findMany
    */
-  export type ModuleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter, which Modules to fetch.
+     * Filter, which Courses to fetch.
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Modules to fetch.
+     * Determine the order of Courses to fetch.
      */
-    orderBy?: ModuleOrderByWithRelationInput | ModuleOrderByWithRelationInput[]
+    orderBy?: CourseOrderByWithRelationInput | CourseOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Modules.
+     * Sets the position for listing Courses.
      */
-    cursor?: ModuleWhereUniqueInput
+    cursor?: CourseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Modules from the position of the cursor.
+     * Take `±n` Courses from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Modules.
+     * Skip the first `n` Courses.
      */
     skip?: number
-    distinct?: ModuleScalarFieldEnum | ModuleScalarFieldEnum[]
+    distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
   }
 
   /**
-   * Module create
+   * Course create
    */
-  export type ModuleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * The data needed to create a Module.
+     * The data needed to create a Course.
      */
-    data: XOR<ModuleCreateInput, ModuleUncheckedCreateInput>
+    data: XOR<CourseCreateInput, CourseUncheckedCreateInput>
   }
 
   /**
-   * Module createMany
+   * Course createMany
    */
-  export type ModuleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Modules.
+     * The data used to create many Courses.
      */
-    data: ModuleCreateManyInput | ModuleCreateManyInput[]
+    data: CourseCreateManyInput | CourseCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Module createManyAndReturn
+   * Course createManyAndReturn
    */
-  export type ModuleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelectCreateManyAndReturn<ExtArgs> | null
+    select?: CourseSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
-     * The data used to create many Modules.
+     * The data used to create many Courses.
      */
-    data: ModuleCreateManyInput | ModuleCreateManyInput[]
+    data: CourseCreateManyInput | CourseCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Module update
+   * Course update
    */
-  export type ModuleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * The data needed to update a Module.
+     * The data needed to update a Course.
      */
-    data: XOR<ModuleUpdateInput, ModuleUncheckedUpdateInput>
+    data: XOR<CourseUpdateInput, CourseUncheckedUpdateInput>
     /**
-     * Choose, which Module to update.
+     * Choose, which Course to update.
      */
-    where: ModuleWhereUniqueInput
+    where: CourseWhereUniqueInput
   }
 
   /**
-   * Module updateMany
+   * Course updateMany
    */
-  export type ModuleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Modules.
+     * The data used to update Courses.
      */
-    data: XOR<ModuleUpdateManyMutationInput, ModuleUncheckedUpdateManyInput>
+    data: XOR<CourseUpdateManyMutationInput, CourseUncheckedUpdateManyInput>
     /**
-     * Filter which Modules to update
+     * Filter which Courses to update
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
-     * Limit how many Modules to update.
+     * Limit how many Courses to update.
      */
     limit?: number
   }
 
   /**
-   * Module updateManyAndReturn
+   * Course updateManyAndReturn
    */
-  export type ModuleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: CourseSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
-     * The data used to update Modules.
+     * The data used to update Courses.
      */
-    data: XOR<ModuleUpdateManyMutationInput, ModuleUncheckedUpdateManyInput>
+    data: XOR<CourseUpdateManyMutationInput, CourseUncheckedUpdateManyInput>
     /**
-     * Filter which Modules to update
+     * Filter which Courses to update
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
-     * Limit how many Modules to update.
+     * Limit how many Courses to update.
      */
     limit?: number
   }
 
   /**
-   * Module upsert
+   * Course upsert
    */
-  export type ModuleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * The filter to search for the Module to update in case it exists.
+     * The filter to search for the Course to update in case it exists.
      */
-    where: ModuleWhereUniqueInput
+    where: CourseWhereUniqueInput
     /**
-     * In case the Module found by the `where` argument doesn't exist, create a new Module with this data.
+     * In case the Course found by the `where` argument doesn't exist, create a new Course with this data.
      */
-    create: XOR<ModuleCreateInput, ModuleUncheckedCreateInput>
+    create: XOR<CourseCreateInput, CourseUncheckedCreateInput>
     /**
-     * In case the Module was found with the provided `where` argument, update it with this data.
+     * In case the Course was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ModuleUpdateInput, ModuleUncheckedUpdateInput>
+    update: XOR<CourseUpdateInput, CourseUncheckedUpdateInput>
   }
 
   /**
-   * Module delete
+   * Course delete
    */
-  export type ModuleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
     /**
-     * Filter which Module to delete.
+     * Filter which Course to delete.
      */
-    where: ModuleWhereUniqueInput
+    where: CourseWhereUniqueInput
   }
 
   /**
-   * Module deleteMany
+   * Course deleteMany
    */
-  export type ModuleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Modules to delete
+     * Filter which Courses to delete
      */
-    where?: ModuleWhereInput
+    where?: CourseWhereInput
     /**
-     * Limit how many Modules to delete.
+     * Limit how many Courses to delete.
      */
     limit?: number
   }
 
   /**
-   * Module.assignments
+   * Course.assignments
    */
-  export type Module$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Course$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
-    where?: ModuleAssignmentWhereInput
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
-    cursor?: ModuleAssignmentWhereUniqueInput
+    include?: CourseAssignmentInclude<ExtArgs> | null
+    where?: CourseAssignmentWhereInput
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
+    cursor?: CourseAssignmentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ModuleAssignmentScalarFieldEnum | ModuleAssignmentScalarFieldEnum[]
+    distinct?: CourseAssignmentScalarFieldEnum | CourseAssignmentScalarFieldEnum[]
   }
 
   /**
-   * Module.moduleVideos
+   * Course.courseVideos
    */
-  export type Module$moduleVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Course$courseVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
-    where?: ModuleVideoWhereInput
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
-    cursor?: ModuleVideoWhereUniqueInput
+    include?: CourseVideoInclude<ExtArgs> | null
+    where?: CourseVideoWhereInput
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
+    cursor?: CourseVideoWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ModuleVideoScalarFieldEnum | ModuleVideoScalarFieldEnum[]
+    distinct?: CourseVideoScalarFieldEnum | CourseVideoScalarFieldEnum[]
   }
 
   /**
-   * Module without action
+   * Course without action
    */
-  export type ModuleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Module
+     * Select specific fields to fetch from the Course
      */
-    select?: ModuleSelect<ExtArgs> | null
+    select?: CourseSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Module
+     * Omit specific fields from the Course
      */
-    omit?: ModuleOmit<ExtArgs> | null
+    omit?: CourseOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleInclude<ExtArgs> | null
+    include?: CourseInclude<ExtArgs> | null
   }
 
 
   /**
-   * Model ModuleAssignment
+   * Model CourseAssignment
    */
 
-  export type AggregateModuleAssignment = {
-    _count: ModuleAssignmentCountAggregateOutputType | null
-    _avg: ModuleAssignmentAvgAggregateOutputType | null
-    _sum: ModuleAssignmentSumAggregateOutputType | null
-    _min: ModuleAssignmentMinAggregateOutputType | null
-    _max: ModuleAssignmentMaxAggregateOutputType | null
+  export type AggregateCourseAssignment = {
+    _count: CourseAssignmentCountAggregateOutputType | null
+    _avg: CourseAssignmentAvgAggregateOutputType | null
+    _sum: CourseAssignmentSumAggregateOutputType | null
+    _min: CourseAssignmentMinAggregateOutputType | null
+    _max: CourseAssignmentMaxAggregateOutputType | null
   }
 
-  export type ModuleAssignmentAvgAggregateOutputType = {
+  export type CourseAssignmentAvgAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     userId: number | null
   }
 
-  export type ModuleAssignmentSumAggregateOutputType = {
+  export type CourseAssignmentSumAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     userId: number | null
   }
 
-  export type ModuleAssignmentMinAggregateOutputType = {
+  export type CourseAssignmentMinAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     userId: number | null
     assignedAt: Date | null
   }
 
-  export type ModuleAssignmentMaxAggregateOutputType = {
+  export type CourseAssignmentMaxAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     userId: number | null
     assignedAt: Date | null
   }
 
-  export type ModuleAssignmentCountAggregateOutputType = {
+  export type CourseAssignmentCountAggregateOutputType = {
     id: number
-    moduleId: number
+    courseId: number
     userId: number
     assignedAt: number
     _all: number
   }
 
 
-  export type ModuleAssignmentAvgAggregateInputType = {
+  export type CourseAssignmentAvgAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     userId?: true
   }
 
-  export type ModuleAssignmentSumAggregateInputType = {
+  export type CourseAssignmentSumAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     userId?: true
   }
 
-  export type ModuleAssignmentMinAggregateInputType = {
+  export type CourseAssignmentMinAggregateInputType = {
     id?: true
-    moduleId?: true
-    userId?: true
-    assignedAt?: true
-  }
-
-  export type ModuleAssignmentMaxAggregateInputType = {
-    id?: true
-    moduleId?: true
+    courseId?: true
     userId?: true
     assignedAt?: true
   }
 
-  export type ModuleAssignmentCountAggregateInputType = {
+  export type CourseAssignmentMaxAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
+    userId?: true
+    assignedAt?: true
+  }
+
+  export type CourseAssignmentCountAggregateInputType = {
+    id?: true
+    courseId?: true
     userId?: true
     assignedAt?: true
     _all?: true
   }
 
-  export type ModuleAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ModuleAssignment to aggregate.
+     * Filter which CourseAssignment to aggregate.
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleAssignments to fetch.
+     * Determine the order of CourseAssignments to fetch.
      */
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ModuleAssignmentWhereUniqueInput
+    cursor?: CourseAssignmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleAssignments from the position of the cursor.
+     * Take `±n` CourseAssignments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleAssignments.
+     * Skip the first `n` CourseAssignments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned ModuleAssignments
+     * Count returned CourseAssignments
     **/
-    _count?: true | ModuleAssignmentCountAggregateInputType
+    _count?: true | CourseAssignmentCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: ModuleAssignmentAvgAggregateInputType
+    _avg?: CourseAssignmentAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: ModuleAssignmentSumAggregateInputType
+    _sum?: CourseAssignmentSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ModuleAssignmentMinAggregateInputType
+    _min?: CourseAssignmentMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ModuleAssignmentMaxAggregateInputType
+    _max?: CourseAssignmentMaxAggregateInputType
   }
 
-  export type GetModuleAssignmentAggregateType<T extends ModuleAssignmentAggregateArgs> = {
-        [P in keyof T & keyof AggregateModuleAssignment]: P extends '_count' | 'count'
+  export type GetCourseAssignmentAggregateType<T extends CourseAssignmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateCourseAssignment]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateModuleAssignment[P]>
-      : GetScalarType<T[P], AggregateModuleAssignment[P]>
+        : GetScalarType<T[P], AggregateCourseAssignment[P]>
+      : GetScalarType<T[P], AggregateCourseAssignment[P]>
   }
 
 
 
 
-  export type ModuleAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleAssignmentWhereInput
-    orderBy?: ModuleAssignmentOrderByWithAggregationInput | ModuleAssignmentOrderByWithAggregationInput[]
-    by: ModuleAssignmentScalarFieldEnum[] | ModuleAssignmentScalarFieldEnum
-    having?: ModuleAssignmentScalarWhereWithAggregatesInput
+  export type CourseAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseAssignmentWhereInput
+    orderBy?: CourseAssignmentOrderByWithAggregationInput | CourseAssignmentOrderByWithAggregationInput[]
+    by: CourseAssignmentScalarFieldEnum[] | CourseAssignmentScalarFieldEnum
+    having?: CourseAssignmentScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ModuleAssignmentCountAggregateInputType | true
-    _avg?: ModuleAssignmentAvgAggregateInputType
-    _sum?: ModuleAssignmentSumAggregateInputType
-    _min?: ModuleAssignmentMinAggregateInputType
-    _max?: ModuleAssignmentMaxAggregateInputType
+    _count?: CourseAssignmentCountAggregateInputType | true
+    _avg?: CourseAssignmentAvgAggregateInputType
+    _sum?: CourseAssignmentSumAggregateInputType
+    _min?: CourseAssignmentMinAggregateInputType
+    _max?: CourseAssignmentMaxAggregateInputType
   }
 
-  export type ModuleAssignmentGroupByOutputType = {
+  export type CourseAssignmentGroupByOutputType = {
     id: number
-    moduleId: number
+    courseId: number
     userId: number
     assignedAt: Date
-    _count: ModuleAssignmentCountAggregateOutputType | null
-    _avg: ModuleAssignmentAvgAggregateOutputType | null
-    _sum: ModuleAssignmentSumAggregateOutputType | null
-    _min: ModuleAssignmentMinAggregateOutputType | null
-    _max: ModuleAssignmentMaxAggregateOutputType | null
+    _count: CourseAssignmentCountAggregateOutputType | null
+    _avg: CourseAssignmentAvgAggregateOutputType | null
+    _sum: CourseAssignmentSumAggregateOutputType | null
+    _min: CourseAssignmentMinAggregateOutputType | null
+    _max: CourseAssignmentMaxAggregateOutputType | null
   }
 
-  type GetModuleAssignmentGroupByPayload<T extends ModuleAssignmentGroupByArgs> = Prisma.PrismaPromise<
+  type GetCourseAssignmentGroupByPayload<T extends CourseAssignmentGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ModuleAssignmentGroupByOutputType, T['by']> &
+      PickEnumerable<CourseAssignmentGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ModuleAssignmentGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CourseAssignmentGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ModuleAssignmentGroupByOutputType[P]>
-            : GetScalarType<T[P], ModuleAssignmentGroupByOutputType[P]>
+              : GetScalarType<T[P], CourseAssignmentGroupByOutputType[P]>
+            : GetScalarType<T[P], CourseAssignmentGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ModuleAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     userId?: boolean
     assignedAt?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleAssignment"]>
+  }, ExtArgs["result"]["courseAssignment"]>
 
-  export type ModuleAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     userId?: boolean
     assignedAt?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleAssignment"]>
+  }, ExtArgs["result"]["courseAssignment"]>
 
-  export type ModuleAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     userId?: boolean
     assignedAt?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleAssignment"]>
+  }, ExtArgs["result"]["courseAssignment"]>
 
-  export type ModuleAssignmentSelectScalar = {
+  export type CourseAssignmentSelectScalar = {
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     userId?: boolean
     assignedAt?: boolean
   }
 
-  export type ModuleAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "moduleId" | "userId" | "assignedAt", ExtArgs["result"]["moduleAssignment"]>
-  export type ModuleAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "userId" | "assignedAt", ExtArgs["result"]["courseAssignment"]>
+  export type CourseAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type ModuleAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type ModuleAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $ModuleAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ModuleAssignment"
+  export type $CourseAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CourseAssignment"
     objects: {
-      module: Prisma.$ModulePayload<ExtArgs>
+      course: Prisma.$CoursePayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      moduleId: number
+      courseId: number
       userId: number
       assignedAt: Date
-    }, ExtArgs["result"]["moduleAssignment"]>
+    }, ExtArgs["result"]["courseAssignment"]>
     composites: {}
   }
 
-  type ModuleAssignmentGetPayload<S extends boolean | null | undefined | ModuleAssignmentDefaultArgs> = $Result.GetResult<Prisma.$ModuleAssignmentPayload, S>
+  type CourseAssignmentGetPayload<S extends boolean | null | undefined | CourseAssignmentDefaultArgs> = $Result.GetResult<Prisma.$CourseAssignmentPayload, S>
 
-  type ModuleAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ModuleAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ModuleAssignmentCountAggregateInputType | true
+  type CourseAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CourseAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CourseAssignmentCountAggregateInputType | true
     }
 
-  export interface ModuleAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ModuleAssignment'], meta: { name: 'ModuleAssignment' } }
+  export interface CourseAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CourseAssignment'], meta: { name: 'CourseAssignment' } }
     /**
-     * Find zero or one ModuleAssignment that matches the filter.
-     * @param {ModuleAssignmentFindUniqueArgs} args - Arguments to find a ModuleAssignment
+     * Find zero or one CourseAssignment that matches the filter.
+     * @param {CourseAssignmentFindUniqueArgs} args - Arguments to find a CourseAssignment
      * @example
-     * // Get one ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.findUnique({
+     * // Get one CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ModuleAssignmentFindUniqueArgs>(args: SelectSubset<T, ModuleAssignmentFindUniqueArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends CourseAssignmentFindUniqueArgs>(args: SelectSubset<T, CourseAssignmentFindUniqueArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one ModuleAssignment that matches the filter or throw an error with `error.code='P2025'`
+     * Find one CourseAssignment that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ModuleAssignmentFindUniqueOrThrowArgs} args - Arguments to find a ModuleAssignment
+     * @param {CourseAssignmentFindUniqueOrThrowArgs} args - Arguments to find a CourseAssignment
      * @example
-     * // Get one ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.findUniqueOrThrow({
+     * // Get one CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ModuleAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, ModuleAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends CourseAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, CourseAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ModuleAssignment that matches the filter.
+     * Find the first CourseAssignment that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentFindFirstArgs} args - Arguments to find a ModuleAssignment
+     * @param {CourseAssignmentFindFirstArgs} args - Arguments to find a CourseAssignment
      * @example
-     * // Get one ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.findFirst({
+     * // Get one CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ModuleAssignmentFindFirstArgs>(args?: SelectSubset<T, ModuleAssignmentFindFirstArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends CourseAssignmentFindFirstArgs>(args?: SelectSubset<T, CourseAssignmentFindFirstArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ModuleAssignment that matches the filter or
+     * Find the first CourseAssignment that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentFindFirstOrThrowArgs} args - Arguments to find a ModuleAssignment
+     * @param {CourseAssignmentFindFirstOrThrowArgs} args - Arguments to find a CourseAssignment
      * @example
-     * // Get one ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.findFirstOrThrow({
+     * // Get one CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ModuleAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, ModuleAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends CourseAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, CourseAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more ModuleAssignments that matches the filter.
+     * Find zero or more CourseAssignments that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CourseAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all ModuleAssignments
-     * const moduleAssignments = await prisma.moduleAssignment.findMany()
+     * // Get all CourseAssignments
+     * const courseAssignments = await prisma.courseAssignment.findMany()
      * 
-     * // Get first 10 ModuleAssignments
-     * const moduleAssignments = await prisma.moduleAssignment.findMany({ take: 10 })
+     * // Get first 10 CourseAssignments
+     * const courseAssignments = await prisma.courseAssignment.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const moduleAssignmentWithIdOnly = await prisma.moduleAssignment.findMany({ select: { id: true } })
+     * const courseAssignmentWithIdOnly = await prisma.courseAssignment.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ModuleAssignmentFindManyArgs>(args?: SelectSubset<T, ModuleAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends CourseAssignmentFindManyArgs>(args?: SelectSubset<T, CourseAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a ModuleAssignment.
-     * @param {ModuleAssignmentCreateArgs} args - Arguments to create a ModuleAssignment.
+     * Create a CourseAssignment.
+     * @param {CourseAssignmentCreateArgs} args - Arguments to create a CourseAssignment.
      * @example
-     * // Create one ModuleAssignment
-     * const ModuleAssignment = await prisma.moduleAssignment.create({
+     * // Create one CourseAssignment
+     * const CourseAssignment = await prisma.courseAssignment.create({
      *   data: {
-     *     // ... data to create a ModuleAssignment
+     *     // ... data to create a CourseAssignment
      *   }
      * })
      * 
      */
-    create<T extends ModuleAssignmentCreateArgs>(args: SelectSubset<T, ModuleAssignmentCreateArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends CourseAssignmentCreateArgs>(args: SelectSubset<T, CourseAssignmentCreateArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many ModuleAssignments.
-     * @param {ModuleAssignmentCreateManyArgs} args - Arguments to create many ModuleAssignments.
+     * Create many CourseAssignments.
+     * @param {CourseAssignmentCreateManyArgs} args - Arguments to create many CourseAssignments.
      * @example
-     * // Create many ModuleAssignments
-     * const moduleAssignment = await prisma.moduleAssignment.createMany({
+     * // Create many CourseAssignments
+     * const courseAssignment = await prisma.courseAssignment.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ModuleAssignmentCreateManyArgs>(args?: SelectSubset<T, ModuleAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends CourseAssignmentCreateManyArgs>(args?: SelectSubset<T, CourseAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many ModuleAssignments and returns the data saved in the database.
-     * @param {ModuleAssignmentCreateManyAndReturnArgs} args - Arguments to create many ModuleAssignments.
+     * Create many CourseAssignments and returns the data saved in the database.
+     * @param {CourseAssignmentCreateManyAndReturnArgs} args - Arguments to create many CourseAssignments.
      * @example
-     * // Create many ModuleAssignments
-     * const moduleAssignment = await prisma.moduleAssignment.createManyAndReturn({
+     * // Create many CourseAssignments
+     * const courseAssignment = await prisma.courseAssignment.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many ModuleAssignments and only return the `id`
-     * const moduleAssignmentWithIdOnly = await prisma.moduleAssignment.createManyAndReturn({
+     * // Create many CourseAssignments and only return the `id`
+     * const courseAssignmentWithIdOnly = await prisma.courseAssignment.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -4384,28 +4393,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends ModuleAssignmentCreateManyAndReturnArgs>(args?: SelectSubset<T, ModuleAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends CourseAssignmentCreateManyAndReturnArgs>(args?: SelectSubset<T, CourseAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a ModuleAssignment.
-     * @param {ModuleAssignmentDeleteArgs} args - Arguments to delete one ModuleAssignment.
+     * Delete a CourseAssignment.
+     * @param {CourseAssignmentDeleteArgs} args - Arguments to delete one CourseAssignment.
      * @example
-     * // Delete one ModuleAssignment
-     * const ModuleAssignment = await prisma.moduleAssignment.delete({
+     * // Delete one CourseAssignment
+     * const CourseAssignment = await prisma.courseAssignment.delete({
      *   where: {
-     *     // ... filter to delete one ModuleAssignment
+     *     // ... filter to delete one CourseAssignment
      *   }
      * })
      * 
      */
-    delete<T extends ModuleAssignmentDeleteArgs>(args: SelectSubset<T, ModuleAssignmentDeleteArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends CourseAssignmentDeleteArgs>(args: SelectSubset<T, CourseAssignmentDeleteArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one ModuleAssignment.
-     * @param {ModuleAssignmentUpdateArgs} args - Arguments to update one ModuleAssignment.
+     * Update one CourseAssignment.
+     * @param {CourseAssignmentUpdateArgs} args - Arguments to update one CourseAssignment.
      * @example
-     * // Update one ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.update({
+     * // Update one CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4415,30 +4424,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ModuleAssignmentUpdateArgs>(args: SelectSubset<T, ModuleAssignmentUpdateArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends CourseAssignmentUpdateArgs>(args: SelectSubset<T, CourseAssignmentUpdateArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more ModuleAssignments.
-     * @param {ModuleAssignmentDeleteManyArgs} args - Arguments to filter ModuleAssignments to delete.
+     * Delete zero or more CourseAssignments.
+     * @param {CourseAssignmentDeleteManyArgs} args - Arguments to filter CourseAssignments to delete.
      * @example
-     * // Delete a few ModuleAssignments
-     * const { count } = await prisma.moduleAssignment.deleteMany({
+     * // Delete a few CourseAssignments
+     * const { count } = await prisma.courseAssignment.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ModuleAssignmentDeleteManyArgs>(args?: SelectSubset<T, ModuleAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends CourseAssignmentDeleteManyArgs>(args?: SelectSubset<T, CourseAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ModuleAssignments.
+     * Update zero or more CourseAssignments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CourseAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many ModuleAssignments
-     * const moduleAssignment = await prisma.moduleAssignment.updateMany({
+     * // Update many CourseAssignments
+     * const courseAssignment = await prisma.courseAssignment.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4448,14 +4457,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ModuleAssignmentUpdateManyArgs>(args: SelectSubset<T, ModuleAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends CourseAssignmentUpdateManyArgs>(args: SelectSubset<T, CourseAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ModuleAssignments and returns the data updated in the database.
-     * @param {ModuleAssignmentUpdateManyAndReturnArgs} args - Arguments to update many ModuleAssignments.
+     * Update zero or more CourseAssignments and returns the data updated in the database.
+     * @param {CourseAssignmentUpdateManyAndReturnArgs} args - Arguments to update many CourseAssignments.
      * @example
-     * // Update many ModuleAssignments
-     * const moduleAssignment = await prisma.moduleAssignment.updateManyAndReturn({
+     * // Update many CourseAssignments
+     * const courseAssignment = await prisma.courseAssignment.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -4464,8 +4473,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more ModuleAssignments and only return the `id`
-     * const moduleAssignmentWithIdOnly = await prisma.moduleAssignment.updateManyAndReturn({
+     * // Update zero or more CourseAssignments and only return the `id`
+     * const courseAssignmentWithIdOnly = await prisma.courseAssignment.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -4478,56 +4487,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends ModuleAssignmentUpdateManyAndReturnArgs>(args: SelectSubset<T, ModuleAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends CourseAssignmentUpdateManyAndReturnArgs>(args: SelectSubset<T, CourseAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one ModuleAssignment.
-     * @param {ModuleAssignmentUpsertArgs} args - Arguments to update or create a ModuleAssignment.
+     * Create or update one CourseAssignment.
+     * @param {CourseAssignmentUpsertArgs} args - Arguments to update or create a CourseAssignment.
      * @example
-     * // Update or create a ModuleAssignment
-     * const moduleAssignment = await prisma.moduleAssignment.upsert({
+     * // Update or create a CourseAssignment
+     * const courseAssignment = await prisma.courseAssignment.upsert({
      *   create: {
-     *     // ... data to create a ModuleAssignment
+     *     // ... data to create a CourseAssignment
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the ModuleAssignment we want to update
+     *     // ... the filter for the CourseAssignment we want to update
      *   }
      * })
      */
-    upsert<T extends ModuleAssignmentUpsertArgs>(args: SelectSubset<T, ModuleAssignmentUpsertArgs<ExtArgs>>): Prisma__ModuleAssignmentClient<$Result.GetResult<Prisma.$ModuleAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends CourseAssignmentUpsertArgs>(args: SelectSubset<T, CourseAssignmentUpsertArgs<ExtArgs>>): Prisma__CourseAssignmentClient<$Result.GetResult<Prisma.$CourseAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of ModuleAssignments.
+     * Count the number of CourseAssignments.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentCountArgs} args - Arguments to filter ModuleAssignments to count.
+     * @param {CourseAssignmentCountArgs} args - Arguments to filter CourseAssignments to count.
      * @example
-     * // Count the number of ModuleAssignments
-     * const count = await prisma.moduleAssignment.count({
+     * // Count the number of CourseAssignments
+     * const count = await prisma.courseAssignment.count({
      *   where: {
-     *     // ... the filter for the ModuleAssignments we want to count
+     *     // ... the filter for the CourseAssignments we want to count
      *   }
      * })
     **/
-    count<T extends ModuleAssignmentCountArgs>(
-      args?: Subset<T, ModuleAssignmentCountArgs>,
+    count<T extends CourseAssignmentCountArgs>(
+      args?: Subset<T, CourseAssignmentCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ModuleAssignmentCountAggregateOutputType>
+          : GetScalarType<T['select'], CourseAssignmentCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a ModuleAssignment.
+     * Allows you to perform aggregations operations on a CourseAssignment.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CourseAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -4547,13 +4556,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ModuleAssignmentAggregateArgs>(args: Subset<T, ModuleAssignmentAggregateArgs>): Prisma.PrismaPromise<GetModuleAssignmentAggregateType<T>>
+    aggregate<T extends CourseAssignmentAggregateArgs>(args: Subset<T, CourseAssignmentAggregateArgs>): Prisma.PrismaPromise<GetCourseAssignmentAggregateType<T>>
 
     /**
-     * Group by ModuleAssignment.
+     * Group by CourseAssignment.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleAssignmentGroupByArgs} args - Group by arguments.
+     * @param {CourseAssignmentGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -4568,14 +4577,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ModuleAssignmentGroupByArgs,
+      T extends CourseAssignmentGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ModuleAssignmentGroupByArgs['orderBy'] }
-        : { orderBy?: ModuleAssignmentGroupByArgs['orderBy'] },
+        ? { orderBy: CourseAssignmentGroupByArgs['orderBy'] }
+        : { orderBy?: CourseAssignmentGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -4624,22 +4633,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ModuleAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModuleAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CourseAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCourseAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the ModuleAssignment model
+   * Fields of the CourseAssignment model
    */
-  readonly fields: ModuleAssignmentFieldRefs;
+  readonly fields: CourseAssignmentFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for ModuleAssignment.
+   * The delegate class that acts as a "Promise-like" for CourseAssignment.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ModuleAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__CourseAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4667,813 +4676,813 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the ModuleAssignment model
+   * Fields of the CourseAssignment model
    */
-  interface ModuleAssignmentFieldRefs {
-    readonly id: FieldRef<"ModuleAssignment", 'Int'>
-    readonly moduleId: FieldRef<"ModuleAssignment", 'Int'>
-    readonly userId: FieldRef<"ModuleAssignment", 'Int'>
-    readonly assignedAt: FieldRef<"ModuleAssignment", 'DateTime'>
+  interface CourseAssignmentFieldRefs {
+    readonly id: FieldRef<"CourseAssignment", 'Int'>
+    readonly courseId: FieldRef<"CourseAssignment", 'Int'>
+    readonly userId: FieldRef<"CourseAssignment", 'Int'>
+    readonly assignedAt: FieldRef<"CourseAssignment", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * ModuleAssignment findUnique
+   * CourseAssignment findUnique
    */
-  export type ModuleAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleAssignment to fetch.
+     * Filter, which CourseAssignment to fetch.
      */
-    where: ModuleAssignmentWhereUniqueInput
+    where: CourseAssignmentWhereUniqueInput
   }
 
   /**
-   * ModuleAssignment findUniqueOrThrow
+   * CourseAssignment findUniqueOrThrow
    */
-  export type ModuleAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleAssignment to fetch.
+     * Filter, which CourseAssignment to fetch.
      */
-    where: ModuleAssignmentWhereUniqueInput
+    where: CourseAssignmentWhereUniqueInput
   }
 
   /**
-   * ModuleAssignment findFirst
+   * CourseAssignment findFirst
    */
-  export type ModuleAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleAssignment to fetch.
+     * Filter, which CourseAssignment to fetch.
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleAssignments to fetch.
+     * Determine the order of CourseAssignments to fetch.
      */
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ModuleAssignments.
+     * Sets the position for searching for CourseAssignments.
      */
-    cursor?: ModuleAssignmentWhereUniqueInput
+    cursor?: CourseAssignmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleAssignments from the position of the cursor.
+     * Take `±n` CourseAssignments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleAssignments.
+     * Skip the first `n` CourseAssignments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ModuleAssignments.
+     * Filter by unique combinations of CourseAssignments.
      */
-    distinct?: ModuleAssignmentScalarFieldEnum | ModuleAssignmentScalarFieldEnum[]
+    distinct?: CourseAssignmentScalarFieldEnum | CourseAssignmentScalarFieldEnum[]
   }
 
   /**
-   * ModuleAssignment findFirstOrThrow
+   * CourseAssignment findFirstOrThrow
    */
-  export type ModuleAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleAssignment to fetch.
+     * Filter, which CourseAssignment to fetch.
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleAssignments to fetch.
+     * Determine the order of CourseAssignments to fetch.
      */
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ModuleAssignments.
+     * Sets the position for searching for CourseAssignments.
      */
-    cursor?: ModuleAssignmentWhereUniqueInput
+    cursor?: CourseAssignmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleAssignments from the position of the cursor.
+     * Take `±n` CourseAssignments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleAssignments.
+     * Skip the first `n` CourseAssignments.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ModuleAssignments.
+     * Filter by unique combinations of CourseAssignments.
      */
-    distinct?: ModuleAssignmentScalarFieldEnum | ModuleAssignmentScalarFieldEnum[]
+    distinct?: CourseAssignmentScalarFieldEnum | CourseAssignmentScalarFieldEnum[]
   }
 
   /**
-   * ModuleAssignment findMany
+   * CourseAssignment findMany
    */
-  export type ModuleAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleAssignments to fetch.
+     * Filter, which CourseAssignments to fetch.
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleAssignments to fetch.
+     * Determine the order of CourseAssignments to fetch.
      */
-    orderBy?: ModuleAssignmentOrderByWithRelationInput | ModuleAssignmentOrderByWithRelationInput[]
+    orderBy?: CourseAssignmentOrderByWithRelationInput | CourseAssignmentOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing ModuleAssignments.
+     * Sets the position for listing CourseAssignments.
      */
-    cursor?: ModuleAssignmentWhereUniqueInput
+    cursor?: CourseAssignmentWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleAssignments from the position of the cursor.
+     * Take `±n` CourseAssignments from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleAssignments.
+     * Skip the first `n` CourseAssignments.
      */
     skip?: number
-    distinct?: ModuleAssignmentScalarFieldEnum | ModuleAssignmentScalarFieldEnum[]
+    distinct?: CourseAssignmentScalarFieldEnum | CourseAssignmentScalarFieldEnum[]
   }
 
   /**
-   * ModuleAssignment create
+   * CourseAssignment create
    */
-  export type ModuleAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * The data needed to create a ModuleAssignment.
+     * The data needed to create a CourseAssignment.
      */
-    data: XOR<ModuleAssignmentCreateInput, ModuleAssignmentUncheckedCreateInput>
+    data: XOR<CourseAssignmentCreateInput, CourseAssignmentUncheckedCreateInput>
   }
 
   /**
-   * ModuleAssignment createMany
+   * CourseAssignment createMany
    */
-  export type ModuleAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many ModuleAssignments.
+     * The data used to create many CourseAssignments.
      */
-    data: ModuleAssignmentCreateManyInput | ModuleAssignmentCreateManyInput[]
+    data: CourseAssignmentCreateManyInput | CourseAssignmentCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * ModuleAssignment createManyAndReturn
+   * CourseAssignment createManyAndReturn
    */
-  export type ModuleAssignmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelectCreateManyAndReturn<ExtArgs> | null
+    select?: CourseAssignmentSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
-     * The data used to create many ModuleAssignments.
+     * The data used to create many CourseAssignments.
      */
-    data: ModuleAssignmentCreateManyInput | ModuleAssignmentCreateManyInput[]
+    data: CourseAssignmentCreateManyInput | CourseAssignmentCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: CourseAssignmentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ModuleAssignment update
+   * CourseAssignment update
    */
-  export type ModuleAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * The data needed to update a ModuleAssignment.
+     * The data needed to update a CourseAssignment.
      */
-    data: XOR<ModuleAssignmentUpdateInput, ModuleAssignmentUncheckedUpdateInput>
+    data: XOR<CourseAssignmentUpdateInput, CourseAssignmentUncheckedUpdateInput>
     /**
-     * Choose, which ModuleAssignment to update.
+     * Choose, which CourseAssignment to update.
      */
-    where: ModuleAssignmentWhereUniqueInput
+    where: CourseAssignmentWhereUniqueInput
   }
 
   /**
-   * ModuleAssignment updateMany
+   * CourseAssignment updateMany
    */
-  export type ModuleAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update ModuleAssignments.
+     * The data used to update CourseAssignments.
      */
-    data: XOR<ModuleAssignmentUpdateManyMutationInput, ModuleAssignmentUncheckedUpdateManyInput>
+    data: XOR<CourseAssignmentUpdateManyMutationInput, CourseAssignmentUncheckedUpdateManyInput>
     /**
-     * Filter which ModuleAssignments to update
+     * Filter which CourseAssignments to update
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
-     * Limit how many ModuleAssignments to update.
+     * Limit how many CourseAssignments to update.
      */
     limit?: number
   }
 
   /**
-   * ModuleAssignment updateManyAndReturn
+   * CourseAssignment updateManyAndReturn
    */
-  export type ModuleAssignmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: CourseAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
-     * The data used to update ModuleAssignments.
+     * The data used to update CourseAssignments.
      */
-    data: XOR<ModuleAssignmentUpdateManyMutationInput, ModuleAssignmentUncheckedUpdateManyInput>
+    data: XOR<CourseAssignmentUpdateManyMutationInput, CourseAssignmentUncheckedUpdateManyInput>
     /**
-     * Filter which ModuleAssignments to update
+     * Filter which CourseAssignments to update
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
-     * Limit how many ModuleAssignments to update.
+     * Limit how many CourseAssignments to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: CourseAssignmentIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ModuleAssignment upsert
+   * CourseAssignment upsert
    */
-  export type ModuleAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * The filter to search for the ModuleAssignment to update in case it exists.
+     * The filter to search for the CourseAssignment to update in case it exists.
      */
-    where: ModuleAssignmentWhereUniqueInput
+    where: CourseAssignmentWhereUniqueInput
     /**
-     * In case the ModuleAssignment found by the `where` argument doesn't exist, create a new ModuleAssignment with this data.
+     * In case the CourseAssignment found by the `where` argument doesn't exist, create a new CourseAssignment with this data.
      */
-    create: XOR<ModuleAssignmentCreateInput, ModuleAssignmentUncheckedCreateInput>
+    create: XOR<CourseAssignmentCreateInput, CourseAssignmentUncheckedCreateInput>
     /**
-     * In case the ModuleAssignment was found with the provided `where` argument, update it with this data.
+     * In case the CourseAssignment was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ModuleAssignmentUpdateInput, ModuleAssignmentUncheckedUpdateInput>
+    update: XOR<CourseAssignmentUpdateInput, CourseAssignmentUncheckedUpdateInput>
   }
 
   /**
-   * ModuleAssignment delete
+   * CourseAssignment delete
    */
-  export type ModuleAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
     /**
-     * Filter which ModuleAssignment to delete.
+     * Filter which CourseAssignment to delete.
      */
-    where: ModuleAssignmentWhereUniqueInput
+    where: CourseAssignmentWhereUniqueInput
   }
 
   /**
-   * ModuleAssignment deleteMany
+   * CourseAssignment deleteMany
    */
-  export type ModuleAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ModuleAssignments to delete
+     * Filter which CourseAssignments to delete
      */
-    where?: ModuleAssignmentWhereInput
+    where?: CourseAssignmentWhereInput
     /**
-     * Limit how many ModuleAssignments to delete.
+     * Limit how many CourseAssignments to delete.
      */
     limit?: number
   }
 
   /**
-   * ModuleAssignment without action
+   * CourseAssignment without action
    */
-  export type ModuleAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleAssignment
+     * Select specific fields to fetch from the CourseAssignment
      */
-    select?: ModuleAssignmentSelect<ExtArgs> | null
+    select?: CourseAssignmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleAssignment
+     * Omit specific fields from the CourseAssignment
      */
-    omit?: ModuleAssignmentOmit<ExtArgs> | null
+    omit?: CourseAssignmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleAssignmentInclude<ExtArgs> | null
+    include?: CourseAssignmentInclude<ExtArgs> | null
   }
 
 
   /**
-   * Model ModuleVideo
+   * Model CourseVideo
    */
 
-  export type AggregateModuleVideo = {
-    _count: ModuleVideoCountAggregateOutputType | null
-    _avg: ModuleVideoAvgAggregateOutputType | null
-    _sum: ModuleVideoSumAggregateOutputType | null
-    _min: ModuleVideoMinAggregateOutputType | null
-    _max: ModuleVideoMaxAggregateOutputType | null
+  export type AggregateCourseVideo = {
+    _count: CourseVideoCountAggregateOutputType | null
+    _avg: CourseVideoAvgAggregateOutputType | null
+    _sum: CourseVideoSumAggregateOutputType | null
+    _min: CourseVideoMinAggregateOutputType | null
+    _max: CourseVideoMaxAggregateOutputType | null
   }
 
-  export type ModuleVideoAvgAggregateOutputType = {
+  export type CourseVideoAvgAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     videoId: number | null
     order: number | null
   }
 
-  export type ModuleVideoSumAggregateOutputType = {
+  export type CourseVideoSumAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     videoId: number | null
     order: number | null
   }
 
-  export type ModuleVideoMinAggregateOutputType = {
+  export type CourseVideoMinAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     videoId: number | null
     order: number | null
   }
 
-  export type ModuleVideoMaxAggregateOutputType = {
+  export type CourseVideoMaxAggregateOutputType = {
     id: number | null
-    moduleId: number | null
+    courseId: number | null
     videoId: number | null
     order: number | null
   }
 
-  export type ModuleVideoCountAggregateOutputType = {
+  export type CourseVideoCountAggregateOutputType = {
     id: number
-    moduleId: number
+    courseId: number
     videoId: number
     order: number
     _all: number
   }
 
 
-  export type ModuleVideoAvgAggregateInputType = {
+  export type CourseVideoAvgAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     videoId?: true
     order?: true
   }
 
-  export type ModuleVideoSumAggregateInputType = {
+  export type CourseVideoSumAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     videoId?: true
     order?: true
   }
 
-  export type ModuleVideoMinAggregateInputType = {
+  export type CourseVideoMinAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     videoId?: true
     order?: true
   }
 
-  export type ModuleVideoMaxAggregateInputType = {
+  export type CourseVideoMaxAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     videoId?: true
     order?: true
   }
 
-  export type ModuleVideoCountAggregateInputType = {
+  export type CourseVideoCountAggregateInputType = {
     id?: true
-    moduleId?: true
+    courseId?: true
     videoId?: true
     order?: true
     _all?: true
   }
 
-  export type ModuleVideoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ModuleVideo to aggregate.
+     * Filter which CourseVideo to aggregate.
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleVideos to fetch.
+     * Determine the order of CourseVideos to fetch.
      */
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: ModuleVideoWhereUniqueInput
+    cursor?: CourseVideoWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleVideos from the position of the cursor.
+     * Take `±n` CourseVideos from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleVideos.
+     * Skip the first `n` CourseVideos.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned ModuleVideos
+     * Count returned CourseVideos
     **/
-    _count?: true | ModuleVideoCountAggregateInputType
+    _count?: true | CourseVideoCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: ModuleVideoAvgAggregateInputType
+    _avg?: CourseVideoAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: ModuleVideoSumAggregateInputType
+    _sum?: CourseVideoSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: ModuleVideoMinAggregateInputType
+    _min?: CourseVideoMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: ModuleVideoMaxAggregateInputType
+    _max?: CourseVideoMaxAggregateInputType
   }
 
-  export type GetModuleVideoAggregateType<T extends ModuleVideoAggregateArgs> = {
-        [P in keyof T & keyof AggregateModuleVideo]: P extends '_count' | 'count'
+  export type GetCourseVideoAggregateType<T extends CourseVideoAggregateArgs> = {
+        [P in keyof T & keyof AggregateCourseVideo]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateModuleVideo[P]>
-      : GetScalarType<T[P], AggregateModuleVideo[P]>
+        : GetScalarType<T[P], AggregateCourseVideo[P]>
+      : GetScalarType<T[P], AggregateCourseVideo[P]>
   }
 
 
 
 
-  export type ModuleVideoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ModuleVideoWhereInput
-    orderBy?: ModuleVideoOrderByWithAggregationInput | ModuleVideoOrderByWithAggregationInput[]
-    by: ModuleVideoScalarFieldEnum[] | ModuleVideoScalarFieldEnum
-    having?: ModuleVideoScalarWhereWithAggregatesInput
+  export type CourseVideoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CourseVideoWhereInput
+    orderBy?: CourseVideoOrderByWithAggregationInput | CourseVideoOrderByWithAggregationInput[]
+    by: CourseVideoScalarFieldEnum[] | CourseVideoScalarFieldEnum
+    having?: CourseVideoScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: ModuleVideoCountAggregateInputType | true
-    _avg?: ModuleVideoAvgAggregateInputType
-    _sum?: ModuleVideoSumAggregateInputType
-    _min?: ModuleVideoMinAggregateInputType
-    _max?: ModuleVideoMaxAggregateInputType
+    _count?: CourseVideoCountAggregateInputType | true
+    _avg?: CourseVideoAvgAggregateInputType
+    _sum?: CourseVideoSumAggregateInputType
+    _min?: CourseVideoMinAggregateInputType
+    _max?: CourseVideoMaxAggregateInputType
   }
 
-  export type ModuleVideoGroupByOutputType = {
+  export type CourseVideoGroupByOutputType = {
     id: number
-    moduleId: number
+    courseId: number
     videoId: number
     order: number
-    _count: ModuleVideoCountAggregateOutputType | null
-    _avg: ModuleVideoAvgAggregateOutputType | null
-    _sum: ModuleVideoSumAggregateOutputType | null
-    _min: ModuleVideoMinAggregateOutputType | null
-    _max: ModuleVideoMaxAggregateOutputType | null
+    _count: CourseVideoCountAggregateOutputType | null
+    _avg: CourseVideoAvgAggregateOutputType | null
+    _sum: CourseVideoSumAggregateOutputType | null
+    _min: CourseVideoMinAggregateOutputType | null
+    _max: CourseVideoMaxAggregateOutputType | null
   }
 
-  type GetModuleVideoGroupByPayload<T extends ModuleVideoGroupByArgs> = Prisma.PrismaPromise<
+  type GetCourseVideoGroupByPayload<T extends CourseVideoGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<ModuleVideoGroupByOutputType, T['by']> &
+      PickEnumerable<CourseVideoGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof ModuleVideoGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CourseVideoGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], ModuleVideoGroupByOutputType[P]>
-            : GetScalarType<T[P], ModuleVideoGroupByOutputType[P]>
+              : GetScalarType<T[P], CourseVideoGroupByOutputType[P]>
+            : GetScalarType<T[P], CourseVideoGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type ModuleVideoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseVideoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     videoId?: boolean
     order?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleVideo"]>
+  }, ExtArgs["result"]["courseVideo"]>
 
-  export type ModuleVideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseVideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     videoId?: boolean
     order?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleVideo"]>
+  }, ExtArgs["result"]["courseVideo"]>
 
-  export type ModuleVideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CourseVideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     videoId?: boolean
     order?: boolean
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["moduleVideo"]>
+  }, ExtArgs["result"]["courseVideo"]>
 
-  export type ModuleVideoSelectScalar = {
+  export type CourseVideoSelectScalar = {
     id?: boolean
-    moduleId?: boolean
+    courseId?: boolean
     videoId?: boolean
     order?: boolean
   }
 
-  export type ModuleVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "moduleId" | "videoId" | "order", ExtArgs["result"]["moduleVideo"]>
-  export type ModuleVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "videoId" | "order", ExtArgs["result"]["courseVideo"]>
+  export type CourseVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
-  export type ModuleVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
-  export type ModuleVideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    module?: boolean | ModuleDefaultArgs<ExtArgs>
+  export type CourseVideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }
 
-  export type $ModuleVideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ModuleVideo"
+  export type $CourseVideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CourseVideo"
     objects: {
-      module: Prisma.$ModulePayload<ExtArgs>
+      course: Prisma.$CoursePayload<ExtArgs>
       video: Prisma.$VideoPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      moduleId: number
+      courseId: number
       videoId: number
       order: number
-    }, ExtArgs["result"]["moduleVideo"]>
+    }, ExtArgs["result"]["courseVideo"]>
     composites: {}
   }
 
-  type ModuleVideoGetPayload<S extends boolean | null | undefined | ModuleVideoDefaultArgs> = $Result.GetResult<Prisma.$ModuleVideoPayload, S>
+  type CourseVideoGetPayload<S extends boolean | null | undefined | CourseVideoDefaultArgs> = $Result.GetResult<Prisma.$CourseVideoPayload, S>
 
-  type ModuleVideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ModuleVideoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ModuleVideoCountAggregateInputType | true
+  type CourseVideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CourseVideoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CourseVideoCountAggregateInputType | true
     }
 
-  export interface ModuleVideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ModuleVideo'], meta: { name: 'ModuleVideo' } }
+  export interface CourseVideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CourseVideo'], meta: { name: 'CourseVideo' } }
     /**
-     * Find zero or one ModuleVideo that matches the filter.
-     * @param {ModuleVideoFindUniqueArgs} args - Arguments to find a ModuleVideo
+     * Find zero or one CourseVideo that matches the filter.
+     * @param {CourseVideoFindUniqueArgs} args - Arguments to find a CourseVideo
      * @example
-     * // Get one ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.findUnique({
+     * // Get one CourseVideo
+     * const courseVideo = await prisma.courseVideo.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends ModuleVideoFindUniqueArgs>(args: SelectSubset<T, ModuleVideoFindUniqueArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends CourseVideoFindUniqueArgs>(args: SelectSubset<T, CourseVideoFindUniqueArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one ModuleVideo that matches the filter or throw an error with `error.code='P2025'`
+     * Find one CourseVideo that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {ModuleVideoFindUniqueOrThrowArgs} args - Arguments to find a ModuleVideo
+     * @param {CourseVideoFindUniqueOrThrowArgs} args - Arguments to find a CourseVideo
      * @example
-     * // Get one ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.findUniqueOrThrow({
+     * // Get one CourseVideo
+     * const courseVideo = await prisma.courseVideo.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends ModuleVideoFindUniqueOrThrowArgs>(args: SelectSubset<T, ModuleVideoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends CourseVideoFindUniqueOrThrowArgs>(args: SelectSubset<T, CourseVideoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ModuleVideo that matches the filter.
+     * Find the first CourseVideo that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoFindFirstArgs} args - Arguments to find a ModuleVideo
+     * @param {CourseVideoFindFirstArgs} args - Arguments to find a CourseVideo
      * @example
-     * // Get one ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.findFirst({
+     * // Get one CourseVideo
+     * const courseVideo = await prisma.courseVideo.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends ModuleVideoFindFirstArgs>(args?: SelectSubset<T, ModuleVideoFindFirstArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends CourseVideoFindFirstArgs>(args?: SelectSubset<T, CourseVideoFindFirstArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first ModuleVideo that matches the filter or
+     * Find the first CourseVideo that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoFindFirstOrThrowArgs} args - Arguments to find a ModuleVideo
+     * @param {CourseVideoFindFirstOrThrowArgs} args - Arguments to find a CourseVideo
      * @example
-     * // Get one ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.findFirstOrThrow({
+     * // Get one CourseVideo
+     * const courseVideo = await prisma.courseVideo.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends ModuleVideoFindFirstOrThrowArgs>(args?: SelectSubset<T, ModuleVideoFindFirstOrThrowArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends CourseVideoFindFirstOrThrowArgs>(args?: SelectSubset<T, CourseVideoFindFirstOrThrowArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more ModuleVideos that matches the filter.
+     * Find zero or more CourseVideos that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CourseVideoFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all ModuleVideos
-     * const moduleVideos = await prisma.moduleVideo.findMany()
+     * // Get all CourseVideos
+     * const courseVideos = await prisma.courseVideo.findMany()
      * 
-     * // Get first 10 ModuleVideos
-     * const moduleVideos = await prisma.moduleVideo.findMany({ take: 10 })
+     * // Get first 10 CourseVideos
+     * const courseVideos = await prisma.courseVideo.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const moduleVideoWithIdOnly = await prisma.moduleVideo.findMany({ select: { id: true } })
+     * const courseVideoWithIdOnly = await prisma.courseVideo.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends ModuleVideoFindManyArgs>(args?: SelectSubset<T, ModuleVideoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends CourseVideoFindManyArgs>(args?: SelectSubset<T, CourseVideoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a ModuleVideo.
-     * @param {ModuleVideoCreateArgs} args - Arguments to create a ModuleVideo.
+     * Create a CourseVideo.
+     * @param {CourseVideoCreateArgs} args - Arguments to create a CourseVideo.
      * @example
-     * // Create one ModuleVideo
-     * const ModuleVideo = await prisma.moduleVideo.create({
+     * // Create one CourseVideo
+     * const CourseVideo = await prisma.courseVideo.create({
      *   data: {
-     *     // ... data to create a ModuleVideo
+     *     // ... data to create a CourseVideo
      *   }
      * })
      * 
      */
-    create<T extends ModuleVideoCreateArgs>(args: SelectSubset<T, ModuleVideoCreateArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends CourseVideoCreateArgs>(args: SelectSubset<T, CourseVideoCreateArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many ModuleVideos.
-     * @param {ModuleVideoCreateManyArgs} args - Arguments to create many ModuleVideos.
+     * Create many CourseVideos.
+     * @param {CourseVideoCreateManyArgs} args - Arguments to create many CourseVideos.
      * @example
-     * // Create many ModuleVideos
-     * const moduleVideo = await prisma.moduleVideo.createMany({
+     * // Create many CourseVideos
+     * const courseVideo = await prisma.courseVideo.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends ModuleVideoCreateManyArgs>(args?: SelectSubset<T, ModuleVideoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends CourseVideoCreateManyArgs>(args?: SelectSubset<T, CourseVideoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many ModuleVideos and returns the data saved in the database.
-     * @param {ModuleVideoCreateManyAndReturnArgs} args - Arguments to create many ModuleVideos.
+     * Create many CourseVideos and returns the data saved in the database.
+     * @param {CourseVideoCreateManyAndReturnArgs} args - Arguments to create many CourseVideos.
      * @example
-     * // Create many ModuleVideos
-     * const moduleVideo = await prisma.moduleVideo.createManyAndReturn({
+     * // Create many CourseVideos
+     * const courseVideo = await prisma.courseVideo.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many ModuleVideos and only return the `id`
-     * const moduleVideoWithIdOnly = await prisma.moduleVideo.createManyAndReturn({
+     * // Create many CourseVideos and only return the `id`
+     * const courseVideoWithIdOnly = await prisma.courseVideo.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -5483,28 +5492,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends ModuleVideoCreateManyAndReturnArgs>(args?: SelectSubset<T, ModuleVideoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends CourseVideoCreateManyAndReturnArgs>(args?: SelectSubset<T, CourseVideoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a ModuleVideo.
-     * @param {ModuleVideoDeleteArgs} args - Arguments to delete one ModuleVideo.
+     * Delete a CourseVideo.
+     * @param {CourseVideoDeleteArgs} args - Arguments to delete one CourseVideo.
      * @example
-     * // Delete one ModuleVideo
-     * const ModuleVideo = await prisma.moduleVideo.delete({
+     * // Delete one CourseVideo
+     * const CourseVideo = await prisma.courseVideo.delete({
      *   where: {
-     *     // ... filter to delete one ModuleVideo
+     *     // ... filter to delete one CourseVideo
      *   }
      * })
      * 
      */
-    delete<T extends ModuleVideoDeleteArgs>(args: SelectSubset<T, ModuleVideoDeleteArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends CourseVideoDeleteArgs>(args: SelectSubset<T, CourseVideoDeleteArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one ModuleVideo.
-     * @param {ModuleVideoUpdateArgs} args - Arguments to update one ModuleVideo.
+     * Update one CourseVideo.
+     * @param {CourseVideoUpdateArgs} args - Arguments to update one CourseVideo.
      * @example
-     * // Update one ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.update({
+     * // Update one CourseVideo
+     * const courseVideo = await prisma.courseVideo.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5514,30 +5523,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends ModuleVideoUpdateArgs>(args: SelectSubset<T, ModuleVideoUpdateArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends CourseVideoUpdateArgs>(args: SelectSubset<T, CourseVideoUpdateArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more ModuleVideos.
-     * @param {ModuleVideoDeleteManyArgs} args - Arguments to filter ModuleVideos to delete.
+     * Delete zero or more CourseVideos.
+     * @param {CourseVideoDeleteManyArgs} args - Arguments to filter CourseVideos to delete.
      * @example
-     * // Delete a few ModuleVideos
-     * const { count } = await prisma.moduleVideo.deleteMany({
+     * // Delete a few CourseVideos
+     * const { count } = await prisma.courseVideo.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends ModuleVideoDeleteManyArgs>(args?: SelectSubset<T, ModuleVideoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends CourseVideoDeleteManyArgs>(args?: SelectSubset<T, CourseVideoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ModuleVideos.
+     * Update zero or more CourseVideos.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CourseVideoUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many ModuleVideos
-     * const moduleVideo = await prisma.moduleVideo.updateMany({
+     * // Update many CourseVideos
+     * const courseVideo = await prisma.courseVideo.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5547,14 +5556,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends ModuleVideoUpdateManyArgs>(args: SelectSubset<T, ModuleVideoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends CourseVideoUpdateManyArgs>(args: SelectSubset<T, CourseVideoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more ModuleVideos and returns the data updated in the database.
-     * @param {ModuleVideoUpdateManyAndReturnArgs} args - Arguments to update many ModuleVideos.
+     * Update zero or more CourseVideos and returns the data updated in the database.
+     * @param {CourseVideoUpdateManyAndReturnArgs} args - Arguments to update many CourseVideos.
      * @example
-     * // Update many ModuleVideos
-     * const moduleVideo = await prisma.moduleVideo.updateManyAndReturn({
+     * // Update many CourseVideos
+     * const courseVideo = await prisma.courseVideo.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5563,8 +5572,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more ModuleVideos and only return the `id`
-     * const moduleVideoWithIdOnly = await prisma.moduleVideo.updateManyAndReturn({
+     * // Update zero or more CourseVideos and only return the `id`
+     * const courseVideoWithIdOnly = await prisma.courseVideo.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -5577,56 +5586,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends ModuleVideoUpdateManyAndReturnArgs>(args: SelectSubset<T, ModuleVideoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends CourseVideoUpdateManyAndReturnArgs>(args: SelectSubset<T, CourseVideoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one ModuleVideo.
-     * @param {ModuleVideoUpsertArgs} args - Arguments to update or create a ModuleVideo.
+     * Create or update one CourseVideo.
+     * @param {CourseVideoUpsertArgs} args - Arguments to update or create a CourseVideo.
      * @example
-     * // Update or create a ModuleVideo
-     * const moduleVideo = await prisma.moduleVideo.upsert({
+     * // Update or create a CourseVideo
+     * const courseVideo = await prisma.courseVideo.upsert({
      *   create: {
-     *     // ... data to create a ModuleVideo
+     *     // ... data to create a CourseVideo
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the ModuleVideo we want to update
+     *     // ... the filter for the CourseVideo we want to update
      *   }
      * })
      */
-    upsert<T extends ModuleVideoUpsertArgs>(args: SelectSubset<T, ModuleVideoUpsertArgs<ExtArgs>>): Prisma__ModuleVideoClient<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends CourseVideoUpsertArgs>(args: SelectSubset<T, CourseVideoUpsertArgs<ExtArgs>>): Prisma__CourseVideoClient<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of ModuleVideos.
+     * Count the number of CourseVideos.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoCountArgs} args - Arguments to filter ModuleVideos to count.
+     * @param {CourseVideoCountArgs} args - Arguments to filter CourseVideos to count.
      * @example
-     * // Count the number of ModuleVideos
-     * const count = await prisma.moduleVideo.count({
+     * // Count the number of CourseVideos
+     * const count = await prisma.courseVideo.count({
      *   where: {
-     *     // ... the filter for the ModuleVideos we want to count
+     *     // ... the filter for the CourseVideos we want to count
      *   }
      * })
     **/
-    count<T extends ModuleVideoCountArgs>(
-      args?: Subset<T, ModuleVideoCountArgs>,
+    count<T extends CourseVideoCountArgs>(
+      args?: Subset<T, CourseVideoCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], ModuleVideoCountAggregateOutputType>
+          : GetScalarType<T['select'], CourseVideoCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a ModuleVideo.
+     * Allows you to perform aggregations operations on a CourseVideo.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CourseVideoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -5646,13 +5655,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends ModuleVideoAggregateArgs>(args: Subset<T, ModuleVideoAggregateArgs>): Prisma.PrismaPromise<GetModuleVideoAggregateType<T>>
+    aggregate<T extends CourseVideoAggregateArgs>(args: Subset<T, CourseVideoAggregateArgs>): Prisma.PrismaPromise<GetCourseVideoAggregateType<T>>
 
     /**
-     * Group by ModuleVideo.
+     * Group by CourseVideo.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ModuleVideoGroupByArgs} args - Group by arguments.
+     * @param {CourseVideoGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -5667,14 +5676,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends ModuleVideoGroupByArgs,
+      T extends CourseVideoGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ModuleVideoGroupByArgs['orderBy'] }
-        : { orderBy?: ModuleVideoGroupByArgs['orderBy'] },
+        ? { orderBy: CourseVideoGroupByArgs['orderBy'] }
+        : { orderBy?: CourseVideoGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -5723,22 +5732,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ModuleVideoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModuleVideoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CourseVideoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCourseVideoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the ModuleVideo model
+   * Fields of the CourseVideo model
    */
-  readonly fields: ModuleVideoFieldRefs;
+  readonly fields: CourseVideoFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for ModuleVideo.
+   * The delegate class that acts as a "Promise-like" for CourseVideo.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__ModuleVideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__CourseVideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    module<T extends ModuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModuleDefaultArgs<ExtArgs>>): Prisma__ModuleClient<$Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     video<T extends VideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VideoDefaultArgs<ExtArgs>>): Prisma__VideoClient<$Result.GetResult<Prisma.$VideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5766,424 +5775,424 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the ModuleVideo model
+   * Fields of the CourseVideo model
    */
-  interface ModuleVideoFieldRefs {
-    readonly id: FieldRef<"ModuleVideo", 'Int'>
-    readonly moduleId: FieldRef<"ModuleVideo", 'Int'>
-    readonly videoId: FieldRef<"ModuleVideo", 'Int'>
-    readonly order: FieldRef<"ModuleVideo", 'Int'>
+  interface CourseVideoFieldRefs {
+    readonly id: FieldRef<"CourseVideo", 'Int'>
+    readonly courseId: FieldRef<"CourseVideo", 'Int'>
+    readonly videoId: FieldRef<"CourseVideo", 'Int'>
+    readonly order: FieldRef<"CourseVideo", 'Int'>
   }
     
 
   // Custom InputTypes
   /**
-   * ModuleVideo findUnique
+   * CourseVideo findUnique
    */
-  export type ModuleVideoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleVideo to fetch.
+     * Filter, which CourseVideo to fetch.
      */
-    where: ModuleVideoWhereUniqueInput
+    where: CourseVideoWhereUniqueInput
   }
 
   /**
-   * ModuleVideo findUniqueOrThrow
+   * CourseVideo findUniqueOrThrow
    */
-  export type ModuleVideoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleVideo to fetch.
+     * Filter, which CourseVideo to fetch.
      */
-    where: ModuleVideoWhereUniqueInput
+    where: CourseVideoWhereUniqueInput
   }
 
   /**
-   * ModuleVideo findFirst
+   * CourseVideo findFirst
    */
-  export type ModuleVideoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleVideo to fetch.
+     * Filter, which CourseVideo to fetch.
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleVideos to fetch.
+     * Determine the order of CourseVideos to fetch.
      */
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ModuleVideos.
+     * Sets the position for searching for CourseVideos.
      */
-    cursor?: ModuleVideoWhereUniqueInput
+    cursor?: CourseVideoWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleVideos from the position of the cursor.
+     * Take `±n` CourseVideos from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleVideos.
+     * Skip the first `n` CourseVideos.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ModuleVideos.
+     * Filter by unique combinations of CourseVideos.
      */
-    distinct?: ModuleVideoScalarFieldEnum | ModuleVideoScalarFieldEnum[]
+    distinct?: CourseVideoScalarFieldEnum | CourseVideoScalarFieldEnum[]
   }
 
   /**
-   * ModuleVideo findFirstOrThrow
+   * CourseVideo findFirstOrThrow
    */
-  export type ModuleVideoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleVideo to fetch.
+     * Filter, which CourseVideo to fetch.
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleVideos to fetch.
+     * Determine the order of CourseVideos to fetch.
      */
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for ModuleVideos.
+     * Sets the position for searching for CourseVideos.
      */
-    cursor?: ModuleVideoWhereUniqueInput
+    cursor?: CourseVideoWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleVideos from the position of the cursor.
+     * Take `±n` CourseVideos from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleVideos.
+     * Skip the first `n` CourseVideos.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of ModuleVideos.
+     * Filter by unique combinations of CourseVideos.
      */
-    distinct?: ModuleVideoScalarFieldEnum | ModuleVideoScalarFieldEnum[]
+    distinct?: CourseVideoScalarFieldEnum | CourseVideoScalarFieldEnum[]
   }
 
   /**
-   * ModuleVideo findMany
+   * CourseVideo findMany
    */
-  export type ModuleVideoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter, which ModuleVideos to fetch.
+     * Filter, which CourseVideos to fetch.
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of ModuleVideos to fetch.
+     * Determine the order of CourseVideos to fetch.
      */
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing ModuleVideos.
+     * Sets the position for listing CourseVideos.
      */
-    cursor?: ModuleVideoWhereUniqueInput
+    cursor?: CourseVideoWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` ModuleVideos from the position of the cursor.
+     * Take `±n` CourseVideos from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` ModuleVideos.
+     * Skip the first `n` CourseVideos.
      */
     skip?: number
-    distinct?: ModuleVideoScalarFieldEnum | ModuleVideoScalarFieldEnum[]
+    distinct?: CourseVideoScalarFieldEnum | CourseVideoScalarFieldEnum[]
   }
 
   /**
-   * ModuleVideo create
+   * CourseVideo create
    */
-  export type ModuleVideoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * The data needed to create a ModuleVideo.
+     * The data needed to create a CourseVideo.
      */
-    data: XOR<ModuleVideoCreateInput, ModuleVideoUncheckedCreateInput>
+    data: XOR<CourseVideoCreateInput, CourseVideoUncheckedCreateInput>
   }
 
   /**
-   * ModuleVideo createMany
+   * CourseVideo createMany
    */
-  export type ModuleVideoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many ModuleVideos.
+     * The data used to create many CourseVideos.
      */
-    data: ModuleVideoCreateManyInput | ModuleVideoCreateManyInput[]
+    data: CourseVideoCreateManyInput | CourseVideoCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * ModuleVideo createManyAndReturn
+   * CourseVideo createManyAndReturn
    */
-  export type ModuleVideoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelectCreateManyAndReturn<ExtArgs> | null
+    select?: CourseVideoSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
-     * The data used to create many ModuleVideos.
+     * The data used to create many CourseVideos.
      */
-    data: ModuleVideoCreateManyInput | ModuleVideoCreateManyInput[]
+    data: CourseVideoCreateManyInput | CourseVideoCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: CourseVideoIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ModuleVideo update
+   * CourseVideo update
    */
-  export type ModuleVideoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * The data needed to update a ModuleVideo.
+     * The data needed to update a CourseVideo.
      */
-    data: XOR<ModuleVideoUpdateInput, ModuleVideoUncheckedUpdateInput>
+    data: XOR<CourseVideoUpdateInput, CourseVideoUncheckedUpdateInput>
     /**
-     * Choose, which ModuleVideo to update.
+     * Choose, which CourseVideo to update.
      */
-    where: ModuleVideoWhereUniqueInput
+    where: CourseVideoWhereUniqueInput
   }
 
   /**
-   * ModuleVideo updateMany
+   * CourseVideo updateMany
    */
-  export type ModuleVideoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update ModuleVideos.
+     * The data used to update CourseVideos.
      */
-    data: XOR<ModuleVideoUpdateManyMutationInput, ModuleVideoUncheckedUpdateManyInput>
+    data: XOR<CourseVideoUpdateManyMutationInput, CourseVideoUncheckedUpdateManyInput>
     /**
-     * Filter which ModuleVideos to update
+     * Filter which CourseVideos to update
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
-     * Limit how many ModuleVideos to update.
+     * Limit how many CourseVideos to update.
      */
     limit?: number
   }
 
   /**
-   * ModuleVideo updateManyAndReturn
+   * CourseVideo updateManyAndReturn
    */
-  export type ModuleVideoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: CourseVideoSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
-     * The data used to update ModuleVideos.
+     * The data used to update CourseVideos.
      */
-    data: XOR<ModuleVideoUpdateManyMutationInput, ModuleVideoUncheckedUpdateManyInput>
+    data: XOR<CourseVideoUpdateManyMutationInput, CourseVideoUncheckedUpdateManyInput>
     /**
-     * Filter which ModuleVideos to update
+     * Filter which CourseVideos to update
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
-     * Limit how many ModuleVideos to update.
+     * Limit how many CourseVideos to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: CourseVideoIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * ModuleVideo upsert
+   * CourseVideo upsert
    */
-  export type ModuleVideoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * The filter to search for the ModuleVideo to update in case it exists.
+     * The filter to search for the CourseVideo to update in case it exists.
      */
-    where: ModuleVideoWhereUniqueInput
+    where: CourseVideoWhereUniqueInput
     /**
-     * In case the ModuleVideo found by the `where` argument doesn't exist, create a new ModuleVideo with this data.
+     * In case the CourseVideo found by the `where` argument doesn't exist, create a new CourseVideo with this data.
      */
-    create: XOR<ModuleVideoCreateInput, ModuleVideoUncheckedCreateInput>
+    create: XOR<CourseVideoCreateInput, CourseVideoUncheckedCreateInput>
     /**
-     * In case the ModuleVideo was found with the provided `where` argument, update it with this data.
+     * In case the CourseVideo was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<ModuleVideoUpdateInput, ModuleVideoUncheckedUpdateInput>
+    update: XOR<CourseVideoUpdateInput, CourseVideoUncheckedUpdateInput>
   }
 
   /**
-   * ModuleVideo delete
+   * CourseVideo delete
    */
-  export type ModuleVideoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
     /**
-     * Filter which ModuleVideo to delete.
+     * Filter which CourseVideo to delete.
      */
-    where: ModuleVideoWhereUniqueInput
+    where: CourseVideoWhereUniqueInput
   }
 
   /**
-   * ModuleVideo deleteMany
+   * CourseVideo deleteMany
    */
-  export type ModuleVideoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which ModuleVideos to delete
+     * Filter which CourseVideos to delete
      */
-    where?: ModuleVideoWhereInput
+    where?: CourseVideoWhereInput
     /**
-     * Limit how many ModuleVideos to delete.
+     * Limit how many CourseVideos to delete.
      */
     limit?: number
   }
 
   /**
-   * ModuleVideo without action
+   * CourseVideo without action
    */
-  export type ModuleVideoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CourseVideoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
+    include?: CourseVideoInclude<ExtArgs> | null
   }
 
 
@@ -6405,7 +6414,7 @@ export namespace Prisma {
     videoId?: boolean
     duration?: boolean
     createdAt?: boolean
-    moduleVideos?: boolean | Video$moduleVideosArgs<ExtArgs>
+    courseVideos?: boolean | Video$courseVideosArgs<ExtArgs>
     watchLogs?: boolean | Video$watchLogsArgs<ExtArgs>
     quiz?: boolean | Video$quizArgs<ExtArgs>
     _count?: boolean | VideoCountOutputTypeDefaultArgs<ExtArgs>
@@ -6443,7 +6452,7 @@ export namespace Prisma {
 
   export type VideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "platform" | "videoUrl" | "videoId" | "duration" | "createdAt", ExtArgs["result"]["video"]>
   export type VideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    moduleVideos?: boolean | Video$moduleVideosArgs<ExtArgs>
+    courseVideos?: boolean | Video$courseVideosArgs<ExtArgs>
     watchLogs?: boolean | Video$watchLogsArgs<ExtArgs>
     quiz?: boolean | Video$quizArgs<ExtArgs>
     _count?: boolean | VideoCountOutputTypeDefaultArgs<ExtArgs>
@@ -6454,7 +6463,7 @@ export namespace Prisma {
   export type $VideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Video"
     objects: {
-      moduleVideos: Prisma.$ModuleVideoPayload<ExtArgs>[]
+      courseVideos: Prisma.$CourseVideoPayload<ExtArgs>[]
       watchLogs: Prisma.$WatchLogPayload<ExtArgs>[]
       quiz: Prisma.$QuizPayload<ExtArgs> | null
     }
@@ -6860,7 +6869,7 @@ export namespace Prisma {
    */
   export interface Prisma__VideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    moduleVideos<T extends Video$moduleVideosArgs<ExtArgs> = {}>(args?: Subset<T, Video$moduleVideosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModuleVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    courseVideos<T extends Video$courseVideosArgs<ExtArgs> = {}>(args?: Subset<T, Video$courseVideosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CourseVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     watchLogs<T extends Video$watchLogsArgs<ExtArgs> = {}>(args?: Subset<T, Video$watchLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WatchLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quiz<T extends Video$quizArgs<ExtArgs> = {}>(args?: Subset<T, Video$quizArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -7287,27 +7296,27 @@ export namespace Prisma {
   }
 
   /**
-   * Video.moduleVideos
+   * Video.courseVideos
    */
-  export type Video$moduleVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Video$courseVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ModuleVideo
+     * Select specific fields to fetch from the CourseVideo
      */
-    select?: ModuleVideoSelect<ExtArgs> | null
+    select?: CourseVideoSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ModuleVideo
+     * Omit specific fields from the CourseVideo
      */
-    omit?: ModuleVideoOmit<ExtArgs> | null
+    omit?: CourseVideoOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ModuleVideoInclude<ExtArgs> | null
-    where?: ModuleVideoWhereInput
-    orderBy?: ModuleVideoOrderByWithRelationInput | ModuleVideoOrderByWithRelationInput[]
-    cursor?: ModuleVideoWhereUniqueInput
+    include?: CourseVideoInclude<ExtArgs> | null
+    where?: CourseVideoWhereInput
+    orderBy?: CourseVideoOrderByWithRelationInput | CourseVideoOrderByWithRelationInput[]
+    cursor?: CourseVideoWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ModuleVideoScalarFieldEnum | ModuleVideoScalarFieldEnum[]
+    distinct?: CourseVideoScalarFieldEnum | CourseVideoScalarFieldEnum[]
   }
 
   /**
@@ -7408,6 +7417,7 @@ export namespace Prisma {
     isCompleted: boolean | null
     watchedPercentage: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WatchLogMaxAggregateOutputType = {
@@ -7418,6 +7428,7 @@ export namespace Prisma {
     isCompleted: boolean | null
     watchedPercentage: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WatchLogCountAggregateOutputType = {
@@ -7430,6 +7441,7 @@ export namespace Prisma {
     skipEvents: number
     pauseEvents: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -7458,6 +7470,7 @@ export namespace Prisma {
     isCompleted?: true
     watchedPercentage?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type WatchLogMaxAggregateInputType = {
@@ -7468,6 +7481,7 @@ export namespace Prisma {
     isCompleted?: true
     watchedPercentage?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type WatchLogCountAggregateInputType = {
@@ -7480,6 +7494,7 @@ export namespace Prisma {
     skipEvents?: true
     pauseEvents?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -7579,6 +7594,7 @@ export namespace Prisma {
     skipEvents: JsonValue
     pauseEvents: JsonValue
     createdAt: Date
+    updatedAt: Date
     _count: WatchLogCountAggregateOutputType | null
     _avg: WatchLogAvgAggregateOutputType | null
     _sum: WatchLogSumAggregateOutputType | null
@@ -7610,6 +7626,7 @@ export namespace Prisma {
     skipEvents?: boolean
     pauseEvents?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -7624,6 +7641,7 @@ export namespace Prisma {
     skipEvents?: boolean
     pauseEvents?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -7638,6 +7656,7 @@ export namespace Prisma {
     skipEvents?: boolean
     pauseEvents?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -7652,9 +7671,10 @@ export namespace Prisma {
     skipEvents?: boolean
     pauseEvents?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type WatchLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "videoId" | "totalWatchTime" | "isCompleted" | "watchedPercentage" | "skipEvents" | "pauseEvents" | "createdAt", ExtArgs["result"]["watchLog"]>
+  export type WatchLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "videoId" | "totalWatchTime" | "isCompleted" | "watchedPercentage" | "skipEvents" | "pauseEvents" | "createdAt" | "updatedAt", ExtArgs["result"]["watchLog"]>
   export type WatchLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
@@ -7684,6 +7704,7 @@ export namespace Prisma {
       skipEvents: Prisma.JsonValue
       pauseEvents: Prisma.JsonValue
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["watchLog"]>
     composites: {}
   }
@@ -8118,6 +8139,7 @@ export namespace Prisma {
     readonly skipEvents: FieldRef<"WatchLog", 'Json'>
     readonly pauseEvents: FieldRef<"WatchLog", 'Json'>
     readonly createdAt: FieldRef<"WatchLog", 'DateTime'>
+    readonly updatedAt: FieldRef<"WatchLog", 'DateTime'>
   }
     
 
@@ -8700,7 +8722,7 @@ export namespace Prisma {
   export type QuizGroupByOutputType = {
     id: number
     videoId: number
-    generatedBy: string
+    generatedBy: string | null
     createdAt: Date
     questions: JsonValue
     _count: QuizCountAggregateOutputType | null
@@ -8783,7 +8805,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       videoId: number
-      generatedBy: string
+      generatedBy: string | null
       createdAt: Date
       questions: Prisma.JsonValue
     }, ExtArgs["result"]["quiz"]>
@@ -10792,35 +10814,36 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const ModuleScalarFieldEnum: {
+  export const CourseScalarFieldEnum: {
     id: 'id',
     title: 'title',
     description: 'description',
     createdBy: 'createdBy',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    thumbnailUrl: 'thumbnailUrl'
   };
 
-  export type ModuleScalarFieldEnum = (typeof ModuleScalarFieldEnum)[keyof typeof ModuleScalarFieldEnum]
+  export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
 
 
-  export const ModuleAssignmentScalarFieldEnum: {
+  export const CourseAssignmentScalarFieldEnum: {
     id: 'id',
-    moduleId: 'moduleId',
+    courseId: 'courseId',
     userId: 'userId',
     assignedAt: 'assignedAt'
   };
 
-  export type ModuleAssignmentScalarFieldEnum = (typeof ModuleAssignmentScalarFieldEnum)[keyof typeof ModuleAssignmentScalarFieldEnum]
+  export type CourseAssignmentScalarFieldEnum = (typeof CourseAssignmentScalarFieldEnum)[keyof typeof CourseAssignmentScalarFieldEnum]
 
 
-  export const ModuleVideoScalarFieldEnum: {
+  export const CourseVideoScalarFieldEnum: {
     id: 'id',
-    moduleId: 'moduleId',
+    courseId: 'courseId',
     videoId: 'videoId',
     order: 'order'
   };
 
-  export type ModuleVideoScalarFieldEnum = (typeof ModuleVideoScalarFieldEnum)[keyof typeof ModuleVideoScalarFieldEnum]
+  export type CourseVideoScalarFieldEnum = (typeof CourseVideoScalarFieldEnum)[keyof typeof CourseVideoScalarFieldEnum]
 
 
   export const VideoScalarFieldEnum: {
@@ -10845,7 +10868,8 @@ export namespace Prisma {
     watchedPercentage: 'watchedPercentage',
     skipEvents: 'skipEvents',
     pauseEvents: 'pauseEvents',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type WatchLogScalarFieldEnum = (typeof WatchLogScalarFieldEnum)[keyof typeof WatchLogScalarFieldEnum]
@@ -11022,7 +11046,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     createdAt?: DateTimeFilter<"User"> | Date | string
-    assignments?: ModuleAssignmentListRelationFilter
+    assignments?: CourseAssignmentListRelationFilter
     quizAttempts?: QuizAttemptListRelationFilter
     watchLogs?: WatchLogListRelationFilter
   }
@@ -11034,7 +11058,7 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
-    assignments?: ModuleAssignmentOrderByRelationAggregateInput
+    assignments?: CourseAssignmentOrderByRelationAggregateInput
     quizAttempts?: QuizAttemptOrderByRelationAggregateInput
     watchLogs?: WatchLogOrderByRelationAggregateInput
   }
@@ -11049,7 +11073,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: EnumRoleFilter<"User"> | $Enums.Role
     createdAt?: DateTimeFilter<"User"> | Date | string
-    assignments?: ModuleAssignmentListRelationFilter
+    assignments?: CourseAssignmentListRelationFilter
     quizAttempts?: QuizAttemptListRelationFilter
     watchLogs?: WatchLogListRelationFilter
   }, "id" | "email">
@@ -11080,174 +11104,179 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
-  export type ModuleWhereInput = {
-    AND?: ModuleWhereInput | ModuleWhereInput[]
-    OR?: ModuleWhereInput[]
-    NOT?: ModuleWhereInput | ModuleWhereInput[]
-    id?: IntFilter<"Module"> | number
-    title?: StringFilter<"Module"> | string
-    description?: StringNullableFilter<"Module"> | string | null
-    createdBy?: IntFilter<"Module"> | number
-    createdAt?: DateTimeFilter<"Module"> | Date | string
-    assignments?: ModuleAssignmentListRelationFilter
-    moduleVideos?: ModuleVideoListRelationFilter
+  export type CourseWhereInput = {
+    AND?: CourseWhereInput | CourseWhereInput[]
+    OR?: CourseWhereInput[]
+    NOT?: CourseWhereInput | CourseWhereInput[]
+    id?: IntFilter<"Course"> | number
+    title?: StringFilter<"Course"> | string
+    description?: StringNullableFilter<"Course"> | string | null
+    createdBy?: StringNullableFilter<"Course"> | string | null
+    createdAt?: DateTimeFilter<"Course"> | Date | string
+    thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    assignments?: CourseAssignmentListRelationFilter
+    courseVideos?: CourseVideoListRelationFilter
   }
 
-  export type ModuleOrderByWithRelationInput = {
+  export type CourseOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
-    createdBy?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    assignments?: ModuleAssignmentOrderByRelationAggregateInput
-    moduleVideos?: ModuleVideoOrderByRelationAggregateInput
+    thumbnailUrl?: SortOrderInput | SortOrder
+    assignments?: CourseAssignmentOrderByRelationAggregateInput
+    courseVideos?: CourseVideoOrderByRelationAggregateInput
   }
 
-  export type ModuleWhereUniqueInput = Prisma.AtLeast<{
+  export type CourseWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: ModuleWhereInput | ModuleWhereInput[]
-    OR?: ModuleWhereInput[]
-    NOT?: ModuleWhereInput | ModuleWhereInput[]
-    title?: StringFilter<"Module"> | string
-    description?: StringNullableFilter<"Module"> | string | null
-    createdBy?: IntFilter<"Module"> | number
-    createdAt?: DateTimeFilter<"Module"> | Date | string
-    assignments?: ModuleAssignmentListRelationFilter
-    moduleVideos?: ModuleVideoListRelationFilter
+    AND?: CourseWhereInput | CourseWhereInput[]
+    OR?: CourseWhereInput[]
+    NOT?: CourseWhereInput | CourseWhereInput[]
+    title?: StringFilter<"Course"> | string
+    description?: StringNullableFilter<"Course"> | string | null
+    createdBy?: StringNullableFilter<"Course"> | string | null
+    createdAt?: DateTimeFilter<"Course"> | Date | string
+    thumbnailUrl?: StringNullableFilter<"Course"> | string | null
+    assignments?: CourseAssignmentListRelationFilter
+    courseVideos?: CourseVideoListRelationFilter
   }, "id">
 
-  export type ModuleOrderByWithAggregationInput = {
+  export type CourseOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
-    createdBy?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    _count?: ModuleCountOrderByAggregateInput
-    _avg?: ModuleAvgOrderByAggregateInput
-    _max?: ModuleMaxOrderByAggregateInput
-    _min?: ModuleMinOrderByAggregateInput
-    _sum?: ModuleSumOrderByAggregateInput
+    thumbnailUrl?: SortOrderInput | SortOrder
+    _count?: CourseCountOrderByAggregateInput
+    _avg?: CourseAvgOrderByAggregateInput
+    _max?: CourseMaxOrderByAggregateInput
+    _min?: CourseMinOrderByAggregateInput
+    _sum?: CourseSumOrderByAggregateInput
   }
 
-  export type ModuleScalarWhereWithAggregatesInput = {
-    AND?: ModuleScalarWhereWithAggregatesInput | ModuleScalarWhereWithAggregatesInput[]
-    OR?: ModuleScalarWhereWithAggregatesInput[]
-    NOT?: ModuleScalarWhereWithAggregatesInput | ModuleScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Module"> | number
-    title?: StringWithAggregatesFilter<"Module"> | string
-    description?: StringNullableWithAggregatesFilter<"Module"> | string | null
-    createdBy?: IntWithAggregatesFilter<"Module"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Module"> | Date | string
+  export type CourseScalarWhereWithAggregatesInput = {
+    AND?: CourseScalarWhereWithAggregatesInput | CourseScalarWhereWithAggregatesInput[]
+    OR?: CourseScalarWhereWithAggregatesInput[]
+    NOT?: CourseScalarWhereWithAggregatesInput | CourseScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Course"> | number
+    title?: StringWithAggregatesFilter<"Course"> | string
+    description?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    createdBy?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"Course"> | string | null
   }
 
-  export type ModuleAssignmentWhereInput = {
-    AND?: ModuleAssignmentWhereInput | ModuleAssignmentWhereInput[]
-    OR?: ModuleAssignmentWhereInput[]
-    NOT?: ModuleAssignmentWhereInput | ModuleAssignmentWhereInput[]
-    id?: IntFilter<"ModuleAssignment"> | number
-    moduleId?: IntFilter<"ModuleAssignment"> | number
-    userId?: IntFilter<"ModuleAssignment"> | number
-    assignedAt?: DateTimeFilter<"ModuleAssignment"> | Date | string
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  export type CourseAssignmentWhereInput = {
+    AND?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
+    OR?: CourseAssignmentWhereInput[]
+    NOT?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
+    id?: IntFilter<"CourseAssignment"> | number
+    courseId?: IntFilter<"CourseAssignment"> | number
+    userId?: IntFilter<"CourseAssignment"> | number
+    assignedAt?: DateTimeFilter<"CourseAssignment"> | Date | string
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
-  export type ModuleAssignmentOrderByWithRelationInput = {
+  export type CourseAssignmentOrderByWithRelationInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
     assignedAt?: SortOrder
-    module?: ModuleOrderByWithRelationInput
+    course?: CourseOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
 
-  export type ModuleAssignmentWhereUniqueInput = Prisma.AtLeast<{
+  export type CourseAssignmentWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: ModuleAssignmentWhereInput | ModuleAssignmentWhereInput[]
-    OR?: ModuleAssignmentWhereInput[]
-    NOT?: ModuleAssignmentWhereInput | ModuleAssignmentWhereInput[]
-    moduleId?: IntFilter<"ModuleAssignment"> | number
-    userId?: IntFilter<"ModuleAssignment"> | number
-    assignedAt?: DateTimeFilter<"ModuleAssignment"> | Date | string
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+    AND?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
+    OR?: CourseAssignmentWhereInput[]
+    NOT?: CourseAssignmentWhereInput | CourseAssignmentWhereInput[]
+    courseId?: IntFilter<"CourseAssignment"> | number
+    userId?: IntFilter<"CourseAssignment"> | number
+    assignedAt?: DateTimeFilter<"CourseAssignment"> | Date | string
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
-  export type ModuleAssignmentOrderByWithAggregationInput = {
+  export type CourseAssignmentOrderByWithAggregationInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
     assignedAt?: SortOrder
-    _count?: ModuleAssignmentCountOrderByAggregateInput
-    _avg?: ModuleAssignmentAvgOrderByAggregateInput
-    _max?: ModuleAssignmentMaxOrderByAggregateInput
-    _min?: ModuleAssignmentMinOrderByAggregateInput
-    _sum?: ModuleAssignmentSumOrderByAggregateInput
+    _count?: CourseAssignmentCountOrderByAggregateInput
+    _avg?: CourseAssignmentAvgOrderByAggregateInput
+    _max?: CourseAssignmentMaxOrderByAggregateInput
+    _min?: CourseAssignmentMinOrderByAggregateInput
+    _sum?: CourseAssignmentSumOrderByAggregateInput
   }
 
-  export type ModuleAssignmentScalarWhereWithAggregatesInput = {
-    AND?: ModuleAssignmentScalarWhereWithAggregatesInput | ModuleAssignmentScalarWhereWithAggregatesInput[]
-    OR?: ModuleAssignmentScalarWhereWithAggregatesInput[]
-    NOT?: ModuleAssignmentScalarWhereWithAggregatesInput | ModuleAssignmentScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"ModuleAssignment"> | number
-    moduleId?: IntWithAggregatesFilter<"ModuleAssignment"> | number
-    userId?: IntWithAggregatesFilter<"ModuleAssignment"> | number
-    assignedAt?: DateTimeWithAggregatesFilter<"ModuleAssignment"> | Date | string
+  export type CourseAssignmentScalarWhereWithAggregatesInput = {
+    AND?: CourseAssignmentScalarWhereWithAggregatesInput | CourseAssignmentScalarWhereWithAggregatesInput[]
+    OR?: CourseAssignmentScalarWhereWithAggregatesInput[]
+    NOT?: CourseAssignmentScalarWhereWithAggregatesInput | CourseAssignmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CourseAssignment"> | number
+    courseId?: IntWithAggregatesFilter<"CourseAssignment"> | number
+    userId?: IntWithAggregatesFilter<"CourseAssignment"> | number
+    assignedAt?: DateTimeWithAggregatesFilter<"CourseAssignment"> | Date | string
   }
 
-  export type ModuleVideoWhereInput = {
-    AND?: ModuleVideoWhereInput | ModuleVideoWhereInput[]
-    OR?: ModuleVideoWhereInput[]
-    NOT?: ModuleVideoWhereInput | ModuleVideoWhereInput[]
-    id?: IntFilter<"ModuleVideo"> | number
-    moduleId?: IntFilter<"ModuleVideo"> | number
-    videoId?: IntFilter<"ModuleVideo"> | number
-    order?: IntFilter<"ModuleVideo"> | number
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+  export type CourseVideoWhereInput = {
+    AND?: CourseVideoWhereInput | CourseVideoWhereInput[]
+    OR?: CourseVideoWhereInput[]
+    NOT?: CourseVideoWhereInput | CourseVideoWhereInput[]
+    id?: IntFilter<"CourseVideo"> | number
+    courseId?: IntFilter<"CourseVideo"> | number
+    videoId?: IntFilter<"CourseVideo"> | number
+    order?: IntFilter<"CourseVideo"> | number
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }
 
-  export type ModuleVideoOrderByWithRelationInput = {
+  export type CourseVideoOrderByWithRelationInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
-    module?: ModuleOrderByWithRelationInput
+    course?: CourseOrderByWithRelationInput
     video?: VideoOrderByWithRelationInput
   }
 
-  export type ModuleVideoWhereUniqueInput = Prisma.AtLeast<{
+  export type CourseVideoWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: ModuleVideoWhereInput | ModuleVideoWhereInput[]
-    OR?: ModuleVideoWhereInput[]
-    NOT?: ModuleVideoWhereInput | ModuleVideoWhereInput[]
-    moduleId?: IntFilter<"ModuleVideo"> | number
-    videoId?: IntFilter<"ModuleVideo"> | number
-    order?: IntFilter<"ModuleVideo"> | number
-    module?: XOR<ModuleScalarRelationFilter, ModuleWhereInput>
+    AND?: CourseVideoWhereInput | CourseVideoWhereInput[]
+    OR?: CourseVideoWhereInput[]
+    NOT?: CourseVideoWhereInput | CourseVideoWhereInput[]
+    courseId?: IntFilter<"CourseVideo"> | number
+    videoId?: IntFilter<"CourseVideo"> | number
+    order?: IntFilter<"CourseVideo"> | number
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }, "id">
 
-  export type ModuleVideoOrderByWithAggregationInput = {
+  export type CourseVideoOrderByWithAggregationInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
-    _count?: ModuleVideoCountOrderByAggregateInput
-    _avg?: ModuleVideoAvgOrderByAggregateInput
-    _max?: ModuleVideoMaxOrderByAggregateInput
-    _min?: ModuleVideoMinOrderByAggregateInput
-    _sum?: ModuleVideoSumOrderByAggregateInput
+    _count?: CourseVideoCountOrderByAggregateInput
+    _avg?: CourseVideoAvgOrderByAggregateInput
+    _max?: CourseVideoMaxOrderByAggregateInput
+    _min?: CourseVideoMinOrderByAggregateInput
+    _sum?: CourseVideoSumOrderByAggregateInput
   }
 
-  export type ModuleVideoScalarWhereWithAggregatesInput = {
-    AND?: ModuleVideoScalarWhereWithAggregatesInput | ModuleVideoScalarWhereWithAggregatesInput[]
-    OR?: ModuleVideoScalarWhereWithAggregatesInput[]
-    NOT?: ModuleVideoScalarWhereWithAggregatesInput | ModuleVideoScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"ModuleVideo"> | number
-    moduleId?: IntWithAggregatesFilter<"ModuleVideo"> | number
-    videoId?: IntWithAggregatesFilter<"ModuleVideo"> | number
-    order?: IntWithAggregatesFilter<"ModuleVideo"> | number
+  export type CourseVideoScalarWhereWithAggregatesInput = {
+    AND?: CourseVideoScalarWhereWithAggregatesInput | CourseVideoScalarWhereWithAggregatesInput[]
+    OR?: CourseVideoScalarWhereWithAggregatesInput[]
+    NOT?: CourseVideoScalarWhereWithAggregatesInput | CourseVideoScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CourseVideo"> | number
+    courseId?: IntWithAggregatesFilter<"CourseVideo"> | number
+    videoId?: IntWithAggregatesFilter<"CourseVideo"> | number
+    order?: IntWithAggregatesFilter<"CourseVideo"> | number
   }
 
   export type VideoWhereInput = {
@@ -11261,7 +11290,7 @@ export namespace Prisma {
     videoId?: StringFilter<"Video"> | string
     duration?: IntFilter<"Video"> | number
     createdAt?: DateTimeFilter<"Video"> | Date | string
-    moduleVideos?: ModuleVideoListRelationFilter
+    courseVideos?: CourseVideoListRelationFilter
     watchLogs?: WatchLogListRelationFilter
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
   }
@@ -11274,7 +11303,7 @@ export namespace Prisma {
     videoId?: SortOrder
     duration?: SortOrder
     createdAt?: SortOrder
-    moduleVideos?: ModuleVideoOrderByRelationAggregateInput
+    courseVideos?: CourseVideoOrderByRelationAggregateInput
     watchLogs?: WatchLogOrderByRelationAggregateInput
     quiz?: QuizOrderByWithRelationInput
   }
@@ -11290,7 +11319,7 @@ export namespace Prisma {
     videoId?: StringFilter<"Video"> | string
     duration?: IntFilter<"Video"> | number
     createdAt?: DateTimeFilter<"Video"> | Date | string
-    moduleVideos?: ModuleVideoListRelationFilter
+    courseVideos?: CourseVideoListRelationFilter
     watchLogs?: WatchLogListRelationFilter
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
   }, "id">
@@ -11336,6 +11365,7 @@ export namespace Prisma {
     skipEvents?: JsonFilter<"WatchLog">
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
+    updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }
@@ -11350,12 +11380,14 @@ export namespace Prisma {
     skipEvents?: SortOrder
     pauseEvents?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     video?: VideoOrderByWithRelationInput
   }
 
   export type WatchLogWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    userId_videoId?: WatchLogUserIdVideoIdCompoundUniqueInput
     AND?: WatchLogWhereInput | WatchLogWhereInput[]
     OR?: WatchLogWhereInput[]
     NOT?: WatchLogWhereInput | WatchLogWhereInput[]
@@ -11367,9 +11399,10 @@ export namespace Prisma {
     skipEvents?: JsonFilter<"WatchLog">
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
+    updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
-  }, "id">
+  }, "id" | "userId_videoId">
 
   export type WatchLogOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11381,6 +11414,7 @@ export namespace Prisma {
     skipEvents?: SortOrder
     pauseEvents?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: WatchLogCountOrderByAggregateInput
     _avg?: WatchLogAvgOrderByAggregateInput
     _max?: WatchLogMaxOrderByAggregateInput
@@ -11401,6 +11435,7 @@ export namespace Prisma {
     skipEvents?: JsonWithAggregatesFilter<"WatchLog">
     pauseEvents?: JsonWithAggregatesFilter<"WatchLog">
     createdAt?: DateTimeWithAggregatesFilter<"WatchLog"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WatchLog"> | Date | string
   }
 
   export type QuizWhereInput = {
@@ -11409,7 +11444,7 @@ export namespace Prisma {
     NOT?: QuizWhereInput | QuizWhereInput[]
     id?: IntFilter<"Quiz"> | number
     videoId?: IntFilter<"Quiz"> | number
-    generatedBy?: StringFilter<"Quiz"> | string
+    generatedBy?: StringNullableFilter<"Quiz"> | string | null
     createdAt?: DateTimeFilter<"Quiz"> | Date | string
     questions?: JsonFilter<"Quiz">
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
@@ -11419,7 +11454,7 @@ export namespace Prisma {
   export type QuizOrderByWithRelationInput = {
     id?: SortOrder
     videoId?: SortOrder
-    generatedBy?: SortOrder
+    generatedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     questions?: SortOrder
     video?: VideoOrderByWithRelationInput
@@ -11432,7 +11467,7 @@ export namespace Prisma {
     AND?: QuizWhereInput | QuizWhereInput[]
     OR?: QuizWhereInput[]
     NOT?: QuizWhereInput | QuizWhereInput[]
-    generatedBy?: StringFilter<"Quiz"> | string
+    generatedBy?: StringNullableFilter<"Quiz"> | string | null
     createdAt?: DateTimeFilter<"Quiz"> | Date | string
     questions?: JsonFilter<"Quiz">
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
@@ -11442,7 +11477,7 @@ export namespace Prisma {
   export type QuizOrderByWithAggregationInput = {
     id?: SortOrder
     videoId?: SortOrder
-    generatedBy?: SortOrder
+    generatedBy?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     questions?: SortOrder
     _count?: QuizCountOrderByAggregateInput
@@ -11458,7 +11493,7 @@ export namespace Prisma {
     NOT?: QuizScalarWhereWithAggregatesInput | QuizScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Quiz"> | number
     videoId?: IntWithAggregatesFilter<"Quiz"> | number
-    generatedBy?: StringWithAggregatesFilter<"Quiz"> | string
+    generatedBy?: StringNullableWithAggregatesFilter<"Quiz"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Quiz"> | Date | string
     questions?: JsonWithAggregatesFilter<"Quiz">
   }
@@ -11529,7 +11564,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     watchLogs?: WatchLogCreateNestedManyWithoutUserInput
   }
@@ -11541,7 +11576,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     watchLogs?: WatchLogUncheckedCreateNestedManyWithoutUserInput
   }
@@ -11552,7 +11587,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     watchLogs?: WatchLogUpdateManyWithoutUserNestedInput
   }
@@ -11564,7 +11599,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     watchLogs?: WatchLogUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -11595,151 +11630,158 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleCreateInput = {
+  export type CourseCreateInput = {
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    assignments?: ModuleAssignmentCreateNestedManyWithoutModuleInput
-    moduleVideos?: ModuleVideoCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    assignments?: CourseAssignmentCreateNestedManyWithoutCourseInput
+    courseVideos?: CourseVideoCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleUncheckedCreateInput = {
+  export type CourseUncheckedCreateInput = {
     id?: number
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    assignments?: ModuleAssignmentUncheckedCreateNestedManyWithoutModuleInput
-    moduleVideos?: ModuleVideoUncheckedCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutCourseInput
+    courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleUpdateInput = {
+  export type CourseUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUpdateManyWithoutModuleNestedInput
-    moduleVideos?: ModuleVideoUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CourseAssignmentUpdateManyWithoutCourseNestedInput
+    courseVideos?: CourseVideoUpdateManyWithoutCourseNestedInput
   }
 
-  export type ModuleUncheckedUpdateInput = {
+  export type CourseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUncheckedUpdateManyWithoutModuleNestedInput
-    moduleVideos?: ModuleVideoUncheckedUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CourseAssignmentUncheckedUpdateManyWithoutCourseNestedInput
+    courseVideos?: CourseVideoUncheckedUpdateManyWithoutCourseNestedInput
   }
 
-  export type ModuleCreateManyInput = {
+  export type CourseCreateManyInput = {
     id?: number
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
+    thumbnailUrl?: string | null
   }
 
-  export type ModuleUpdateManyMutationInput = {
+  export type CourseUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type ModuleUncheckedUpdateManyInput = {
+  export type CourseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type ModuleAssignmentCreateInput = {
+  export type CourseAssignmentCreateInput = {
     assignedAt: Date | string
-    module: ModuleCreateNestedOneWithoutAssignmentsInput
+    course: CourseCreateNestedOneWithoutAssignmentsInput
     user: UserCreateNestedOneWithoutAssignmentsInput
   }
 
-  export type ModuleAssignmentUncheckedCreateInput = {
+  export type CourseAssignmentUncheckedCreateInput = {
     id?: number
-    moduleId: number
+    courseId: number
     userId: number
     assignedAt: Date | string
   }
 
-  export type ModuleAssignmentUpdateInput = {
+  export type CourseAssignmentUpdateInput = {
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    module?: ModuleUpdateOneRequiredWithoutAssignmentsNestedInput
+    course?: CourseUpdateOneRequiredWithoutAssignmentsNestedInput
     user?: UserUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
-  export type ModuleAssignmentUncheckedUpdateInput = {
+  export type CourseAssignmentUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleAssignmentCreateManyInput = {
+  export type CourseAssignmentCreateManyInput = {
     id?: number
-    moduleId: number
+    courseId: number
     userId: number
     assignedAt: Date | string
   }
 
-  export type ModuleAssignmentUpdateManyMutationInput = {
+  export type CourseAssignmentUpdateManyMutationInput = {
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleAssignmentUncheckedUpdateManyInput = {
+  export type CourseAssignmentUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleVideoCreateInput = {
+  export type CourseVideoCreateInput = {
     order: number
-    module: ModuleCreateNestedOneWithoutModuleVideosInput
-    video: VideoCreateNestedOneWithoutModuleVideosInput
+    course: CourseCreateNestedOneWithoutCourseVideosInput
+    video: VideoCreateNestedOneWithoutCourseVideosInput
   }
 
-  export type ModuleVideoUncheckedCreateInput = {
+  export type CourseVideoUncheckedCreateInput = {
     id?: number
-    moduleId: number
+    courseId: number
     videoId: number
     order: number
   }
 
-  export type ModuleVideoUpdateInput = {
+  export type CourseVideoUpdateInput = {
     order?: IntFieldUpdateOperationsInput | number
-    module?: ModuleUpdateOneRequiredWithoutModuleVideosNestedInput
-    video?: VideoUpdateOneRequiredWithoutModuleVideosNestedInput
+    course?: CourseUpdateOneRequiredWithoutCourseVideosNestedInput
+    video?: VideoUpdateOneRequiredWithoutCourseVideosNestedInput
   }
 
-  export type ModuleVideoUncheckedUpdateInput = {
+  export type CourseVideoUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModuleVideoCreateManyInput = {
+  export type CourseVideoCreateManyInput = {
     id?: number
-    moduleId: number
+    courseId: number
     videoId: number
     order: number
   }
 
-  export type ModuleVideoUpdateManyMutationInput = {
+  export type CourseVideoUpdateManyMutationInput = {
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModuleVideoUncheckedUpdateManyInput = {
+  export type CourseVideoUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
@@ -11751,7 +11793,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoCreateNestedManyWithoutVideoInput
     watchLogs?: WatchLogCreateNestedManyWithoutVideoInput
     quiz?: QuizCreateNestedOneWithoutVideoInput
   }
@@ -11764,7 +11806,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoUncheckedCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutVideoInput
     watchLogs?: WatchLogUncheckedCreateNestedManyWithoutVideoInput
     quiz?: QuizUncheckedCreateNestedOneWithoutVideoInput
   }
@@ -11776,7 +11818,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUpdateManyWithoutVideoNestedInput
     watchLogs?: WatchLogUpdateManyWithoutVideoNestedInput
     quiz?: QuizUpdateOneWithoutVideoNestedInput
   }
@@ -11789,7 +11831,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUncheckedUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUncheckedUpdateManyWithoutVideoNestedInput
     watchLogs?: WatchLogUncheckedUpdateManyWithoutVideoNestedInput
     quiz?: QuizUncheckedUpdateOneWithoutVideoNestedInput
   }
@@ -11825,11 +11867,12 @@ export namespace Prisma {
 
   export type WatchLogCreateInput = {
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     user: UserCreateNestedOneWithoutWatchLogsInput
     video: VideoCreateNestedOneWithoutWatchLogsInput
   }
@@ -11839,11 +11882,12 @@ export namespace Prisma {
     userId: number
     videoId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WatchLogUpdateInput = {
@@ -11853,6 +11897,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutWatchLogsNestedInput
     video?: VideoUpdateOneRequiredWithoutWatchLogsNestedInput
   }
@@ -11867,6 +11912,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WatchLogCreateManyInput = {
@@ -11874,11 +11920,12 @@ export namespace Prisma {
     userId: number
     videoId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WatchLogUpdateManyMutationInput = {
@@ -11888,6 +11935,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WatchLogUncheckedUpdateManyInput = {
@@ -11900,10 +11948,11 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuizCreateInput = {
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
     video: VideoCreateNestedOneWithoutQuizInput
@@ -11913,14 +11962,14 @@ export namespace Prisma {
   export type QuizUncheckedCreateInput = {
     id?: number
     videoId: number
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptUncheckedCreateNestedManyWithoutQuizInput
   }
 
   export type QuizUpdateInput = {
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
     video?: VideoUpdateOneRequiredWithoutQuizNestedInput
@@ -11930,7 +11979,7 @@ export namespace Prisma {
   export type QuizUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptUncheckedUpdateManyWithoutQuizNestedInput
@@ -11939,13 +11988,13 @@ export namespace Prisma {
   export type QuizCreateManyInput = {
     id?: number
     videoId: number
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
   }
 
   export type QuizUpdateManyMutationInput = {
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
   }
@@ -11953,7 +12002,7 @@ export namespace Prisma {
   export type QuizUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
   }
@@ -12053,10 +12102,10 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type ModuleAssignmentListRelationFilter = {
-    every?: ModuleAssignmentWhereInput
-    some?: ModuleAssignmentWhereInput
-    none?: ModuleAssignmentWhereInput
+  export type CourseAssignmentListRelationFilter = {
+    every?: CourseAssignmentWhereInput
+    some?: CourseAssignmentWhereInput
+    none?: CourseAssignmentWhereInput
   }
 
   export type QuizAttemptListRelationFilter = {
@@ -12071,7 +12120,7 @@ export namespace Prisma {
     none?: WatchLogWhereInput
   }
 
-  export type ModuleAssignmentOrderByRelationAggregateInput = {
+  export type CourseAssignmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12191,10 +12240,10 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type ModuleVideoListRelationFilter = {
-    every?: ModuleVideoWhereInput
-    some?: ModuleVideoWhereInput
-    none?: ModuleVideoWhereInput
+  export type CourseVideoListRelationFilter = {
+    every?: CourseVideoWhereInput
+    some?: CourseVideoWhereInput
+    none?: CourseVideoWhereInput
   }
 
   export type SortOrderInput = {
@@ -12202,42 +12251,43 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type ModuleVideoOrderByRelationAggregateInput = {
+  export type CourseVideoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ModuleCountOrderByAggregateInput = {
+  export type CourseCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    thumbnailUrl?: SortOrder
   }
 
-  export type ModuleAvgOrderByAggregateInput = {
+  export type CourseAvgOrderByAggregateInput = {
     id?: SortOrder
-    createdBy?: SortOrder
   }
 
-  export type ModuleMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    createdBy?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ModuleMinOrderByAggregateInput = {
+  export type CourseMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
+    thumbnailUrl?: SortOrder
   }
 
-  export type ModuleSumOrderByAggregateInput = {
+  export type CourseMinOrderByAggregateInput = {
     id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
     createdBy?: SortOrder
+    createdAt?: SortOrder
+    thumbnailUrl?: SortOrder
+  }
+
+  export type CourseSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -12258,9 +12308,9 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type ModuleScalarRelationFilter = {
-    is?: ModuleWhereInput
-    isNot?: ModuleWhereInput
+  export type CourseScalarRelationFilter = {
+    is?: CourseWhereInput
+    isNot?: CourseWhereInput
   }
 
   export type UserScalarRelationFilter = {
@@ -12268,36 +12318,36 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
-  export type ModuleAssignmentCountOrderByAggregateInput = {
+  export type CourseAssignmentCountOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
     assignedAt?: SortOrder
   }
 
-  export type ModuleAssignmentAvgOrderByAggregateInput = {
+  export type CourseAssignmentAvgOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
   }
 
-  export type ModuleAssignmentMaxOrderByAggregateInput = {
+  export type CourseAssignmentMaxOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
-    userId?: SortOrder
-    assignedAt?: SortOrder
-  }
-
-  export type ModuleAssignmentMinOrderByAggregateInput = {
-    id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
     assignedAt?: SortOrder
   }
 
-  export type ModuleAssignmentSumOrderByAggregateInput = {
+  export type CourseAssignmentMinOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
+    userId?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type CourseAssignmentSumOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
     userId?: SortOrder
   }
 
@@ -12306,37 +12356,37 @@ export namespace Prisma {
     isNot?: VideoWhereInput
   }
 
-  export type ModuleVideoCountOrderByAggregateInput = {
+  export type CourseVideoCountOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
   }
 
-  export type ModuleVideoAvgOrderByAggregateInput = {
+  export type CourseVideoAvgOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
   }
 
-  export type ModuleVideoMaxOrderByAggregateInput = {
+  export type CourseVideoMaxOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
   }
 
-  export type ModuleVideoMinOrderByAggregateInput = {
+  export type CourseVideoMinOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
   }
 
-  export type ModuleVideoSumOrderByAggregateInput = {
+  export type CourseVideoSumOrderByAggregateInput = {
     id?: SortOrder
-    moduleId?: SortOrder
+    courseId?: SortOrder
     videoId?: SortOrder
     order?: SortOrder
   }
@@ -12425,6 +12475,11 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type WatchLogUserIdVideoIdCompoundUniqueInput = {
+    userId: number
+    videoId: number
+  }
+
   export type WatchLogCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -12435,6 +12490,7 @@ export namespace Prisma {
     skipEvents?: SortOrder
     pauseEvents?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WatchLogAvgOrderByAggregateInput = {
@@ -12453,6 +12509,7 @@ export namespace Prisma {
     isCompleted?: SortOrder
     watchedPercentage?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WatchLogMinOrderByAggregateInput = {
@@ -12463,6 +12520,7 @@ export namespace Prisma {
     isCompleted?: SortOrder
     watchedPercentage?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WatchLogSumOrderByAggregateInput = {
@@ -12598,11 +12656,11 @@ export namespace Prisma {
     score?: SortOrder
   }
 
-  export type ModuleAssignmentCreateNestedManyWithoutUserInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput> | ModuleAssignmentCreateWithoutUserInput[] | ModuleAssignmentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutUserInput | ModuleAssignmentCreateOrConnectWithoutUserInput[]
-    createMany?: ModuleAssignmentCreateManyUserInputEnvelope
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
+  export type CourseAssignmentCreateNestedManyWithoutUserInput = {
+    create?: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput> | CourseAssignmentCreateWithoutUserInput[] | CourseAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutUserInput | CourseAssignmentCreateOrConnectWithoutUserInput[]
+    createMany?: CourseAssignmentCreateManyUserInputEnvelope
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
   }
 
   export type QuizAttemptCreateNestedManyWithoutUserInput = {
@@ -12619,11 +12677,11 @@ export namespace Prisma {
     connect?: WatchLogWhereUniqueInput | WatchLogWhereUniqueInput[]
   }
 
-  export type ModuleAssignmentUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput> | ModuleAssignmentCreateWithoutUserInput[] | ModuleAssignmentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutUserInput | ModuleAssignmentCreateOrConnectWithoutUserInput[]
-    createMany?: ModuleAssignmentCreateManyUserInputEnvelope
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
+  export type CourseAssignmentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput> | CourseAssignmentCreateWithoutUserInput[] | CourseAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutUserInput | CourseAssignmentCreateOrConnectWithoutUserInput[]
+    createMany?: CourseAssignmentCreateManyUserInputEnvelope
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
   }
 
   export type QuizAttemptUncheckedCreateNestedManyWithoutUserInput = {
@@ -12652,18 +12710,18 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type ModuleAssignmentUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput> | ModuleAssignmentCreateWithoutUserInput[] | ModuleAssignmentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutUserInput | ModuleAssignmentCreateOrConnectWithoutUserInput[]
-    upsert?: ModuleAssignmentUpsertWithWhereUniqueWithoutUserInput | ModuleAssignmentUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ModuleAssignmentCreateManyUserInputEnvelope
-    set?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    disconnect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    delete?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    update?: ModuleAssignmentUpdateWithWhereUniqueWithoutUserInput | ModuleAssignmentUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ModuleAssignmentUpdateManyWithWhereWithoutUserInput | ModuleAssignmentUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
+  export type CourseAssignmentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput> | CourseAssignmentCreateWithoutUserInput[] | CourseAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutUserInput | CourseAssignmentCreateOrConnectWithoutUserInput[]
+    upsert?: CourseAssignmentUpsertWithWhereUniqueWithoutUserInput | CourseAssignmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CourseAssignmentCreateManyUserInputEnvelope
+    set?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    disconnect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    delete?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    update?: CourseAssignmentUpdateWithWhereUniqueWithoutUserInput | CourseAssignmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CourseAssignmentUpdateManyWithWhereWithoutUserInput | CourseAssignmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
   }
 
   export type QuizAttemptUpdateManyWithoutUserNestedInput = {
@@ -12702,18 +12760,18 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type ModuleAssignmentUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput> | ModuleAssignmentCreateWithoutUserInput[] | ModuleAssignmentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutUserInput | ModuleAssignmentCreateOrConnectWithoutUserInput[]
-    upsert?: ModuleAssignmentUpsertWithWhereUniqueWithoutUserInput | ModuleAssignmentUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ModuleAssignmentCreateManyUserInputEnvelope
-    set?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    disconnect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    delete?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    update?: ModuleAssignmentUpdateWithWhereUniqueWithoutUserInput | ModuleAssignmentUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ModuleAssignmentUpdateManyWithWhereWithoutUserInput | ModuleAssignmentUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
+  export type CourseAssignmentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput> | CourseAssignmentCreateWithoutUserInput[] | CourseAssignmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutUserInput | CourseAssignmentCreateOrConnectWithoutUserInput[]
+    upsert?: CourseAssignmentUpsertWithWhereUniqueWithoutUserInput | CourseAssignmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CourseAssignmentCreateManyUserInputEnvelope
+    set?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    disconnect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    delete?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    update?: CourseAssignmentUpdateWithWhereUniqueWithoutUserInput | CourseAssignmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CourseAssignmentUpdateManyWithWhereWithoutUserInput | CourseAssignmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
   }
 
   export type QuizAttemptUncheckedUpdateManyWithoutUserNestedInput = {
@@ -12744,98 +12802,98 @@ export namespace Prisma {
     deleteMany?: WatchLogScalarWhereInput | WatchLogScalarWhereInput[]
   }
 
-  export type ModuleAssignmentCreateNestedManyWithoutModuleInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput> | ModuleAssignmentCreateWithoutModuleInput[] | ModuleAssignmentUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutModuleInput | ModuleAssignmentCreateOrConnectWithoutModuleInput[]
-    createMany?: ModuleAssignmentCreateManyModuleInputEnvelope
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
+  export type CourseAssignmentCreateNestedManyWithoutCourseInput = {
+    create?: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput> | CourseAssignmentCreateWithoutCourseInput[] | CourseAssignmentUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutCourseInput | CourseAssignmentCreateOrConnectWithoutCourseInput[]
+    createMany?: CourseAssignmentCreateManyCourseInputEnvelope
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
   }
 
-  export type ModuleVideoCreateNestedManyWithoutModuleInput = {
-    create?: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput> | ModuleVideoCreateWithoutModuleInput[] | ModuleVideoUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutModuleInput | ModuleVideoCreateOrConnectWithoutModuleInput[]
-    createMany?: ModuleVideoCreateManyModuleInputEnvelope
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
+  export type CourseVideoCreateNestedManyWithoutCourseInput = {
+    create?: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput> | CourseVideoCreateWithoutCourseInput[] | CourseVideoUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutCourseInput | CourseVideoCreateOrConnectWithoutCourseInput[]
+    createMany?: CourseVideoCreateManyCourseInputEnvelope
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
   }
 
-  export type ModuleAssignmentUncheckedCreateNestedManyWithoutModuleInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput> | ModuleAssignmentCreateWithoutModuleInput[] | ModuleAssignmentUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutModuleInput | ModuleAssignmentCreateOrConnectWithoutModuleInput[]
-    createMany?: ModuleAssignmentCreateManyModuleInputEnvelope
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
+  export type CourseAssignmentUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput> | CourseAssignmentCreateWithoutCourseInput[] | CourseAssignmentUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutCourseInput | CourseAssignmentCreateOrConnectWithoutCourseInput[]
+    createMany?: CourseAssignmentCreateManyCourseInputEnvelope
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
   }
 
-  export type ModuleVideoUncheckedCreateNestedManyWithoutModuleInput = {
-    create?: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput> | ModuleVideoCreateWithoutModuleInput[] | ModuleVideoUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutModuleInput | ModuleVideoCreateOrConnectWithoutModuleInput[]
-    createMany?: ModuleVideoCreateManyModuleInputEnvelope
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
+  export type CourseVideoUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput> | CourseVideoCreateWithoutCourseInput[] | CourseVideoUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutCourseInput | CourseVideoCreateOrConnectWithoutCourseInput[]
+    createMany?: CourseVideoCreateManyCourseInputEnvelope
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
 
-  export type ModuleAssignmentUpdateManyWithoutModuleNestedInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput> | ModuleAssignmentCreateWithoutModuleInput[] | ModuleAssignmentUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutModuleInput | ModuleAssignmentCreateOrConnectWithoutModuleInput[]
-    upsert?: ModuleAssignmentUpsertWithWhereUniqueWithoutModuleInput | ModuleAssignmentUpsertWithWhereUniqueWithoutModuleInput[]
-    createMany?: ModuleAssignmentCreateManyModuleInputEnvelope
-    set?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    disconnect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    delete?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    update?: ModuleAssignmentUpdateWithWhereUniqueWithoutModuleInput | ModuleAssignmentUpdateWithWhereUniqueWithoutModuleInput[]
-    updateMany?: ModuleAssignmentUpdateManyWithWhereWithoutModuleInput | ModuleAssignmentUpdateManyWithWhereWithoutModuleInput[]
-    deleteMany?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
+  export type CourseAssignmentUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput> | CourseAssignmentCreateWithoutCourseInput[] | CourseAssignmentUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutCourseInput | CourseAssignmentCreateOrConnectWithoutCourseInput[]
+    upsert?: CourseAssignmentUpsertWithWhereUniqueWithoutCourseInput | CourseAssignmentUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: CourseAssignmentCreateManyCourseInputEnvelope
+    set?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    disconnect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    delete?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    update?: CourseAssignmentUpdateWithWhereUniqueWithoutCourseInput | CourseAssignmentUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: CourseAssignmentUpdateManyWithWhereWithoutCourseInput | CourseAssignmentUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
   }
 
-  export type ModuleVideoUpdateManyWithoutModuleNestedInput = {
-    create?: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput> | ModuleVideoCreateWithoutModuleInput[] | ModuleVideoUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutModuleInput | ModuleVideoCreateOrConnectWithoutModuleInput[]
-    upsert?: ModuleVideoUpsertWithWhereUniqueWithoutModuleInput | ModuleVideoUpsertWithWhereUniqueWithoutModuleInput[]
-    createMany?: ModuleVideoCreateManyModuleInputEnvelope
-    set?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    disconnect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    delete?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    update?: ModuleVideoUpdateWithWhereUniqueWithoutModuleInput | ModuleVideoUpdateWithWhereUniqueWithoutModuleInput[]
-    updateMany?: ModuleVideoUpdateManyWithWhereWithoutModuleInput | ModuleVideoUpdateManyWithWhereWithoutModuleInput[]
-    deleteMany?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
+  export type CourseVideoUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput> | CourseVideoCreateWithoutCourseInput[] | CourseVideoUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutCourseInput | CourseVideoCreateOrConnectWithoutCourseInput[]
+    upsert?: CourseVideoUpsertWithWhereUniqueWithoutCourseInput | CourseVideoUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: CourseVideoCreateManyCourseInputEnvelope
+    set?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    disconnect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    delete?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    update?: CourseVideoUpdateWithWhereUniqueWithoutCourseInput | CourseVideoUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: CourseVideoUpdateManyWithWhereWithoutCourseInput | CourseVideoUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
   }
 
-  export type ModuleAssignmentUncheckedUpdateManyWithoutModuleNestedInput = {
-    create?: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput> | ModuleAssignmentCreateWithoutModuleInput[] | ModuleAssignmentUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleAssignmentCreateOrConnectWithoutModuleInput | ModuleAssignmentCreateOrConnectWithoutModuleInput[]
-    upsert?: ModuleAssignmentUpsertWithWhereUniqueWithoutModuleInput | ModuleAssignmentUpsertWithWhereUniqueWithoutModuleInput[]
-    createMany?: ModuleAssignmentCreateManyModuleInputEnvelope
-    set?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    disconnect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    delete?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    connect?: ModuleAssignmentWhereUniqueInput | ModuleAssignmentWhereUniqueInput[]
-    update?: ModuleAssignmentUpdateWithWhereUniqueWithoutModuleInput | ModuleAssignmentUpdateWithWhereUniqueWithoutModuleInput[]
-    updateMany?: ModuleAssignmentUpdateManyWithWhereWithoutModuleInput | ModuleAssignmentUpdateManyWithWhereWithoutModuleInput[]
-    deleteMany?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
+  export type CourseAssignmentUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput> | CourseAssignmentCreateWithoutCourseInput[] | CourseAssignmentUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseAssignmentCreateOrConnectWithoutCourseInput | CourseAssignmentCreateOrConnectWithoutCourseInput[]
+    upsert?: CourseAssignmentUpsertWithWhereUniqueWithoutCourseInput | CourseAssignmentUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: CourseAssignmentCreateManyCourseInputEnvelope
+    set?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    disconnect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    delete?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    connect?: CourseAssignmentWhereUniqueInput | CourseAssignmentWhereUniqueInput[]
+    update?: CourseAssignmentUpdateWithWhereUniqueWithoutCourseInput | CourseAssignmentUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: CourseAssignmentUpdateManyWithWhereWithoutCourseInput | CourseAssignmentUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
   }
 
-  export type ModuleVideoUncheckedUpdateManyWithoutModuleNestedInput = {
-    create?: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput> | ModuleVideoCreateWithoutModuleInput[] | ModuleVideoUncheckedCreateWithoutModuleInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutModuleInput | ModuleVideoCreateOrConnectWithoutModuleInput[]
-    upsert?: ModuleVideoUpsertWithWhereUniqueWithoutModuleInput | ModuleVideoUpsertWithWhereUniqueWithoutModuleInput[]
-    createMany?: ModuleVideoCreateManyModuleInputEnvelope
-    set?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    disconnect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    delete?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    update?: ModuleVideoUpdateWithWhereUniqueWithoutModuleInput | ModuleVideoUpdateWithWhereUniqueWithoutModuleInput[]
-    updateMany?: ModuleVideoUpdateManyWithWhereWithoutModuleInput | ModuleVideoUpdateManyWithWhereWithoutModuleInput[]
-    deleteMany?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
+  export type CourseVideoUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput> | CourseVideoCreateWithoutCourseInput[] | CourseVideoUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutCourseInput | CourseVideoCreateOrConnectWithoutCourseInput[]
+    upsert?: CourseVideoUpsertWithWhereUniqueWithoutCourseInput | CourseVideoUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: CourseVideoCreateManyCourseInputEnvelope
+    set?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    disconnect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    delete?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    update?: CourseVideoUpdateWithWhereUniqueWithoutCourseInput | CourseVideoUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: CourseVideoUpdateManyWithWhereWithoutCourseInput | CourseVideoUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
   }
 
-  export type ModuleCreateNestedOneWithoutAssignmentsInput = {
-    create?: XOR<ModuleCreateWithoutAssignmentsInput, ModuleUncheckedCreateWithoutAssignmentsInput>
-    connectOrCreate?: ModuleCreateOrConnectWithoutAssignmentsInput
-    connect?: ModuleWhereUniqueInput
+  export type CourseCreateNestedOneWithoutAssignmentsInput = {
+    create?: XOR<CourseCreateWithoutAssignmentsInput, CourseUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutAssignmentsInput
+    connect?: CourseWhereUniqueInput
   }
 
   export type UserCreateNestedOneWithoutAssignmentsInput = {
@@ -12844,12 +12902,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type ModuleUpdateOneRequiredWithoutAssignmentsNestedInput = {
-    create?: XOR<ModuleCreateWithoutAssignmentsInput, ModuleUncheckedCreateWithoutAssignmentsInput>
-    connectOrCreate?: ModuleCreateOrConnectWithoutAssignmentsInput
-    upsert?: ModuleUpsertWithoutAssignmentsInput
-    connect?: ModuleWhereUniqueInput
-    update?: XOR<XOR<ModuleUpdateToOneWithWhereWithoutAssignmentsInput, ModuleUpdateWithoutAssignmentsInput>, ModuleUncheckedUpdateWithoutAssignmentsInput>
+  export type CourseUpdateOneRequiredWithoutAssignmentsNestedInput = {
+    create?: XOR<CourseCreateWithoutAssignmentsInput, CourseUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutAssignmentsInput
+    upsert?: CourseUpsertWithoutAssignmentsInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutAssignmentsInput, CourseUpdateWithoutAssignmentsInput>, CourseUncheckedUpdateWithoutAssignmentsInput>
   }
 
   export type UserUpdateOneRequiredWithoutAssignmentsNestedInput = {
@@ -12860,39 +12918,39 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignmentsInput, UserUpdateWithoutAssignmentsInput>, UserUncheckedUpdateWithoutAssignmentsInput>
   }
 
-  export type ModuleCreateNestedOneWithoutModuleVideosInput = {
-    create?: XOR<ModuleCreateWithoutModuleVideosInput, ModuleUncheckedCreateWithoutModuleVideosInput>
-    connectOrCreate?: ModuleCreateOrConnectWithoutModuleVideosInput
-    connect?: ModuleWhereUniqueInput
+  export type CourseCreateNestedOneWithoutCourseVideosInput = {
+    create?: XOR<CourseCreateWithoutCourseVideosInput, CourseUncheckedCreateWithoutCourseVideosInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutCourseVideosInput
+    connect?: CourseWhereUniqueInput
   }
 
-  export type VideoCreateNestedOneWithoutModuleVideosInput = {
-    create?: XOR<VideoCreateWithoutModuleVideosInput, VideoUncheckedCreateWithoutModuleVideosInput>
-    connectOrCreate?: VideoCreateOrConnectWithoutModuleVideosInput
+  export type VideoCreateNestedOneWithoutCourseVideosInput = {
+    create?: XOR<VideoCreateWithoutCourseVideosInput, VideoUncheckedCreateWithoutCourseVideosInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutCourseVideosInput
     connect?: VideoWhereUniqueInput
   }
 
-  export type ModuleUpdateOneRequiredWithoutModuleVideosNestedInput = {
-    create?: XOR<ModuleCreateWithoutModuleVideosInput, ModuleUncheckedCreateWithoutModuleVideosInput>
-    connectOrCreate?: ModuleCreateOrConnectWithoutModuleVideosInput
-    upsert?: ModuleUpsertWithoutModuleVideosInput
-    connect?: ModuleWhereUniqueInput
-    update?: XOR<XOR<ModuleUpdateToOneWithWhereWithoutModuleVideosInput, ModuleUpdateWithoutModuleVideosInput>, ModuleUncheckedUpdateWithoutModuleVideosInput>
+  export type CourseUpdateOneRequiredWithoutCourseVideosNestedInput = {
+    create?: XOR<CourseCreateWithoutCourseVideosInput, CourseUncheckedCreateWithoutCourseVideosInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutCourseVideosInput
+    upsert?: CourseUpsertWithoutCourseVideosInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutCourseVideosInput, CourseUpdateWithoutCourseVideosInput>, CourseUncheckedUpdateWithoutCourseVideosInput>
   }
 
-  export type VideoUpdateOneRequiredWithoutModuleVideosNestedInput = {
-    create?: XOR<VideoCreateWithoutModuleVideosInput, VideoUncheckedCreateWithoutModuleVideosInput>
-    connectOrCreate?: VideoCreateOrConnectWithoutModuleVideosInput
-    upsert?: VideoUpsertWithoutModuleVideosInput
+  export type VideoUpdateOneRequiredWithoutCourseVideosNestedInput = {
+    create?: XOR<VideoCreateWithoutCourseVideosInput, VideoUncheckedCreateWithoutCourseVideosInput>
+    connectOrCreate?: VideoCreateOrConnectWithoutCourseVideosInput
+    upsert?: VideoUpsertWithoutCourseVideosInput
     connect?: VideoWhereUniqueInput
-    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutModuleVideosInput, VideoUpdateWithoutModuleVideosInput>, VideoUncheckedUpdateWithoutModuleVideosInput>
+    update?: XOR<XOR<VideoUpdateToOneWithWhereWithoutCourseVideosInput, VideoUpdateWithoutCourseVideosInput>, VideoUncheckedUpdateWithoutCourseVideosInput>
   }
 
-  export type ModuleVideoCreateNestedManyWithoutVideoInput = {
-    create?: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput> | ModuleVideoCreateWithoutVideoInput[] | ModuleVideoUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutVideoInput | ModuleVideoCreateOrConnectWithoutVideoInput[]
-    createMany?: ModuleVideoCreateManyVideoInputEnvelope
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
+  export type CourseVideoCreateNestedManyWithoutVideoInput = {
+    create?: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput> | CourseVideoCreateWithoutVideoInput[] | CourseVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutVideoInput | CourseVideoCreateOrConnectWithoutVideoInput[]
+    createMany?: CourseVideoCreateManyVideoInputEnvelope
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
   }
 
   export type WatchLogCreateNestedManyWithoutVideoInput = {
@@ -12908,11 +12966,11 @@ export namespace Prisma {
     connect?: QuizWhereUniqueInput
   }
 
-  export type ModuleVideoUncheckedCreateNestedManyWithoutVideoInput = {
-    create?: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput> | ModuleVideoCreateWithoutVideoInput[] | ModuleVideoUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutVideoInput | ModuleVideoCreateOrConnectWithoutVideoInput[]
-    createMany?: ModuleVideoCreateManyVideoInputEnvelope
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
+  export type CourseVideoUncheckedCreateNestedManyWithoutVideoInput = {
+    create?: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput> | CourseVideoCreateWithoutVideoInput[] | CourseVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutVideoInput | CourseVideoCreateOrConnectWithoutVideoInput[]
+    createMany?: CourseVideoCreateManyVideoInputEnvelope
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
   }
 
   export type WatchLogUncheckedCreateNestedManyWithoutVideoInput = {
@@ -12928,18 +12986,18 @@ export namespace Prisma {
     connect?: QuizWhereUniqueInput
   }
 
-  export type ModuleVideoUpdateManyWithoutVideoNestedInput = {
-    create?: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput> | ModuleVideoCreateWithoutVideoInput[] | ModuleVideoUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutVideoInput | ModuleVideoCreateOrConnectWithoutVideoInput[]
-    upsert?: ModuleVideoUpsertWithWhereUniqueWithoutVideoInput | ModuleVideoUpsertWithWhereUniqueWithoutVideoInput[]
-    createMany?: ModuleVideoCreateManyVideoInputEnvelope
-    set?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    disconnect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    delete?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    update?: ModuleVideoUpdateWithWhereUniqueWithoutVideoInput | ModuleVideoUpdateWithWhereUniqueWithoutVideoInput[]
-    updateMany?: ModuleVideoUpdateManyWithWhereWithoutVideoInput | ModuleVideoUpdateManyWithWhereWithoutVideoInput[]
-    deleteMany?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
+  export type CourseVideoUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput> | CourseVideoCreateWithoutVideoInput[] | CourseVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutVideoInput | CourseVideoCreateOrConnectWithoutVideoInput[]
+    upsert?: CourseVideoUpsertWithWhereUniqueWithoutVideoInput | CourseVideoUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: CourseVideoCreateManyVideoInputEnvelope
+    set?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    disconnect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    delete?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    update?: CourseVideoUpdateWithWhereUniqueWithoutVideoInput | CourseVideoUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: CourseVideoUpdateManyWithWhereWithoutVideoInput | CourseVideoUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
   }
 
   export type WatchLogUpdateManyWithoutVideoNestedInput = {
@@ -12966,18 +13024,18 @@ export namespace Prisma {
     update?: XOR<XOR<QuizUpdateToOneWithWhereWithoutVideoInput, QuizUpdateWithoutVideoInput>, QuizUncheckedUpdateWithoutVideoInput>
   }
 
-  export type ModuleVideoUncheckedUpdateManyWithoutVideoNestedInput = {
-    create?: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput> | ModuleVideoCreateWithoutVideoInput[] | ModuleVideoUncheckedCreateWithoutVideoInput[]
-    connectOrCreate?: ModuleVideoCreateOrConnectWithoutVideoInput | ModuleVideoCreateOrConnectWithoutVideoInput[]
-    upsert?: ModuleVideoUpsertWithWhereUniqueWithoutVideoInput | ModuleVideoUpsertWithWhereUniqueWithoutVideoInput[]
-    createMany?: ModuleVideoCreateManyVideoInputEnvelope
-    set?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    disconnect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    delete?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    connect?: ModuleVideoWhereUniqueInput | ModuleVideoWhereUniqueInput[]
-    update?: ModuleVideoUpdateWithWhereUniqueWithoutVideoInput | ModuleVideoUpdateWithWhereUniqueWithoutVideoInput[]
-    updateMany?: ModuleVideoUpdateManyWithWhereWithoutVideoInput | ModuleVideoUpdateManyWithWhereWithoutVideoInput[]
-    deleteMany?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
+  export type CourseVideoUncheckedUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput> | CourseVideoCreateWithoutVideoInput[] | CourseVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: CourseVideoCreateOrConnectWithoutVideoInput | CourseVideoCreateOrConnectWithoutVideoInput[]
+    upsert?: CourseVideoUpsertWithWhereUniqueWithoutVideoInput | CourseVideoUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: CourseVideoCreateManyVideoInputEnvelope
+    set?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    disconnect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    delete?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    connect?: CourseVideoWhereUniqueInput | CourseVideoWhereUniqueInput[]
+    update?: CourseVideoUpdateWithWhereUniqueWithoutVideoInput | CourseVideoUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: CourseVideoUpdateManyWithWhereWithoutVideoInput | CourseVideoUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
   }
 
   export type WatchLogUncheckedUpdateManyWithoutVideoNestedInput = {
@@ -13333,24 +13391,24 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type ModuleAssignmentCreateWithoutUserInput = {
+  export type CourseAssignmentCreateWithoutUserInput = {
     assignedAt: Date | string
-    module: ModuleCreateNestedOneWithoutAssignmentsInput
+    course: CourseCreateNestedOneWithoutAssignmentsInput
   }
 
-  export type ModuleAssignmentUncheckedCreateWithoutUserInput = {
+  export type CourseAssignmentUncheckedCreateWithoutUserInput = {
     id?: number
-    moduleId: number
+    courseId: number
     assignedAt: Date | string
   }
 
-  export type ModuleAssignmentCreateOrConnectWithoutUserInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    create: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput>
+  export type CourseAssignmentCreateOrConnectWithoutUserInput = {
+    where: CourseAssignmentWhereUniqueInput
+    create: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput>
   }
 
-  export type ModuleAssignmentCreateManyUserInputEnvelope = {
-    data: ModuleAssignmentCreateManyUserInput | ModuleAssignmentCreateManyUserInput[]
+  export type CourseAssignmentCreateManyUserInputEnvelope = {
+    data: CourseAssignmentCreateManyUserInput | CourseAssignmentCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -13379,11 +13437,12 @@ export namespace Prisma {
 
   export type WatchLogCreateWithoutUserInput = {
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     video: VideoCreateNestedOneWithoutWatchLogsInput
   }
 
@@ -13391,11 +13450,12 @@ export namespace Prisma {
     id?: number
     videoId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WatchLogCreateOrConnectWithoutUserInput = {
@@ -13408,30 +13468,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ModuleAssignmentUpsertWithWhereUniqueWithoutUserInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    update: XOR<ModuleAssignmentUpdateWithoutUserInput, ModuleAssignmentUncheckedUpdateWithoutUserInput>
-    create: XOR<ModuleAssignmentCreateWithoutUserInput, ModuleAssignmentUncheckedCreateWithoutUserInput>
+  export type CourseAssignmentUpsertWithWhereUniqueWithoutUserInput = {
+    where: CourseAssignmentWhereUniqueInput
+    update: XOR<CourseAssignmentUpdateWithoutUserInput, CourseAssignmentUncheckedUpdateWithoutUserInput>
+    create: XOR<CourseAssignmentCreateWithoutUserInput, CourseAssignmentUncheckedCreateWithoutUserInput>
   }
 
-  export type ModuleAssignmentUpdateWithWhereUniqueWithoutUserInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    data: XOR<ModuleAssignmentUpdateWithoutUserInput, ModuleAssignmentUncheckedUpdateWithoutUserInput>
+  export type CourseAssignmentUpdateWithWhereUniqueWithoutUserInput = {
+    where: CourseAssignmentWhereUniqueInput
+    data: XOR<CourseAssignmentUpdateWithoutUserInput, CourseAssignmentUncheckedUpdateWithoutUserInput>
   }
 
-  export type ModuleAssignmentUpdateManyWithWhereWithoutUserInput = {
-    where: ModuleAssignmentScalarWhereInput
-    data: XOR<ModuleAssignmentUpdateManyMutationInput, ModuleAssignmentUncheckedUpdateManyWithoutUserInput>
+  export type CourseAssignmentUpdateManyWithWhereWithoutUserInput = {
+    where: CourseAssignmentScalarWhereInput
+    data: XOR<CourseAssignmentUpdateManyMutationInput, CourseAssignmentUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type ModuleAssignmentScalarWhereInput = {
-    AND?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
-    OR?: ModuleAssignmentScalarWhereInput[]
-    NOT?: ModuleAssignmentScalarWhereInput | ModuleAssignmentScalarWhereInput[]
-    id?: IntFilter<"ModuleAssignment"> | number
-    moduleId?: IntFilter<"ModuleAssignment"> | number
-    userId?: IntFilter<"ModuleAssignment"> | number
-    assignedAt?: DateTimeFilter<"ModuleAssignment"> | Date | string
+  export type CourseAssignmentScalarWhereInput = {
+    AND?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
+    OR?: CourseAssignmentScalarWhereInput[]
+    NOT?: CourseAssignmentScalarWhereInput | CourseAssignmentScalarWhereInput[]
+    id?: IntFilter<"CourseAssignment"> | number
+    courseId?: IntFilter<"CourseAssignment"> | number
+    userId?: IntFilter<"CourseAssignment"> | number
+    assignedAt?: DateTimeFilter<"CourseAssignment"> | Date | string
   }
 
   export type QuizAttemptUpsertWithWhereUniqueWithoutUserInput = {
@@ -13490,112 +13550,115 @@ export namespace Prisma {
     skipEvents?: JsonFilter<"WatchLog">
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
+    updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
   }
 
-  export type ModuleAssignmentCreateWithoutModuleInput = {
+  export type CourseAssignmentCreateWithoutCourseInput = {
     assignedAt: Date | string
     user: UserCreateNestedOneWithoutAssignmentsInput
   }
 
-  export type ModuleAssignmentUncheckedCreateWithoutModuleInput = {
+  export type CourseAssignmentUncheckedCreateWithoutCourseInput = {
     id?: number
     userId: number
     assignedAt: Date | string
   }
 
-  export type ModuleAssignmentCreateOrConnectWithoutModuleInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    create: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput>
+  export type CourseAssignmentCreateOrConnectWithoutCourseInput = {
+    where: CourseAssignmentWhereUniqueInput
+    create: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput>
   }
 
-  export type ModuleAssignmentCreateManyModuleInputEnvelope = {
-    data: ModuleAssignmentCreateManyModuleInput | ModuleAssignmentCreateManyModuleInput[]
+  export type CourseAssignmentCreateManyCourseInputEnvelope = {
+    data: CourseAssignmentCreateManyCourseInput | CourseAssignmentCreateManyCourseInput[]
     skipDuplicates?: boolean
   }
 
-  export type ModuleVideoCreateWithoutModuleInput = {
+  export type CourseVideoCreateWithoutCourseInput = {
     order: number
-    video: VideoCreateNestedOneWithoutModuleVideosInput
+    video: VideoCreateNestedOneWithoutCourseVideosInput
   }
 
-  export type ModuleVideoUncheckedCreateWithoutModuleInput = {
+  export type CourseVideoUncheckedCreateWithoutCourseInput = {
     id?: number
     videoId: number
     order: number
   }
 
-  export type ModuleVideoCreateOrConnectWithoutModuleInput = {
-    where: ModuleVideoWhereUniqueInput
-    create: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput>
+  export type CourseVideoCreateOrConnectWithoutCourseInput = {
+    where: CourseVideoWhereUniqueInput
+    create: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput>
   }
 
-  export type ModuleVideoCreateManyModuleInputEnvelope = {
-    data: ModuleVideoCreateManyModuleInput | ModuleVideoCreateManyModuleInput[]
+  export type CourseVideoCreateManyCourseInputEnvelope = {
+    data: CourseVideoCreateManyCourseInput | CourseVideoCreateManyCourseInput[]
     skipDuplicates?: boolean
   }
 
-  export type ModuleAssignmentUpsertWithWhereUniqueWithoutModuleInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    update: XOR<ModuleAssignmentUpdateWithoutModuleInput, ModuleAssignmentUncheckedUpdateWithoutModuleInput>
-    create: XOR<ModuleAssignmentCreateWithoutModuleInput, ModuleAssignmentUncheckedCreateWithoutModuleInput>
+  export type CourseAssignmentUpsertWithWhereUniqueWithoutCourseInput = {
+    where: CourseAssignmentWhereUniqueInput
+    update: XOR<CourseAssignmentUpdateWithoutCourseInput, CourseAssignmentUncheckedUpdateWithoutCourseInput>
+    create: XOR<CourseAssignmentCreateWithoutCourseInput, CourseAssignmentUncheckedCreateWithoutCourseInput>
   }
 
-  export type ModuleAssignmentUpdateWithWhereUniqueWithoutModuleInput = {
-    where: ModuleAssignmentWhereUniqueInput
-    data: XOR<ModuleAssignmentUpdateWithoutModuleInput, ModuleAssignmentUncheckedUpdateWithoutModuleInput>
+  export type CourseAssignmentUpdateWithWhereUniqueWithoutCourseInput = {
+    where: CourseAssignmentWhereUniqueInput
+    data: XOR<CourseAssignmentUpdateWithoutCourseInput, CourseAssignmentUncheckedUpdateWithoutCourseInput>
   }
 
-  export type ModuleAssignmentUpdateManyWithWhereWithoutModuleInput = {
-    where: ModuleAssignmentScalarWhereInput
-    data: XOR<ModuleAssignmentUpdateManyMutationInput, ModuleAssignmentUncheckedUpdateManyWithoutModuleInput>
+  export type CourseAssignmentUpdateManyWithWhereWithoutCourseInput = {
+    where: CourseAssignmentScalarWhereInput
+    data: XOR<CourseAssignmentUpdateManyMutationInput, CourseAssignmentUncheckedUpdateManyWithoutCourseInput>
   }
 
-  export type ModuleVideoUpsertWithWhereUniqueWithoutModuleInput = {
-    where: ModuleVideoWhereUniqueInput
-    update: XOR<ModuleVideoUpdateWithoutModuleInput, ModuleVideoUncheckedUpdateWithoutModuleInput>
-    create: XOR<ModuleVideoCreateWithoutModuleInput, ModuleVideoUncheckedCreateWithoutModuleInput>
+  export type CourseVideoUpsertWithWhereUniqueWithoutCourseInput = {
+    where: CourseVideoWhereUniqueInput
+    update: XOR<CourseVideoUpdateWithoutCourseInput, CourseVideoUncheckedUpdateWithoutCourseInput>
+    create: XOR<CourseVideoCreateWithoutCourseInput, CourseVideoUncheckedCreateWithoutCourseInput>
   }
 
-  export type ModuleVideoUpdateWithWhereUniqueWithoutModuleInput = {
-    where: ModuleVideoWhereUniqueInput
-    data: XOR<ModuleVideoUpdateWithoutModuleInput, ModuleVideoUncheckedUpdateWithoutModuleInput>
+  export type CourseVideoUpdateWithWhereUniqueWithoutCourseInput = {
+    where: CourseVideoWhereUniqueInput
+    data: XOR<CourseVideoUpdateWithoutCourseInput, CourseVideoUncheckedUpdateWithoutCourseInput>
   }
 
-  export type ModuleVideoUpdateManyWithWhereWithoutModuleInput = {
-    where: ModuleVideoScalarWhereInput
-    data: XOR<ModuleVideoUpdateManyMutationInput, ModuleVideoUncheckedUpdateManyWithoutModuleInput>
+  export type CourseVideoUpdateManyWithWhereWithoutCourseInput = {
+    where: CourseVideoScalarWhereInput
+    data: XOR<CourseVideoUpdateManyMutationInput, CourseVideoUncheckedUpdateManyWithoutCourseInput>
   }
 
-  export type ModuleVideoScalarWhereInput = {
-    AND?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
-    OR?: ModuleVideoScalarWhereInput[]
-    NOT?: ModuleVideoScalarWhereInput | ModuleVideoScalarWhereInput[]
-    id?: IntFilter<"ModuleVideo"> | number
-    moduleId?: IntFilter<"ModuleVideo"> | number
-    videoId?: IntFilter<"ModuleVideo"> | number
-    order?: IntFilter<"ModuleVideo"> | number
+  export type CourseVideoScalarWhereInput = {
+    AND?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
+    OR?: CourseVideoScalarWhereInput[]
+    NOT?: CourseVideoScalarWhereInput | CourseVideoScalarWhereInput[]
+    id?: IntFilter<"CourseVideo"> | number
+    courseId?: IntFilter<"CourseVideo"> | number
+    videoId?: IntFilter<"CourseVideo"> | number
+    order?: IntFilter<"CourseVideo"> | number
   }
 
-  export type ModuleCreateWithoutAssignmentsInput = {
+  export type CourseCreateWithoutAssignmentsInput = {
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    moduleVideos?: ModuleVideoCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    courseVideos?: CourseVideoCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleUncheckedCreateWithoutAssignmentsInput = {
+  export type CourseUncheckedCreateWithoutAssignmentsInput = {
     id?: number
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    moduleVideos?: ModuleVideoUncheckedCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleCreateOrConnectWithoutAssignmentsInput = {
-    where: ModuleWhereUniqueInput
-    create: XOR<ModuleCreateWithoutAssignmentsInput, ModuleUncheckedCreateWithoutAssignmentsInput>
+  export type CourseCreateOrConnectWithoutAssignmentsInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutAssignmentsInput, CourseUncheckedCreateWithoutAssignmentsInput>
   }
 
   export type UserCreateWithoutAssignmentsInput = {
@@ -13624,32 +13687,34 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutAssignmentsInput, UserUncheckedCreateWithoutAssignmentsInput>
   }
 
-  export type ModuleUpsertWithoutAssignmentsInput = {
-    update: XOR<ModuleUpdateWithoutAssignmentsInput, ModuleUncheckedUpdateWithoutAssignmentsInput>
-    create: XOR<ModuleCreateWithoutAssignmentsInput, ModuleUncheckedCreateWithoutAssignmentsInput>
-    where?: ModuleWhereInput
+  export type CourseUpsertWithoutAssignmentsInput = {
+    update: XOR<CourseUpdateWithoutAssignmentsInput, CourseUncheckedUpdateWithoutAssignmentsInput>
+    create: XOR<CourseCreateWithoutAssignmentsInput, CourseUncheckedCreateWithoutAssignmentsInput>
+    where?: CourseWhereInput
   }
 
-  export type ModuleUpdateToOneWithWhereWithoutAssignmentsInput = {
-    where?: ModuleWhereInput
-    data: XOR<ModuleUpdateWithoutAssignmentsInput, ModuleUncheckedUpdateWithoutAssignmentsInput>
+  export type CourseUpdateToOneWithWhereWithoutAssignmentsInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutAssignmentsInput, CourseUncheckedUpdateWithoutAssignmentsInput>
   }
 
-  export type ModuleUpdateWithoutAssignmentsInput = {
+  export type CourseUpdateWithoutAssignmentsInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    courseVideos?: CourseVideoUpdateManyWithoutCourseNestedInput
   }
 
-  export type ModuleUncheckedUpdateWithoutAssignmentsInput = {
+  export type CourseUncheckedUpdateWithoutAssignmentsInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUncheckedUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    courseVideos?: CourseVideoUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsInput = {
@@ -13684,29 +13749,31 @@ export namespace Prisma {
     watchLogs?: WatchLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type ModuleCreateWithoutModuleVideosInput = {
+  export type CourseCreateWithoutCourseVideosInput = {
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    assignments?: ModuleAssignmentCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    assignments?: CourseAssignmentCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleUncheckedCreateWithoutModuleVideosInput = {
+  export type CourseUncheckedCreateWithoutCourseVideosInput = {
     id?: number
     title: string
     description?: string | null
-    createdBy: number
+    createdBy?: string | null
     createdAt: Date | string
-    assignments?: ModuleAssignmentUncheckedCreateNestedManyWithoutModuleInput
+    thumbnailUrl?: string | null
+    assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutCourseInput
   }
 
-  export type ModuleCreateOrConnectWithoutModuleVideosInput = {
-    where: ModuleWhereUniqueInput
-    create: XOR<ModuleCreateWithoutModuleVideosInput, ModuleUncheckedCreateWithoutModuleVideosInput>
+  export type CourseCreateOrConnectWithoutCourseVideosInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutCourseVideosInput, CourseUncheckedCreateWithoutCourseVideosInput>
   }
 
-  export type VideoCreateWithoutModuleVideosInput = {
+  export type VideoCreateWithoutCourseVideosInput = {
     title: string
     platform: string
     videoUrl: string
@@ -13717,7 +13784,7 @@ export namespace Prisma {
     quiz?: QuizCreateNestedOneWithoutVideoInput
   }
 
-  export type VideoUncheckedCreateWithoutModuleVideosInput = {
+  export type VideoUncheckedCreateWithoutCourseVideosInput = {
     id?: number
     title: string
     platform: string
@@ -13729,51 +13796,53 @@ export namespace Prisma {
     quiz?: QuizUncheckedCreateNestedOneWithoutVideoInput
   }
 
-  export type VideoCreateOrConnectWithoutModuleVideosInput = {
+  export type VideoCreateOrConnectWithoutCourseVideosInput = {
     where: VideoWhereUniqueInput
-    create: XOR<VideoCreateWithoutModuleVideosInput, VideoUncheckedCreateWithoutModuleVideosInput>
+    create: XOR<VideoCreateWithoutCourseVideosInput, VideoUncheckedCreateWithoutCourseVideosInput>
   }
 
-  export type ModuleUpsertWithoutModuleVideosInput = {
-    update: XOR<ModuleUpdateWithoutModuleVideosInput, ModuleUncheckedUpdateWithoutModuleVideosInput>
-    create: XOR<ModuleCreateWithoutModuleVideosInput, ModuleUncheckedCreateWithoutModuleVideosInput>
-    where?: ModuleWhereInput
+  export type CourseUpsertWithoutCourseVideosInput = {
+    update: XOR<CourseUpdateWithoutCourseVideosInput, CourseUncheckedUpdateWithoutCourseVideosInput>
+    create: XOR<CourseCreateWithoutCourseVideosInput, CourseUncheckedCreateWithoutCourseVideosInput>
+    where?: CourseWhereInput
   }
 
-  export type ModuleUpdateToOneWithWhereWithoutModuleVideosInput = {
-    where?: ModuleWhereInput
-    data: XOR<ModuleUpdateWithoutModuleVideosInput, ModuleUncheckedUpdateWithoutModuleVideosInput>
+  export type CourseUpdateToOneWithWhereWithoutCourseVideosInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutCourseVideosInput, CourseUncheckedUpdateWithoutCourseVideosInput>
   }
 
-  export type ModuleUpdateWithoutModuleVideosInput = {
+  export type CourseUpdateWithoutCourseVideosInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CourseAssignmentUpdateManyWithoutCourseNestedInput
   }
 
-  export type ModuleUncheckedUpdateWithoutModuleVideosInput = {
+  export type CourseUncheckedUpdateWithoutCourseVideosInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUncheckedUpdateManyWithoutModuleNestedInput
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    assignments?: CourseAssignmentUncheckedUpdateManyWithoutCourseNestedInput
   }
 
-  export type VideoUpsertWithoutModuleVideosInput = {
-    update: XOR<VideoUpdateWithoutModuleVideosInput, VideoUncheckedUpdateWithoutModuleVideosInput>
-    create: XOR<VideoCreateWithoutModuleVideosInput, VideoUncheckedCreateWithoutModuleVideosInput>
+  export type VideoUpsertWithoutCourseVideosInput = {
+    update: XOR<VideoUpdateWithoutCourseVideosInput, VideoUncheckedUpdateWithoutCourseVideosInput>
+    create: XOR<VideoCreateWithoutCourseVideosInput, VideoUncheckedCreateWithoutCourseVideosInput>
     where?: VideoWhereInput
   }
 
-  export type VideoUpdateToOneWithWhereWithoutModuleVideosInput = {
+  export type VideoUpdateToOneWithWhereWithoutCourseVideosInput = {
     where?: VideoWhereInput
-    data: XOR<VideoUpdateWithoutModuleVideosInput, VideoUncheckedUpdateWithoutModuleVideosInput>
+    data: XOR<VideoUpdateWithoutCourseVideosInput, VideoUncheckedUpdateWithoutCourseVideosInput>
   }
 
-  export type VideoUpdateWithoutModuleVideosInput = {
+  export type VideoUpdateWithoutCourseVideosInput = {
     title?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     videoUrl?: StringFieldUpdateOperationsInput | string
@@ -13784,7 +13853,7 @@ export namespace Prisma {
     quiz?: QuizUpdateOneWithoutVideoNestedInput
   }
 
-  export type VideoUncheckedUpdateWithoutModuleVideosInput = {
+  export type VideoUncheckedUpdateWithoutCourseVideosInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
@@ -13796,34 +13865,35 @@ export namespace Prisma {
     quiz?: QuizUncheckedUpdateOneWithoutVideoNestedInput
   }
 
-  export type ModuleVideoCreateWithoutVideoInput = {
+  export type CourseVideoCreateWithoutVideoInput = {
     order: number
-    module: ModuleCreateNestedOneWithoutModuleVideosInput
+    course: CourseCreateNestedOneWithoutCourseVideosInput
   }
 
-  export type ModuleVideoUncheckedCreateWithoutVideoInput = {
+  export type CourseVideoUncheckedCreateWithoutVideoInput = {
     id?: number
-    moduleId: number
+    courseId: number
     order: number
   }
 
-  export type ModuleVideoCreateOrConnectWithoutVideoInput = {
-    where: ModuleVideoWhereUniqueInput
-    create: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput>
+  export type CourseVideoCreateOrConnectWithoutVideoInput = {
+    where: CourseVideoWhereUniqueInput
+    create: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput>
   }
 
-  export type ModuleVideoCreateManyVideoInputEnvelope = {
-    data: ModuleVideoCreateManyVideoInput | ModuleVideoCreateManyVideoInput[]
+  export type CourseVideoCreateManyVideoInputEnvelope = {
+    data: CourseVideoCreateManyVideoInput | CourseVideoCreateManyVideoInput[]
     skipDuplicates?: boolean
   }
 
   export type WatchLogCreateWithoutVideoInput = {
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
     user: UserCreateNestedOneWithoutWatchLogsInput
   }
 
@@ -13831,11 +13901,12 @@ export namespace Prisma {
     id?: number
     userId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WatchLogCreateOrConnectWithoutVideoInput = {
@@ -13849,7 +13920,7 @@ export namespace Prisma {
   }
 
   export type QuizCreateWithoutVideoInput = {
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptCreateNestedManyWithoutQuizInput
@@ -13857,7 +13928,7 @@ export namespace Prisma {
 
   export type QuizUncheckedCreateWithoutVideoInput = {
     id?: number
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptUncheckedCreateNestedManyWithoutQuizInput
@@ -13868,20 +13939,20 @@ export namespace Prisma {
     create: XOR<QuizCreateWithoutVideoInput, QuizUncheckedCreateWithoutVideoInput>
   }
 
-  export type ModuleVideoUpsertWithWhereUniqueWithoutVideoInput = {
-    where: ModuleVideoWhereUniqueInput
-    update: XOR<ModuleVideoUpdateWithoutVideoInput, ModuleVideoUncheckedUpdateWithoutVideoInput>
-    create: XOR<ModuleVideoCreateWithoutVideoInput, ModuleVideoUncheckedCreateWithoutVideoInput>
+  export type CourseVideoUpsertWithWhereUniqueWithoutVideoInput = {
+    where: CourseVideoWhereUniqueInput
+    update: XOR<CourseVideoUpdateWithoutVideoInput, CourseVideoUncheckedUpdateWithoutVideoInput>
+    create: XOR<CourseVideoCreateWithoutVideoInput, CourseVideoUncheckedCreateWithoutVideoInput>
   }
 
-  export type ModuleVideoUpdateWithWhereUniqueWithoutVideoInput = {
-    where: ModuleVideoWhereUniqueInput
-    data: XOR<ModuleVideoUpdateWithoutVideoInput, ModuleVideoUncheckedUpdateWithoutVideoInput>
+  export type CourseVideoUpdateWithWhereUniqueWithoutVideoInput = {
+    where: CourseVideoWhereUniqueInput
+    data: XOR<CourseVideoUpdateWithoutVideoInput, CourseVideoUncheckedUpdateWithoutVideoInput>
   }
 
-  export type ModuleVideoUpdateManyWithWhereWithoutVideoInput = {
-    where: ModuleVideoScalarWhereInput
-    data: XOR<ModuleVideoUpdateManyMutationInput, ModuleVideoUncheckedUpdateManyWithoutVideoInput>
+  export type CourseVideoUpdateManyWithWhereWithoutVideoInput = {
+    where: CourseVideoScalarWhereInput
+    data: XOR<CourseVideoUpdateManyMutationInput, CourseVideoUncheckedUpdateManyWithoutVideoInput>
   }
 
   export type WatchLogUpsertWithWhereUniqueWithoutVideoInput = {
@@ -13912,7 +13983,7 @@ export namespace Prisma {
   }
 
   export type QuizUpdateWithoutVideoInput = {
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptUpdateManyWithoutQuizNestedInput
@@ -13920,7 +13991,7 @@ export namespace Prisma {
 
   export type QuizUncheckedUpdateWithoutVideoInput = {
     id?: IntFieldUpdateOperationsInput | number
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
     attempts?: QuizAttemptUncheckedUpdateManyWithoutQuizNestedInput
@@ -13932,7 +14003,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -13943,7 +14014,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -13959,7 +14030,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoCreateNestedManyWithoutVideoInput
     quiz?: QuizCreateNestedOneWithoutVideoInput
   }
 
@@ -13971,7 +14042,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoUncheckedCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutVideoInput
     quiz?: QuizUncheckedCreateNestedOneWithoutVideoInput
   }
 
@@ -13997,7 +14068,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -14008,7 +14079,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -14030,7 +14101,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUpdateManyWithoutVideoNestedInput
     quiz?: QuizUpdateOneWithoutVideoNestedInput
   }
 
@@ -14042,7 +14113,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUncheckedUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUncheckedUpdateManyWithoutVideoNestedInput
     quiz?: QuizUncheckedUpdateOneWithoutVideoNestedInput
   }
 
@@ -14053,7 +14124,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoCreateNestedManyWithoutVideoInput
     watchLogs?: WatchLogCreateNestedManyWithoutVideoInput
   }
 
@@ -14065,7 +14136,7 @@ export namespace Prisma {
     videoId: string
     duration: number
     createdAt: Date | string
-    moduleVideos?: ModuleVideoUncheckedCreateNestedManyWithoutVideoInput
+    courseVideos?: CourseVideoUncheckedCreateNestedManyWithoutVideoInput
     watchLogs?: WatchLogUncheckedCreateNestedManyWithoutVideoInput
   }
 
@@ -14115,7 +14186,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUpdateManyWithoutVideoNestedInput
     watchLogs?: WatchLogUpdateManyWithoutVideoNestedInput
   }
 
@@ -14127,7 +14198,7 @@ export namespace Prisma {
     videoId?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    moduleVideos?: ModuleVideoUncheckedUpdateManyWithoutVideoNestedInput
+    courseVideos?: CourseVideoUncheckedUpdateManyWithoutVideoNestedInput
     watchLogs?: WatchLogUncheckedUpdateManyWithoutVideoNestedInput
   }
 
@@ -14153,7 +14224,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentCreateNestedManyWithoutUserInput
     watchLogs?: WatchLogCreateNestedManyWithoutUserInput
   }
 
@@ -14164,7 +14235,7 @@ export namespace Prisma {
     password: string
     role: $Enums.Role
     createdAt?: Date | string
-    assignments?: ModuleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    assignments?: CourseAssignmentUncheckedCreateNestedManyWithoutUserInput
     watchLogs?: WatchLogUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14174,7 +14245,7 @@ export namespace Prisma {
   }
 
   export type QuizCreateWithoutAttemptsInput = {
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
     video: VideoCreateNestedOneWithoutQuizInput
@@ -14183,7 +14254,7 @@ export namespace Prisma {
   export type QuizUncheckedCreateWithoutAttemptsInput = {
     id?: number
     videoId: number
-    generatedBy: string
+    generatedBy?: string | null
     createdAt: Date | string
     questions: JsonNullValueInput | InputJsonValue
   }
@@ -14210,7 +14281,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUpdateManyWithoutUserNestedInput
     watchLogs?: WatchLogUpdateManyWithoutUserNestedInput
   }
 
@@ -14221,7 +14292,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignments?: ModuleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    assignments?: CourseAssignmentUncheckedUpdateManyWithoutUserNestedInput
     watchLogs?: WatchLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -14237,7 +14308,7 @@ export namespace Prisma {
   }
 
   export type QuizUpdateWithoutAttemptsInput = {
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
     video?: VideoUpdateOneRequiredWithoutQuizNestedInput
@@ -14246,14 +14317,14 @@ export namespace Prisma {
   export type QuizUncheckedUpdateWithoutAttemptsInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
-    generatedBy?: StringFieldUpdateOperationsInput | string
+    generatedBy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: JsonNullValueInput | InputJsonValue
   }
 
-  export type ModuleAssignmentCreateManyUserInput = {
+  export type CourseAssignmentCreateManyUserInput = {
     id?: number
-    moduleId: number
+    courseId: number
     assignedAt: Date | string
   }
 
@@ -14268,27 +14339,28 @@ export namespace Prisma {
     id?: number
     videoId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type ModuleAssignmentUpdateWithoutUserInput = {
+  export type CourseAssignmentUpdateWithoutUserInput = {
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    module?: ModuleUpdateOneRequiredWithoutAssignmentsNestedInput
+    course?: CourseUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
-  export type ModuleAssignmentUncheckedUpdateWithoutUserInput = {
+  export type CourseAssignmentUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleAssignmentUncheckedUpdateManyWithoutUserInput = {
+  export type CourseAssignmentUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14319,6 +14391,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     video?: VideoUpdateOneRequiredWithoutWatchLogsNestedInput
   }
 
@@ -14331,6 +14404,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WatchLogUncheckedUpdateManyWithoutUserInput = {
@@ -14342,57 +14416,58 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleAssignmentCreateManyModuleInput = {
+  export type CourseAssignmentCreateManyCourseInput = {
     id?: number
     userId: number
     assignedAt: Date | string
   }
 
-  export type ModuleVideoCreateManyModuleInput = {
+  export type CourseVideoCreateManyCourseInput = {
     id?: number
     videoId: number
     order: number
   }
 
-  export type ModuleAssignmentUpdateWithoutModuleInput = {
+  export type CourseAssignmentUpdateWithoutCourseInput = {
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutAssignmentsNestedInput
   }
 
-  export type ModuleAssignmentUncheckedUpdateWithoutModuleInput = {
+  export type CourseAssignmentUncheckedUpdateWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleAssignmentUncheckedUpdateManyWithoutModuleInput = {
+  export type CourseAssignmentUncheckedUpdateManyWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ModuleVideoUpdateWithoutModuleInput = {
+  export type CourseVideoUpdateWithoutCourseInput = {
     order?: IntFieldUpdateOperationsInput | number
-    video?: VideoUpdateOneRequiredWithoutModuleVideosNestedInput
+    video?: VideoUpdateOneRequiredWithoutCourseVideosNestedInput
   }
 
-  export type ModuleVideoUncheckedUpdateWithoutModuleInput = {
+  export type CourseVideoUncheckedUpdateWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModuleVideoUncheckedUpdateManyWithoutModuleInput = {
+  export type CourseVideoUncheckedUpdateManyWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     videoId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModuleVideoCreateManyVideoInput = {
+  export type CourseVideoCreateManyVideoInput = {
     id?: number
-    moduleId: number
+    courseId: number
     order: number
   }
 
@@ -14400,27 +14475,28 @@ export namespace Prisma {
     id?: number
     userId: number
     totalWatchTime: number
-    isCompleted: boolean
-    watchedPercentage: number
-    skipEvents: JsonNullValueInput | InputJsonValue
-    pauseEvents: JsonNullValueInput | InputJsonValue
-    createdAt: Date | string
+    isCompleted?: boolean
+    watchedPercentage?: number
+    skipEvents?: JsonNullValueInput | InputJsonValue
+    pauseEvents?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type ModuleVideoUpdateWithoutVideoInput = {
+  export type CourseVideoUpdateWithoutVideoInput = {
     order?: IntFieldUpdateOperationsInput | number
-    module?: ModuleUpdateOneRequiredWithoutModuleVideosNestedInput
+    course?: CourseUpdateOneRequiredWithoutCourseVideosNestedInput
   }
 
-  export type ModuleVideoUncheckedUpdateWithoutVideoInput = {
+  export type CourseVideoUncheckedUpdateWithoutVideoInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModuleVideoUncheckedUpdateManyWithoutVideoInput = {
+  export type CourseVideoUncheckedUpdateManyWithoutVideoInput = {
     id?: IntFieldUpdateOperationsInput | number
-    moduleId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
     order?: IntFieldUpdateOperationsInput | number
   }
 
@@ -14431,6 +14507,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutWatchLogsNestedInput
   }
 
@@ -14443,6 +14520,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WatchLogUncheckedUpdateManyWithoutVideoInput = {
@@ -14454,6 +14532,7 @@ export namespace Prisma {
     skipEvents?: JsonNullValueInput | InputJsonValue
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuizAttemptCreateManyQuizInput = {
