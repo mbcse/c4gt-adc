@@ -18,6 +18,7 @@ import {
   SortAsc,
   MoreHorizontal,
   Bookmark,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/student/lib/utils";
 import { Link } from "react-router-dom";
@@ -25,6 +26,7 @@ import DashboardLayout from "@/student/components/DashboardLayout";
 import { courseAPI } from "@/api/courseAPI";
 import { useApi } from '@/api/index';
 import { metadataAPI } from '@/api/metadataAPI';
+import { formatDuration } from "@/utils/format";
 
 export default function Courses() {
   const api = useApi();
@@ -32,7 +34,7 @@ export default function Courses() {
   const [allCourses, setAllCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [hasMore, setHasMore] = useState(true);
@@ -61,68 +63,68 @@ export default function Courses() {
   }, []);
 
   useEffect(() => {
-  const fetchCourses = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const filters: any = {
-        categoryId: selectedCategory,
-        skillLevelId: selectedSkillLevel,
-        gradeId: selectedGrade,
-        languageId: selectedLanguage,
-        tagIds: selectedTagIds.length ? selectedTagIds : undefined,
-        search: searchQuery.trim() || undefined,
-      };
+        const filters: any = {
+          categoryId: selectedCategory,
+          skillLevelId: selectedSkillLevel,
+          gradeId: selectedGrade,
+          languageId: selectedLanguage,
+          tagIds: selectedTagIds.length ? selectedTagIds : undefined,
+          search: searchQuery.trim() || undefined,
+        };
 
-      if (assignedFilter === "assigned") filters.assigned = true;
-      else if (assignedFilter === "unassigned") filters.assigned = false;
+        if (assignedFilter === "assigned") filters.assigned = true;
+        else if (assignedFilter === "unassigned") filters.assigned = false;
 
-      const response = await courseAPI.getAllCourses(api, 1, limit, filters);
-      setAllCourses(response.data);
-      setHasMore(response.page < response.totalPages);
-      setPage(1);
-    } catch (err: any) {
-      setError(err.message || "Failed to load courses");
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchCourses();
-}, [
-  api,
-  limit,
-  selectedCategory,
-  selectedSkillLevel,
-  selectedGrade,
-  selectedLanguage,
-  selectedTagIds,
-  assignedFilter,
-  searchQuery,
-]);
+        const response = await courseAPI.getAllCourses(api, 1, limit, filters);
+        setAllCourses(response.data);
+        setHasMore(response.page < response.totalPages);
+        setPage(1);
+      } catch (err: any) {
+        setError(err.message || "Failed to load courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, [
+    api,
+    limit,
+    selectedCategory,
+    selectedSkillLevel,
+    selectedGrade,
+    selectedLanguage,
+    selectedTagIds,
+    assignedFilter,
+    searchQuery,
+  ]);
 
 
   useEffect(() => {
-  async function fetchMetadata() {
-    try {
-      const [cats, skills, grans, langs, tgs] = await Promise.all([
-        metadataAPI.getCategories(),
-        metadataAPI.getSkillLevels(),
-        metadataAPI.getGrades(),
-        metadataAPI.getLanguages(),
-        metadataAPI.getTags(),
-      ]);
-      setCategories(cats);
-      setSkillLevels(skills);
-      setGrades(grans);
-      setLanguages(langs);
-      setTags(tgs);
-    } catch (err) {
-      console.error("Failed to load metadata:", err);
+    async function fetchMetadata() {
+      try {
+        const [cats, skills, grans, langs, tgs] = await Promise.all([
+          metadataAPI.getCategories(),
+          metadataAPI.getSkillLevels(),
+          metadataAPI.getGrades(),
+          metadataAPI.getLanguages(),
+          metadataAPI.getTags(),
+        ]);
+        setCategories(cats);
+        setSkillLevels(skills);
+        setGrades(grans);
+        setLanguages(langs);
+        setTags(tgs);
+      } catch (err) {
+        console.error("Failed to load metadata:", err);
+      }
     }
-  }
-  fetchMetadata();
-}, [api]);
+    fetchMetadata();
+  }, [api]);
 
 
   useEffect(() => {
@@ -132,11 +134,11 @@ export default function Courses() {
         setPage(prevPage => prevPage + 1);
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
-  
+
 
   const sortCourses = (courses: typeof allCourses) => {
     return [...courses].sort((a, b) => {
@@ -146,12 +148,15 @@ export default function Courses() {
         case "name":
           return a.title.localeCompare(b.title);
         case "date":
-          return new Date(b.enrolledDate).getTime() - new Date(a.enrolledDate).getTime();
+          const dateA = new Date(a.assignedAt || a.createdAt).getTime();
+          const dateB = new Date(b.assignedAt || b.createdAt).getTime();
+          return dateB - dateA;
         default:
           return 0;
       }
     });
   };
+
 
   const filterCourses = (courses: typeof allCourses) => {
     let filtered = courses;
@@ -167,6 +172,10 @@ export default function Courses() {
       );
     }
     return filtered;
+  };
+
+  const getStatusCount = (status: string) => {
+    return allCourses.filter(c => c.status === status).length;
   };
 
   const filteredAndSortedCourses = sortCourses(filterCourses(allCourses));
@@ -361,76 +370,86 @@ export default function Courses() {
           </div>
 
           <div className="flex flex-wrap gap-4 items-center mb-6">
-  <select
-    value={assignedFilter}
-    onChange={e => setAssignedFilter(e.target.value as any)}
-    className="px-3 py-2 border rounded"
-  >
-    <option value="all">All Courses</option>
-    <option value="assigned">Assigned Courses</option>
-    <option value="unassigned">Unassigned Courses</option>
-  </select>
+            <div className="inline-flex rounded-md bg-white/80 border border-violet-300 shadow-lg backdrop-blur-sm p-1">
+              {["all", "assigned", "unassigned"].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setAssignedFilter(filter as any)}
+                  className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${assignedFilter === filter
+                    ? "bg-violet-600 text-white shadow-md"
+                    : "text-violet-700 hover:bg-violet-200"
+                    }`}
+                >
+                  {filter === "all"
+                    ? "All Courses"
+                    : filter === "assigned"
+                      ? "Assigned Courses"
+                      : "Unassigned Courses"}
+                </button>
+              ))}
+            </div>
 
-  <select
-    value={selectedCategory ?? ""}
-    onChange={e => setSelectedCategory(e.target.value ? Number(e.target.value) : undefined)}
-    className="px-3 py-2 border rounded"
-  >
-    <option value="">All Categories</option>
-    {categories.map(cat => (
-      <option key={cat.id} value={cat.id}>{cat.name}</option>
-    ))}
-  </select>
 
-  <select
-    value={selectedSkillLevel ?? ""}
-    onChange={e => setSelectedSkillLevel(e.target.value ? Number(e.target.value) : undefined)}
-    className="px-3 py-2 border rounded"
-  >
-    <option value="">All Skill Levels</option>
-    {skillLevels.map(sl => (
-      <option key={sl.id} value={sl.id}>{sl.level}</option>
-    ))}
-  </select>
+            <select
+              value={selectedCategory ?? ""}
+              onChange={e => setSelectedCategory(e.target.value ? Number(e.target.value) : undefined)}
+              className="px-3 py-2 border rounded"
+            >
+              <option value="">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
 
-  <select
-    value={selectedGrade ?? ""}
-    onChange={e => setSelectedGrade(e.target.value ? Number(e.target.value) : undefined)}
-    className="px-3 py-2 border rounded"
-  >
-    <option value="">All Grades</option>
-    {grades.map(gr => (
-      <option key={gr.id} value={gr.id}>{gr.value}</option>
-    ))}
-  </select>
+            <select
+              value={selectedSkillLevel ?? ""}
+              onChange={e => setSelectedSkillLevel(e.target.value ? Number(e.target.value) : undefined)}
+              className="px-3 py-2 border rounded"
+            >
+              <option value="">All Skill Levels</option>
+              {skillLevels.map(sl => (
+                <option key={sl.id} value={sl.id}>{sl.level}</option>
+              ))}
+            </select>
 
-  <select
-    value={selectedLanguage ?? ""}
-    onChange={e => setSelectedLanguage(e.target.value ? Number(e.target.value) : undefined)}
-    className="px-3 py-2 border rounded"
-  >
-    <option value="">All Languages</option>
-    {languages.map(lang => (
-      <option key={lang.id} value={lang.id}>{lang.name}</option>
-    ))}
-  </select>
+            <select
+              value={selectedGrade ?? ""}
+              onChange={e => setSelectedGrade(e.target.value ? Number(e.target.value) : undefined)}
+              className="px-3 py-2 border rounded"
+            >
+              <option value="">All Grades</option>
+              {grades.map(gr => (
+                <option key={gr.id} value={gr.id}>{gr.value}</option>
+              ))}
+            </select>
 
-  <div className="flex flex-wrap gap-2 max-w-xs max-h-24 overflow-auto border p-2 rounded">
-    {tags.map(tag => (
-      <label key={tag.id} className="inline-flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={selectedTagIds.includes(tag.id)}
-          onChange={e => {
-            if (e.target.checked) setSelectedTagIds([...selectedTagIds, tag.id]);
-            else setSelectedTagIds(selectedTagIds.filter(id => id !== tag.id));
-          }}
-        />
-        <span className="text-sm">{tag.name}</span>
-      </label>
-    ))}
-  </div>
-</div>
+            <select
+              value={selectedLanguage ?? ""}
+              onChange={e => setSelectedLanguage(e.target.value ? Number(e.target.value) : undefined)}
+              className="px-3 py-2 border rounded"
+            >
+              <option value="">All Languages</option>
+              {languages.map(lang => (
+                <option key={lang.id} value={lang.id}>{lang.name}</option>
+              ))}
+            </select>
+
+            <div className="flex flex-wrap gap-2 max-w-xs max-h-24 overflow-auto border p-2 rounded">
+              {tags.map(tag => (
+                <label key={tag.id} className="inline-flex items-center gap-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedTagIds.includes(tag.id)}
+                    onChange={e => {
+                      if (e.target.checked) setSelectedTagIds([...selectedTagIds, tag.id]);
+                      else setSelectedTagIds(selectedTagIds.filter(id => id !== tag.id));
+                    }}
+                  />
+                  <span className="text-sm">{tag.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
 
 
           {/* Course Card Grid */}
@@ -459,134 +478,138 @@ export default function Courses() {
               const { bg, accent, statusBg, progressBg } = getColorClass(course.progress);
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
-                <Card
-                  className="relative overflow-hidden bg-white border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group hover:-translate-y-3 hover:scale-105 transform-gpu"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/85 group-hover:from-white/98 group-hover:via-white/95 group-hover:to-white/90 transition-all duration-500"></div>
-                  <CardContent className="relative p-0">
-                    {/* Course Thumbnail */}
-                    <div className="relative">
-                      <div className="w-full h-56 rounded-t-xl flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
+                  <Card
+                    className="relative overflow-hidden bg-white border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group hover:-translate-y-3 hover:scale-105 transform-gpu"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/85 group-hover:from-white/98 group-hover:via-white/95 group-hover:to-white/90 transition-all duration-500"></div>
+                    <CardContent className="relative p-0">
+                      {/* Course Thumbnail */}
+                      <div className="relative">
+                        <div className="w-full h-56 rounded-t-xl flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
 
-                        {course.thumbnailUrl ? (
-                          <img
-                            src={course.thumbnailUrl}
-                            alt={`${course.title} thumbnail`}
-                            className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="text-7xl select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">📚</div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent group-hover:from-black/40 transition-all duration-500"></div>
+                          {course.thumbnailUrl ? (
+                            <img
+                              src={course.thumbnailUrl}
+                              alt={`${course.title} thumbnail`}
+                              className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="text-7xl select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">📚</div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent group-hover:from-black/40 transition-all duration-500"></div>
 
-                        {/* Progress Badge */}
-                        <div className="absolute top-4 right-4">
-                          <div className={`bg-gradient-to-r ${progressBg} text-white px-3 py-2 rounded-2xl text-sm font-bold shadow-lg backdrop-blur-sm border border-white/20`}>
-                            {course.progress}% Complete
-                          </div>
-                        </div>
-
-                        {/* Status Badge */}
-                        <div className="absolute top-4 left-4">
-                          <div
-                            className={cn(
-                              "px-3 py-2 rounded-2xl text-sm font-bold border-2 backdrop-blur-sm shadow-lg",
-                              course.status === "completed"
-                                ? "bg-emerald-500 text-white border-emerald-300"
-                                : course.status === "in-progress"
-                                ? "bg-blue-500 text-white border-blue-300"
-                                : "bg-slate-500 text-white border-gray-300"
-                            )}
-                          >
-                            {course.status === "completed"
-                              ? "✓ Completed"
-                              : course.status === "in-progress"
-                              ? "◗ In Progress"
-                              : "○ Not Started"}
-                          </div>
-                        </div>
-
-                        {course.status === "completed" && (
-                          <div className="absolute bottom-4 right-4">
-                            <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-500 text-white p-3 rounded-2xl shadow-lg animate-pulse">
-                              <Trophy className="h-5 w-5" />
+                          {/* Progress Badge */}
+                          <div className="absolute top-4 right-4">
+                            <div className={`bg-gradient-to-r ${progressBg} text-white px-3 py-2 rounded-2xl text-sm font-bold shadow-lg backdrop-blur-sm border border-white/20`}>
+                              {course.progress}% Complete
                             </div>
                           </div>
-                        )}
-                      </div>
-                    </div>
 
-                    {course.isAssigned && (
-  <Badge className="bg-indigo-100 text-indigo-800 absolute top-4 right-4 rounded-lg px-2 py-1 text-xs font-semibold z-20">
-    Assigned
-  </Badge>
-)}
+                          {/* Status Badge */}
+                          <div className="absolute top-4 left-4">
+                            <div
+                              className={cn(
+                                "px-3 py-2 rounded-2xl text-sm font-bold border-2 backdrop-blur-sm shadow-lg",
+                                course.status === "completed"
+                                  ? "bg-emerald-500 text-white border-emerald-300"
+                                  : course.status === "in-progress"
+                                    ? "bg-blue-500 text-white border-blue-300"
+                                    : "bg-slate-500 text-white border-gray-300"
+                              )}
+                            >
+                              {course.status === "completed"
+                                ? "✓ Completed"
+                                : course.status === "in-progress"
+                                  ? "◗ In Progress"
+                                  : "○ Not Started"}
+                            </div>
+                          </div>
 
-                    {/* Course Content */}
-                    <div className="p-7">
-                      <div className="mb-6">
-                        <div className="flex items-start justify-between mb-3">
-                          <h3 className="font-bold text-slate-900 text-xl group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2">
-                            {course.title}
-                          </h3>
+                          {course.status === "completed" && (
+                            <div className="absolute bottom-4 right-4">
+                              <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-500 text-white p-3 rounded-2xl shadow-lg animate-pulse">
+                                <Trophy className="h-5 w-5" />
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <p className="text-sm text-slate-600 mb-5 flex items-center font-medium">
-                          <span className="inline-block w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mr-2"></span>
-                          {course.createdBy || "Unknown"}
-                        </p>
+                      </div>
 
-                        {/* Progress Bar */}
-                        <div className="mb-5">
+                      {course.isAssigned && (
+                        <Badge className="bg-indigo-100 text-indigo-800 absolute bottom-4 left-4 
+    rounded-lg px-2 py-1 text-xs font-semibold z-20">
+                          Assigned
+                        </Badge>
+                      )}
+
+                      {/* Course Content */}
+                      <div className="p-7">
+                        <div className="mb-6">
+                          <div className="flex items-start justify-between mb-3">
+                            <h3 className="font-bold text-slate-900 text-xl group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 line-clamp-2">
+                              {course.title}
+                            </h3>
+                          </div>
+                          <p className="text-sm text-slate-600 mb-5 flex items-center font-medium">
+                            <span className="inline-block w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full mr-2"></span>
+                            {course.createdBy || "Unknown"}
+                          </p>
+
+                          {/* Progress Bar */}
                           <div className="relative">
                             <Progress
-                              value={course.progress > 0 ? course.progress : 0}
+                              value={course.progress}
                               className="h-3 rounded-full bg-slate-200 shadow-inner"
                             />
-                            <div className={`absolute inset-0 bg-gradient-to-r ${progressBg} rounded-full opacity-90 transition-all duration-300`} style={{ width: `${course.progress}%` }}></div>
+                            <div
+                              className={`absolute inset-0 bg-gradient-to-r ${progressBg} rounded-full opacity-90 transition-all duration-300`}
+                              style={{ width: `${course.progress}%` }}
+                            />
                           </div>
-                          <div className="text-sm text-slate-700 mt-2 font-medium">{course.progress}% Complete</div>
-                        </div>
+                          <div className="text-sm text-slate-700 mt-2 font-medium">
+                            {course.progress}% Complete • {formatDuration(course.totalWatchTime)} watched
+                          </div>
 
-                        <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>
+                          <p className="text-slate-700 mb-5 line-clamp-3 leading-relaxed">{course.description}</p>
 
-                        {/* Lessons and Last Activity */}
-                        <div className="flex justify-between text-sm text-slate-500 mb-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-3">
-                          <span className="flex items-center font-medium">
-                            <BookOpen className="h-4 w-4 mr-2 text-violet-500" />
-                            {course.completedLessons}/{course.totalLessons} lessons
-                          </span>
-                          <span className="flex items-center font-medium">
-                            <div className="w-2 h-2 bg-teal-400 rounded-full mr-2 animate-pulse"></div>
-                            {course.lastActivity}
-                          </span>
-                        </div>
+                          {/* Lessons and Last Activity */}
+                          <div className="flex justify-between text-sm text-slate-500 mb-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-3">
+                            <span className="flex items-center font-medium">
+                              <BookOpen className="h-4 w-4 mr-2 text-violet-500" />
+                              {course.completedLessons}/{course.totalLessons} lessons
+                            </span>
+                            <span className="flex items-center font-medium">
+                              <Clock className="h-4 w-4 mr-2 text-teal-500" />
+                              {formatDuration(course.totalDuration)}
+                            </span>
+                          </div>
 
-                        {/* Action Buttons */}
-                        {course.status === "completed" ? (
-                          <div className="space-y-3">
-                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
-                              <Trophy className="h-5 w-5 mr-2" />
-                              View Certificate
-                            </Button>
-                            <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
-                              <Link to={`/courses/${course.id}/video`}>
-                                <BookOpen className="h-5 w-5 mr-2" />
-                                Revise Course
+                          {/* Action Buttons */}
+                          {course.status === "completed" ? (
+                            <div className="space-y-3">
+                              <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
+                                <Trophy className="h-5 w-5 mr-2" />
+                                View Certificate
+                              </Button>
+                              <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold">
+                                <Link to={`/courses/${course.id}/video`}>
+                                  <BookOpen className="h-5 w-5 mr-2" />
+                                  Revise Course
+                                </Link>
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold text-base group-hover:scale-105">
+                              <Link to={`/courses/${course.id}`}>
+                                <Play className="h-5 w-5 mr-2" />
+                                {course.status === "not-started" ? "Start Learning" : "Continue Learning"}
                               </Link>
                             </Button>
-                          </div>
-                        ) : (
-                          <Button asChild className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-3 font-semibold text-base group-hover:scale-105">
-                            <Link to={`/courses/${course.id}/video`}>
-                              <Play className="h-5 w-5 mr-2" />
-                              {course.status === "not-started" ? "Start Learning" : "Continue Learning"}
-                            </Link>
-                          </Button>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
                 </Link>
               );
             })}

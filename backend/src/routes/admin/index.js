@@ -6,7 +6,7 @@ const usersRoutes = require('./adminUsers');
 const studentsRoutes = require('./adminStudents');
 const coursesRoutes = require('./adminCourses');
 const progressRoutes = require('./adminProgress');
-const quizRoutes = require('./adminQuizAnalytics');
+const quizRoutes = require('./adminQuiz');
 const reportsRoutes = require('./adminReports');
 const notificationsRoutes = require('./adminNotifications.js');
 const adminMetadataRoutes = require('./adminMetadata');
@@ -28,8 +28,8 @@ router.use('/courses', requireRole(['ADMIN', 'SUPERADMIN']), coursesRoutes);
 // INSTRUCTOR, ADMIN and SUPERADMIN progress tracking routes
 router.use('/progress', requireRole(['INSTRUCTOR', 'ADMIN', 'SUPERADMIN']), progressRoutes);
 
-// ADMIN and SUPERADMIN quiz analytics routes
-router.use('/quiz-analytics', requireRole(['ADMIN', 'SUPERADMIN']), quizRoutes);
+// ADMIN and SUPERADMIN quiz routes
+router.use('/quizzes', requireRole(['ADMIN', 'SUPERADMIN']), quizRoutes);
 
 // ADMIN and SUPERADMIN reports routes
 router.use('/reports', requireRole(['ADMIN', 'SUPERADMIN']), reportsRoutes);

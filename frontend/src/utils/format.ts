@@ -4,9 +4,9 @@ export function formatDuration(durationInSeconds: number): string {
   const seconds = durationInSeconds % 60;
 
   if (hours > 0) {
-    return `${hours}h ${minutes}m ${seconds}s`;
+    return `${hours}h ${minutes}m`;
   } else if (minutes > 0) {
-    return `${minutes}m ${seconds}s`;
+    return `${minutes}m`;
   } else {
     return `${seconds}s`;
   }

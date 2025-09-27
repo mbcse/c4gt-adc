@@ -1,17 +1,18 @@
 const rateLimit = require('express-rate-limit');
 const { ipKeyGenerator } = require('express-rate-limit');
+const { PrismaClient } = require('../../generated/prisma');
+const prisma = new PrismaClient();
 
-// Rate limiting for progress updates
 const progressUpdateLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 100, // max 100 progress updates per minute per IP
+  max: 30,
   message: {
-    error: 'Too many progress updates, please slow down'
+    error: 'Too many progress updates. Please watch at normal speed.',
+    code: 'RATE_LIMIT_EXCEEDED'
   },
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => {
-    // userId from decoded JWT
     if (req.user && req.user.userId) {
       return req.user.userId.toString();
     }
@@ -19,67 +20,125 @@ const progressUpdateLimiter = rateLimit({
   }
 });
 
-// Rate limiting for video fetching
-const videoFetchLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 200, // max 200 video fetch requests per minute per IP
-  message: {
-    error: 'Too many video requests, please wait'
-  },
-  standardHeaders: true,
-  legacyHeaders: false
-});
+const validateSession = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const videoId = req.params.videoId;
+    const userAgent = req.headers['user-agent'];
 
-// Validate video progress data
-const validateProgressData = (req, res, next) => {
-  const { watchedPercentage, totalWatchTime, skipEvents, pauseEvents } = req.body;
+    const recentSessions = await prisma.analyticsEvent.findMany({
+      where: {
+        userId,
+        videoId: parseInt(videoId),
+        eventType: 'PROGRESS_UPDATE',
+        timestamp: {
+          gte: new Date(Date.now() - 30 * 60 * 1000)
+        }
+      },
+      select: {
+        data: true,
+        timestamp: true
+      },
+      orderBy: { timestamp: 'desc' },
+      take: 5
+    });
 
-  // Validate watchedPercentage
-  if (watchedPercentage !== undefined) {
-    if (typeof watchedPercentage !== 'number' || 
-        watchedPercentage < 0 || watchedPercentage > 100) {
+    const uniqueUserAgents = new Set(
+      recentSessions
+        .map(s => s.data?.userAgent)
+        .filter(Boolean)
+    );
+
+    if (uniqueUserAgents.size > 1) {
       return res.status(400).json({
-        error: 'Invalid watchedPercentage: must be a number between 0 and 100'
+        error: 'Multiple devices detected. Please complete watching on one device.',
+        code: 'MULTIPLE_DEVICES'
       });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Session validation error:', error);
+    next();
+  }
+};
+
+const validateProgressData = (req, res, next) => {
+  const {
+    watchedPercentage,
+    totalWatchTime,
+    skipEvents,
+    pauseEvents,
+    isCompleted
+  } = req.body;
+
+  const errors = [];
+
+  if (watchedPercentage !== undefined) {
+    if (typeof watchedPercentage !== 'number' ||
+        watchedPercentage < 0 || watchedPercentage > 100) {
+      errors.push('Invalid watchedPercentage: must be a number between 0 and 100');
     }
   }
 
-  // Validate totalWatchTime
   if (totalWatchTime !== undefined) {
     if (typeof totalWatchTime !== 'number' || totalWatchTime < 0) {
-      return res.status(400).json({
-        error: 'Invalid totalWatchTime: must be a non-negative number'
-      });
+      errors.push('Invalid totalWatchTime: must be a non-negative number');
     }
   }
 
-  // Validate events arrays
   if (skipEvents !== undefined && !Array.isArray(skipEvents)) {
-    return res.status(400).json({
-      error: 'Invalid skipEvents: must be an array'
-    });
+    errors.push('Invalid skipEvents: must be an array');
   }
 
   if (pauseEvents !== undefined && !Array.isArray(pauseEvents)) {
+    errors.push('Invalid pauseEvents: must be an array');
+  }
+
+  if (Array.isArray(skipEvents)) {
+    const invalidSkips = skipEvents.filter(event => {
+      return !event.timestamp || 
+             typeof event.from !== 'number' || 
+             typeof event.to !== 'number';
+    });
+    
+    if (invalidSkips.length > 0) {
+      errors.push('Invalid skip event structure: missing timestamp, from, or to values');
+    }
+  }
+
+  if (Array.isArray(pauseEvents)) {
+    const invalidPauses = pauseEvents.filter(event => {
+      return !event.timestamp || typeof event.currentTime !== 'number';
+    });
+    
+    if (invalidPauses.length > 0) {
+      errors.push('Invalid pause event structure: missing timestamp or currentTime');
+    }
+  }
+
+  if (errors.length > 0) {
     return res.status(400).json({
-      error: 'Invalid pauseEvents: must be an array'
+      error: 'Validation failed',
+      details: errors,
+      code: 'VALIDATION_ERROR'
     });
   }
 
   next();
 };
 
-// Security headers for video endpoints
 const videoSecurityHeaders = (req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   next();
 };
 
 module.exports = {
   progressUpdateLimiter,
-  videoFetchLimiter,
+  validateSession,
   validateProgressData,
   videoSecurityHeaders
 };

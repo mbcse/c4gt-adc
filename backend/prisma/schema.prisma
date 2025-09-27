@@ -126,10 +126,13 @@ model WatchLog {
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   video             Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  lastUpdateTime    DateTime?
 
   @@unique([userId, videoId])
   @@index([userId, updatedAt(sort: Desc)])
   @@index([videoId, isCompleted])
+  @@index([userId, videoId])
+  @@index([lastUpdateTime])
 }
 
 model Quiz {
@@ -161,8 +164,8 @@ model AnalyticsEvent {
   timestamp DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  @@index([videoId, eventType])
-  @@index([userId, timestamp(sort: Desc)])
+  @@index([videoId, eventType, timestamp(sort: Desc)])
+  @@index([userId, eventType, timestamp(sort: Desc)])
 }
 
 

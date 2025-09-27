@@ -1,9 +1,13 @@
 // AdminCourseWizard.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import { CourseMetadataForm } from "../components/CourseMetadataForm";
 import { CourseVideosManager } from "../components/CourseVideosManager";
+import { AdminQuizModal } from "../components/AdminQuizModal";
 import { courseAPI } from "@/api/courseAPI";
+import { quizAPI } from "@/api/quizAPI";
 import { useApi } from "@/api";
+import type { Quiz, Video } from "@/types";
 
 export function AdminCourseWizard({
   isOpen,
@@ -33,16 +37,38 @@ export function AdminCourseWizard({
   const [languageId, setLanguageId] = useState<number | "">("");
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
-  // Videos state (local, editable in step 2)
+  // Videos state
   const [videos, setVideos] = useState<any[]>([]);
 
   // Backend created course
   const [savedCourse, setSavedCourse] = useState<any | null>(null);
 
+  // Quiz management states
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
+  const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
   // Loading states for API calls
   const [loading, setLoading] = useState(false);
 
-  // Load playlist: autofill metadata (do NOT load videos)
+  // Load quizzes when savedCourse is available
+  useEffect(() => {
+    if (!savedCourse?.id) return;
+
+    const loadQuizzes = async () => {
+      try {
+        const response = await quizAPI.getAllQuizzes(api, 1, 100, { courseId: savedCourse.id });
+        setQuizzes(response.data || []);
+      } catch (error) {
+        console.error("Failed to load quizzes:", error);
+      }
+    };
+
+    loadQuizzes();
+  }, [savedCourse?.id, api]);
+
+  // Load playlist, autofill metadata
   const loadPlaylist = async () => {
     if (!playlistUrl.trim()) return;
     setLoadingPlaylist(true);
@@ -51,7 +77,6 @@ export function AdminCourseWizard({
       setTitle(data.playlistTitle || "");
       setDescription(data.playlistDescription || "");
       setThumbnailUrl(data.playlistThumbnailUrl || "");
-      // Don't set videos here to prevent loading all videos upfront
     } catch {
       alert("Failed to load playlist");
     } finally {
@@ -87,30 +112,96 @@ export function AdminCourseWizard({
     }
   };
 
-  // Step 3: Final save videos to backend
-  const handleFinishVideos = async () => {
+  // Step 2: Add videos and quizzes
+
+  // Videos handler
+  const handleVideosUpdated = async () => {
+    if (!savedCourse?.id) return;
+    try {
+      const updatedCourse = await courseAPI.getCourse(savedCourse.id, api);
+      setVideos(updatedCourse.courseVideos || []);
+      const response = await quizAPI.getAllQuizzes(api, 1, 100, { courseId: savedCourse.id });
+      setQuizzes(response.data || []);
+    } catch (error) {
+      console.error("Failed to refresh videos:", error);
+    }
+  };
+
+  // Quiz management handlers
+  const handleCreateQuiz = (video: Video) => {
+    setEditingQuiz(null);
+    setSelectedVideo(video);
+    setQuizModalOpen(true);
+  };
+
+  const handleEditQuiz = (quiz: Quiz) => {
+    setEditingQuiz(quiz);
+    setSelectedVideo(null);
+    setQuizModalOpen(true);
+  };
+
+  const handleQuizSaved = async (savedQuiz: Quiz) => {
+    try {
+      const response = await quizAPI.getAllQuizzes(api, 1, 100, { courseId: savedCourse.id });
+      setQuizzes(response.data || []);
+    } catch (error) {
+      console.error("Failed to refresh quizzes:", error);
+    }
+
+    setQuizModalOpen(false);
+    setEditingQuiz(null);
+    setSelectedVideo(null);
+  };
+
+  const handleDeleteQuiz = async (quizId: number) => {
+    if (!window.confirm("Are you sure you want to delete this quiz?")) return;
+
+    try {
+      await quizAPI.deleteQuiz(quizId, api);
+      const response = await quizAPI.getAllQuizzes(api, 1, 100, { courseId: savedCourse.id });
+      setQuizzes(response.data || []);
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Failed to delete quiz");
+    }
+  };
+
+  // Step 3: Finalize course 
+  const handleFinishCourse = async () => {
     if (!savedCourse) return;
     setLoading(true);
     try {
-      for (const video of videos) {
-        const videoPayload = {
-          videoUrl: video.videoUrl,
-          title: video.title,
-          description: video.description,
-          duration: video.duration,
-          thumbnailUrl: video.thumbnailUrl,
-          platform: video.platform || "youtube",
-        };
-        await courseAPI.addVideoToCourse(savedCourse.id, videoPayload, api);
-      }
+      // Get the final updated course
       const updatedCourse = await courseAPI.getCourse(savedCourse.id, api);
       onSaved(updatedCourse);
       handleClose();
     } catch (e: any) {
-      alert(e.message || "Failed to save videos");
+      alert(e.message || "Failed to finalize course");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Cancel/cleanup handler
+  const handleCancel = async () => {
+    const hasUnsavedWork = savedCourse && (videos.length > 0 || quizzes.length > 0);
+
+    if (hasUnsavedWork) {
+      const confirmed = window.confirm(
+        "Are you sure you want to cancel? This will delete the partially created course and all its content."
+      );
+      if (!confirmed) return;
+    }
+
+    // Cleanup partial course if it exists
+    if (savedCourse?.id) {
+      try {
+        await courseAPI.deleteCourse(savedCourse.id, api);
+      } catch (error) {
+        console.warn("Failed to cleanup partial course:", error);
+      }
+    }
+
+    handleClose();
   };
 
   // Reset wizard state on close
@@ -128,6 +219,10 @@ export function AdminCourseWizard({
     setSelectedTagIds([]);
     setVideos([]);
     setSavedCourse(null);
+    setQuizzes([]);
+    setQuizModalOpen(false);
+    setEditingQuiz(null);
+    setSelectedVideo(null);
     setLoading(false);
   };
 
@@ -142,25 +237,41 @@ export function AdminCourseWizard({
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-auto">
       <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full p-6 overflow-auto max-h-[90vh]">
 
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold">Create New Course</h1>
+          <button
+            onClick={handleCancel}
+            className="text-gray-400 hover:text-gray-600 p-1"
+            title="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
         {/* Wizard Navigation */}
         <div className="flex space-x-4 mb-6">
-          <span className={step === 1 ? "font-bold" : "cursor-pointer"} onClick={() => setStep(1)}>
+          <span
+            className={`${step === 1 ? "font-bold text-blue-600" : savedCourse ? "cursor-pointer hover:text-blue-600" : "text-gray-400"}`}
+            onClick={() => savedCourse && setStep(1)}
+          >
             1. Metadata
           </span>
           <span
-            className={step === 2 ? "font-bold" : savedCourse ? "cursor-pointer" : "text-gray-400"}
+            className={`${step === 2 ? "font-bold text-blue-600" : savedCourse ? "cursor-pointer hover:text-blue-600" : "text-gray-400"}`}
             onClick={() => savedCourse && setStep(2)}
           >
-            2. Videos
+            2. Videos & Quizzes
           </span>
           <span
-            className={step === 3 ? "font-bold" : savedCourse ? "cursor-pointer" : "text-gray-400"}
+            className={`${step === 3 ? "font-bold text-blue-600" : savedCourse ? "cursor-pointer hover:text-blue-600" : "text-gray-400"}`}
             onClick={() => savedCourse && setStep(3)}
           >
             3. Review
           </span>
         </div>
 
+        {/* Step 1: Metadata */}
         {step === 1 && (
           <>
             <h2 className="text-xl font-semibold mb-4">Course Metadata</h2>
@@ -219,69 +330,117 @@ export function AdminCourseWizard({
               disabled={loading}
             />
 
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+              <button onClick={handleCancel} className="btn btn-outline" disabled={loading}>
+                Cancel
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={handleSaveMetadata}
                 disabled={loading || !title.trim()}
               >
-                Next
+                {loading ? "Creating..." : "Next"}
               </button>
             </div>
           </>
         )}
 
+        {/* Step 2: Videos & Quizzes */}
         {step === 2 && savedCourse && (
-  <>
-    <h2 className="text-xl font-semibold mb-4">Manage Videos</h2>
+          <>
+            <h2 className="text-xl font-semibold mb-4">Manage Videos & Quizzes</h2>
+            <p className="text-gray-600 mb-4">
+              Add videos to your course and create quizzes for each video. Videos are saved immediately when added.
+            </p>
 
-    <CourseVideosManager
-      courseId={savedCourse.id}
-      videos={videos}
-      onVideosUpdated={setVideos}
-      playlistUrl={playlistUrl}  
-      disabled={loading}
-    />
+            <CourseVideosManager
+              courseId={savedCourse.id}
+              videos={videos}
+              onVideosUpdated={handleVideosUpdated}
+              playlistUrl={playlistUrl}
+              disabled={loading}
+              quizzes={quizzes}
+              onCreateQuiz={handleCreateQuiz}
+              onEditQuiz={handleEditQuiz}
+              onDeleteQuiz={handleDeleteQuiz}
+            />
 
-    <div className="flex justify-between mt-4">
-      <button className="btn btn-outline" onClick={() => setStep(1)} disabled={loading}>
-        Back
-      </button>
-      <button className="btn btn-primary" onClick={() => setStep(3)} disabled={loading}>
-        Next
-      </button>
-    </div>
-  </>
-)}
+            <div className="flex justify-between mt-6">
+              <button onClick={handleCancel} className="btn btn-outline" disabled={loading}>
+                Cancel
+              </button>
+              <div className="flex space-x-2">
+                <button className="btn btn-outline" onClick={() => setStep(1)} disabled={loading}>
+                  Back
+                </button>
+                <button className="btn btn-primary" onClick={() => setStep(3)} disabled={loading}>
+                  Next
+                </button>
+              </div>
+            </div>
+          </>
+        )}
 
-
+        {/* Step 3: Review */}
         {step === 3 && savedCourse && (
           <>
             <h2 className="text-xl font-semibold mb-4">Review & Confirm</h2>
 
-            <p>
-              <strong>Title:</strong> {title}
-            </p>
-            <p>
-              <strong>Description:</strong> {description}
-            </p>
-            <p>
-              <strong>Thumbnail URL:</strong> {thumbnailUrl || "(none)"}
-            </p>
-            <p>
-              <strong>Number of Videos:</strong> {videos.length}
-            </p>
+            <div className="bg-gray-50 p-4 rounded-lg mb-4">
+              <h3 className="font-medium mb-2">Course Details</h3>
+              <p><strong>Title:</strong> {title}</p>
+              <p><strong>Description:</strong> {description || "(No description)"}</p>
+              <p><strong>Thumbnail URL:</strong> {thumbnailUrl || "(No thumbnail)"}</p>
+            </div>
 
-            <div className="flex justify-between mt-4">
-              <button className="btn btn-outline" onClick={() => setStep(2)} disabled={loading}>
-                Back
+            <div className="bg-gray-50 p-4 rounded-lg mb-4">
+              <h3 className="font-medium mb-2">Content Summary</h3>
+              <p><strong>Videos:</strong> {videos.length} added</p>
+              <p><strong>Quizzes:</strong> {quizzes.length} created</p>
+              {quizzes.length > 0 && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Total quiz questions: {quizzes.reduce((total, quiz) => total + quiz.questions.length, 0)}
+                </p>
+              )}
+            </div>
+
+            {videos.length === 0 && (
+              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4">
+                <p className="text-yellow-800">
+                  <strong>Note:</strong> This course doesn't have any videos yet. You can add videos later from the course detail page.
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-between mt-6">
+              <button onClick={handleCancel} className="btn btn-outline" disabled={loading}>
+                Cancel
               </button>
-              <button className="btn btn-primary" onClick={handleFinishVideos} disabled={loading}>
-                {loading ? "Saving..." : "Create Course"}
-              </button>
+              <div className="flex space-x-2">
+                <button className="btn btn-outline" onClick={() => setStep(2)} disabled={loading}>
+                  Back
+                </button>
+                <button className="btn btn-primary" onClick={handleFinishCourse} disabled={loading}>
+                  {loading ? "Finalizing..." : "Create Course"}
+                </button>
+              </div>
             </div>
           </>
         )}
+
+        {/* Quiz Modal */}
+        <AdminQuizModal
+          isOpen={quizModalOpen}
+          onClose={() => {
+            setQuizModalOpen(false);
+            setEditingQuiz(null);
+            setSelectedVideo(null);
+          }}
+          onQuizSaved={handleQuizSaved}
+          courseId={savedCourse?.id || 0}
+          editingQuiz={editingQuiz}
+          selectedVideo={selectedVideo}
+        />
       </div>
     </div>
   );

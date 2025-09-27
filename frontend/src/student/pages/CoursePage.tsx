@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardHeader, CardContent, CardTitle } from "@/student/components/ui/card";
 import { Progress } from "@/student/components/ui/progress";
-import { Loader2, BookOpen, ChevronLeft, CheckCircle, Clock, Play } from "lucide-react";
+import { Loader2, BookOpen, ChevronLeft, CheckCircle, Clock, Play, RotateCcw, PlayCircle } from "lucide-react";
 import DashboardLayout from "@/student/components/DashboardLayout";
 import ErrorBoundary from "@/student/components/ErrorBoundary";
 import { useApi } from "@/api/index";
@@ -14,6 +14,7 @@ export default function CoursePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [course, setCourse] = useState<any>(null);
   const [videos, setVideos] = useState<any[]>([]);
+  const [courseProgress, setCourseProgress] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,17 +23,17 @@ export default function CoursePage() {
       setIsLoading(true);
       setError(null);
       try {
-        // Fetch course details including videos embedded as courseVideos
         const courseRes = await api.get(`/courses/${courseId}`);
-        const courseData = courseRes.data.course;
+        const { course: courseData, courseProgress: progressData } = courseRes.data;
+        
         setCourse(courseData);
+        setCourseProgress(progressData);
+        
         const courseVideos = Array.isArray(courseData?.courseVideos) ? courseData.courseVideos : [];
-
-        // Flatten to videos array with video property plus order
         const videoList = courseVideos.map(cv => ({
           ...cv.video,
           order: cv.order,
-          progress: cv.video.progress || {} // optional, depends on backend
+          progress: cv.video.progress || {}
         }));
         setVideos(videoList);
       } catch (err: any) {
@@ -44,8 +45,36 @@ export default function CoursePage() {
     fetchCourse();
   }, [api, courseId]);
 
-  const numCompleted = videos.filter(v => v.progress?.isCompleted).length;
-  const progress = videos.length ? Math.round((numCompleted / videos.length) * 100) : 0;
+  // Helper function to determine video status
+  const getVideoStatus = (progress: any) => {
+    if (progress?.isCompleted) return 'completed';
+    if (progress?.watchedPercentage > 0) return 'in-progress';
+    return 'not-started';
+  };
+
+  // Helper function to get button config
+  const getButtonConfig = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return {
+          text: 'Watch Again',
+          icon: RotateCcw,
+          className: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
+        };
+      case 'in-progress':
+        return {
+          text: 'Resume',
+          icon: PlayCircle,
+          className: 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700'
+        };
+      default:
+        return {
+          text: 'Start Lesson',
+          icon: Play,
+          className: 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
+        };
+    }
+  };
 
   if (isLoading) {
     return (
@@ -102,7 +131,7 @@ export default function CoursePage() {
               </span>
             </div>
 
-            {/* Course Header */}
+            {/* Course Header with Enhanced Progress */}
             <Card className="mb-8 bg-white/90 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-purple-500/10 to-teal-500/5"></div>
               <CardHeader className="relative p-8">
@@ -118,27 +147,44 @@ export default function CoursePage() {
                     </div>
                     <div className="text-slate-600 text-lg leading-relaxed max-w-2xl">{course.description}</div>
                   </div>
+                  
+                  {/* Enhanced Progress Card */}
                   <div className="lg:min-w-[320px] bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-violet-200">
                     <div className="text-center mb-4">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-1">{progress}%</div>
+                      <div className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-1">
+                        {courseProgress?.completionPercentage?.toFixed(1) || 0}%
+                      </div>
                       <div className="text-slate-600 font-medium">Course Progress</div>
                     </div>
                     <div className="relative mb-4">
-                      <Progress value={progress} className="h-4 rounded-full bg-slate-200 shadow-inner" />
+                      <Progress value={courseProgress?.completionPercentage || 0} className="h-4 rounded-full bg-slate-200 shadow-inner" />
                       <div
                         className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `${courseProgress?.completionPercentage || 0}%` }}
                       />
                     </div>
-                    <div className="text-sm text-slate-500 text-center">
-                      {numCompleted} of {videos.length} lessons completed
+                    
+                    {/* Additional Progress Stats */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between text-slate-600">
+                        <span>Completed:</span>
+                        <span className="font-semibold">{courseProgress?.completedVideos || 0} / {courseProgress?.totalVideos || 0}</span>
+                      </div>
+                      <div className="flex justify-between text-slate-600">
+                        <span>Total Watch Time:</span>
+                        <span className="font-semibold">{Math.floor((courseProgress?.totalWatchTime || 0) / 60)} min</span>
+                      </div>
+                      <div className="flex justify-between text-slate-600">
+                        <span>Avg Progress:</span>
+                        <span className="font-semibold">{courseProgress?.averageProgress?.toFixed(1) || 0}%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </CardHeader>
             </Card>
 
-            {/* Video/Lesson List */}
+            {/* Enhanced Video List */}
             <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-blue-500/10 to-violet-500/5"></div>
               <CardHeader className="relative p-8 border-b border-violet-100">
@@ -162,63 +208,73 @@ export default function CoursePage() {
                   </div>
                 )}
                 <div className="space-y-4">
-                  {videos.map((video, idx) => (
-                    <div
-                      key={video.id}
-                      className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-violet-100 hover:shadow-2xl hover:bg-white/90 transition-all duration-300 hover:-translate-y-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 flex-1">
-                          <div className="flex-shrink-0">
-                            <div
-                              className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg ${
-                                video.progress?.isCompleted
-                                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
-                                  : "bg-gradient-to-r from-indigo-500 to-purple-600"
-                              }`}
-                            >
-                              {video.progress?.isCompleted ? (
-                                <CheckCircle className="h-6 w-6" />
-                              ) : (
-                                <span className="text-lg">{idx + 1}</span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-bold text-slate-900 group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 truncate">
-                              {video.title}
-                            </h4>
-                            <div className="flex items-center gap-4 mt-2">
-                              <div className="flex items-center gap-2 text-sm text-slate-500">
-                                <Clock className="h-4 w-4 text-violet-400" />
-                                <span className="font-medium">{Math.round(video.duration / 60)} min</span>
+                  {videos.map((video, idx) => {
+                    const status = getVideoStatus(video.progress);
+                    const buttonConfig = getButtonConfig(status);
+                    const ButtonIcon = buttonConfig.icon;
+                    
+                    const progressValue = video.progress?.watchedPercentage || 0;
+
+                    return (
+                      <div
+                        key={video.id}
+                        className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-violet-100 hover:shadow-2xl hover:bg-white/90 transition-all duration-300 hover:-translate-y-1"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4 flex-1">
+                            <div className="flex-shrink-0">
+                              <div
+                                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg ${
+                                  status === 'completed'
+                                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
+                                    : status === 'in-progress'
+                                    ? "bg-gradient-to-r from-amber-500 to-orange-600"
+                                    : "bg-gradient-to-r from-indigo-500 to-purple-600"
+                                }`}
+                              >
+                                {status === 'completed' ? (
+                                  <CheckCircle className="h-6 w-6" />
+                                ) : (
+                                  <span className="text-lg">{idx + 1}</span>
+                                )}
                               </div>
-                              {video.progress?.isCompleted && (
-                                <div className="flex items-center gap-1 text-sm font-medium text-emerald-600">
-                                  <CheckCircle className="h-4 w-4" />
-                                  <span>Completed</span>
-                                </div>
-                              )}
                             </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-lg font-bold text-slate-900 group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 truncate">
+                                {video.title}
+                              </h4>
+                              <Progress value={progressValue} className="h-2 rounded-full mt-2" />
+ <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
+              {status === 'in-progress' && (
+                <span>{progressValue.toFixed(0)}% watched</span>
+              )}
+              {status === 'completed' && (
+                <span>Completed</span>
+              )}
+              {status === 'not-started' && (
+                <span>Not started</span>
+              )}
+            </div>
+            <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+              <Clock className="h-3 w-3" />
+              <span>{Math.round(video.duration / 60)} min</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex-shrink-0">
+                            <Link to={`/courses/${courseId}/video/${video.id}`}>
+                              <button
+                                className={`px-6 py-3 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group-hover:scale-105 ${buttonConfig.className}`}
+                              >
+                                <ButtonIcon className="h-5 w-5" />
+                                <span>{buttonConfig.text}</span>
+                              </button>
+                            </Link>
                           </div>
-                        </div>
-                        <div className="flex-shrink-0 ml-4">
-                          <Link to={`/courses/${courseId}/video/${video.id}`}>
-                            <button
-                              className={`px-6 py-3 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group-hover:scale-105 ${
-                                video.progress?.isCompleted
-                                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
-                                  : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                              }`}
-                            >
-                              <Play className="h-5 w-5" />
-                              <span>{video.progress?.isCompleted ? "Review" : "Start Lesson"}</span>
-                            </button>
-                          </Link>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

@@ -1,6 +1,52 @@
+// controllers/videoController.js
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
+// Anti-gaming configuration
+const ANTI_GAMING_CONFIG = {
+  MAX_PLAYBACK_SPEED: 1.6, // Slightly higher than frontend to account for network delays
+  MIN_UPDATE_INTERVAL: 2, // Minimum seconds between meaningful updates
+  SUSPICIOUS_SKIP_THRESHOLD: 60, // Seconds - larger skips are flagged
+  COMPLETION_THRESHOLD: 95, // Minimum % to mark as complete
+};
+
+const validateProgressIntegrity = (current, previous, video, realTimeElapsed) => {
+  const issues = [];
+  
+  // Speed validation 
+  const watchTimeIncrease = current.totalWatchTime - (previous?.totalWatchTime || 0);
+  if (realTimeElapsed > ANTI_GAMING_CONFIG.MIN_UPDATE_INTERVAL && watchTimeIncrease > 0) {
+    const effectiveSpeed = watchTimeIncrease / realTimeElapsed;
+    if (effectiveSpeed > ANTI_GAMING_CONFIG.MAX_PLAYBACK_SPEED) {
+      issues.push({
+        type: 'SPEED_VIOLATION',
+        detectedSpeed: effectiveSpeed,
+        maxAllowed: ANTI_GAMING_CONFIG.MAX_PLAYBACK_SPEED
+      });
+    }
+  }
+  
+  // Large skip detection
+  const skipDistance = Math.abs(current.totalWatchTime - (previous?.totalWatchTime || 0));
+  if (skipDistance > ANTI_GAMING_CONFIG.SUSPICIOUS_SKIP_THRESHOLD && realTimeElapsed < 10) {
+    issues.push({
+      type: 'LARGE_SKIP',
+      skipDistance,
+      threshold: ANTI_GAMING_CONFIG.SUSPICIOUS_SKIP_THRESHOLD
+    });
+  }
+  
+  // Duration overflow
+  if (current.totalWatchTime > video.duration * 1.05) {
+    issues.push({
+      type: 'DURATION_OVERFLOW',
+      totalWatchTime: current.totalWatchTime,
+      videoDuration: video.duration
+    });
+  }
+  
+  return issues;
+};
 
 // Get all videos for a course with user progress
 const getCourseVideos = async (req, res) => {
@@ -12,21 +58,14 @@ const getCourseVideos = async (req, res) => {
     limit = parseInt(limit);
     const skip = (page - 1) * limit;
 
-
-    // Validate student’s course access
     const courseAssignment = await prisma.courseAssignment.findFirst({
       where: { courseId: parseInt(courseId), userId },
     });
-    if (!courseAssignment) {
-      return res.status(403).json({ error: "Access denied to this course" });
-    }
-
 
     // Count total videos for pagination
     const totalVideos = await prisma.courseVideo.count({
       where: { courseId: parseInt(courseId) },
     });
-
 
     // Get paginated videos
     const courseVideos = await prisma.courseVideo.findMany({
@@ -44,13 +83,13 @@ const getCourseVideos = async (req, res) => {
                 isCompleted: true,
                 watchedPercentage: true,
                 updatedAt: true,
+                lastUpdateTime: true,
               },
             },
           },
         },
       },
     });
-
 
     const videosWithProgress = courseVideos.map((cv) => ({
       id: cv.video.id,
@@ -67,7 +106,6 @@ const getCourseVideos = async (req, res) => {
       },
     }));
 
-
     res.json({
       success: true,
       total: totalVideos,
@@ -81,13 +119,11 @@ const getCourseVideos = async (req, res) => {
   }
 };
 
-
 // Get specific video with progress
 const getVideo = async (req, res) => {
   try {
     const { videoId } = req.params;
     const userId = req.user.userId;
-
 
     const video = await prisma.video.findUnique({
       where: { id: parseInt(videoId) },
@@ -100,7 +136,8 @@ const getVideo = async (req, res) => {
             watchedPercentage: true,
             skipEvents: true,
             pauseEvents: true,
-            updatedAt: true
+            updatedAt: true,
+            lastUpdateTime: true,
           }
         },
         courseVideos: {
@@ -118,29 +155,19 @@ const getVideo = async (req, res) => {
       }
     });
 
-
     if (!video) {
       return res.status(404).json({ error: 'Video not found' });
     }
 
-
-    // Check if user has access to this video
-    const hasAccess = video.courseVideos.some(cv => 
-      cv.course.assignments.length > 0
+    const isAssigned = video.courseVideos.some(cv => 
+      cv.course.assignments.some(a => a.userId === userId)
     );
-
-
-    if (!hasAccess) {
-      return res.status(403).json({ 
-        error: 'Access denied to this video' 
-      });
-    }
-
 
     res.json({
       success: true,
       video: {
         ...video,
+        isAssigned,
         progress: video.watchLogs[0] || {
           totalWatchTime: 0,
           isCompleted: false,
@@ -151,54 +178,42 @@ const getVideo = async (req, res) => {
       }
     });
 
-
   } catch (error) {
     console.error('Error fetching video:', error);
     res.status(500).json({ error: 'Failed to fetch video' });
   }
 };
 
-
-// Update video progress
+// Update video progress with validation
 const updateProgress = async (req, res) => {
   try {
     const { videoId } = req.params;
     const userId = req.user.userId;
-    const { 
-      watchedPercentage, 
-      isCompleted, 
-      totalWatchTime, 
-      skipEvents = [], 
-      pauseEvents = [] 
+    const {
+      watchedPercentage,
+      isCompleted,
+      totalWatchTime,
+      skipEvents = [],
+      pauseEvents = []
     } = req.body;
 
-    // Validate watchedPercentage is numeric and within [0, 100]
-    if (
-      typeof watchedPercentage !== 'number' || 
-      watchedPercentage < 0 || 
-      watchedPercentage > 100
-    ) {
-      return res.status(400).json({ 
-        error: 'Invalid watchedPercentage value; must be a number between 0 and 100.' 
+    const now = new Date();
+
+    if (typeof watchedPercentage !== 'number' || watchedPercentage < 0 || watchedPercentage > 100) {
+      return res.status(400).json({
+        error: 'Invalid watchedPercentage value; must be a number between 0 and 100.',
+        code: 'INVALID_INPUT'
       });
     }
 
-    // Basic validation for totalWatchTime (non-negative)
-    if (
-      typeof totalWatchTime !== 'number' || 
-      totalWatchTime < 0
-    ) {
-      return res.status(400).json({ 
-        error: 'Invalid totalWatchTime value; must be a non-negative number.' 
+    if (typeof totalWatchTime !== 'number' || totalWatchTime < 0) {
+      return res.status(400).json({
+        error: 'Invalid totalWatchTime value; must be a non-negative number.',
+        code: 'INVALID_INPUT'
       });
     }
 
-    // Clamp values to safe ranges
-    const clampedWatchedPercentage = Math.min(Math.max(watchedPercentage, 0), 100);
-    const clampedTotalWatchTime = Math.max(totalWatchTime, 0);
-    const completionStatus = isCompleted || clampedWatchedPercentage >= 95;
-
-    // Check video access
+    // Get video and existing progress 
     const video = await prisma.video.findUnique({
       where: { id: parseInt(videoId) },
       include: {
@@ -221,33 +236,119 @@ const updateProgress = async (req, res) => {
       return res.status(404).json({ error: 'Video not found' });
     }
 
-    const hasAccess = video.courseVideos.some(cv => 
-      cv.course.assignments.length > 0
+    const isAssigned = video.courseVideos.some(cv =>
+      cv.course.assignments.some(a => a.userId === userId)
     );
 
-    if (!hasAccess) {
-      return res.status(403).json({ 
-        error: 'Access denied to this video' 
-      });
+    // Get existing watch log
+    const existingLog = await prisma.watchLog.findUnique({
+      where: {
+        userId_videoId: { userId, videoId: parseInt(videoId) }
+      }
+    });
+
+    // Calculate real time elapsed
+    let realTimeElapsed = 2; // Default minimum
+    if (existingLog?.lastUpdateTime) {
+      realTimeElapsed = Math.max((now - existingLog.lastUpdateTime) / 1000, 1);
     }
 
-    // Optional: You may want to verify that clampedTotalWatchTime does not exceed video.duration here
+    // Validation for gaming behavior
+    const currentProgress = {
+      totalWatchTime,
+      watchedPercentage,
+      isCompleted
+    };
+
+    const validationIssues = validateProgressIntegrity(
+      currentProgress,
+      existingLog,
+      video,
+      realTimeElapsed
+    );
+
+    // Handle violations
+    if (validationIssues.length > 0) {
+      const speedViolation = validationIssues.find(issue => issue.type === 'SPEED_VIOLATION');
+      const skipViolation = validationIssues.find(issue => issue.type === 'LARGE_SKIP');
+      const overflowViolation = validationIssues.find(issue => issue.type === 'DURATION_OVERFLOW');
+
+      // Count violations for this user/video
+      const violationCount = incrementViolationCount(userId, parseInt(videoId));
+
+      if (speedViolation) {
+        return res.status(400).json({
+          error: `Playback speed too high (${speedViolation.detectedSpeed.toFixed(2)}x). Please watch at normal speed (max 1.5x) for effective learning.`,
+          code: 'SPEED_VIOLATION',
+          details: {
+            detectedSpeed: speedViolation.detectedSpeed,
+            maxAllowed: 1.5,
+            violationCount
+          }
+        });
+      }
+
+      if (overflowViolation) {
+        return res.status(400).json({
+          error: 'Watch time cannot exceed video duration. Please watch the video normally.',
+          code: 'DURATION_OVERFLOW'
+        });
+      }
+
+      if (skipViolation && violationCount >= 2) {
+        return res.status(400).json({
+          error: 'Excessive skipping detected. Please watch the video sequentially for better learning.',
+          code: 'EXCESSIVE_SKIPPING',
+          details: {
+            skipDistance: skipViolation.skipDistance,
+            violationCount
+          }
+        });
+      }
+
+      // For first-time or minor violations, just warn but continue
+      console.warn(`Minor violation for user ${userId}, video ${videoId}:`, validationIssues[0].type);
+    }
+
+    // Preserve existing clamping and validation logic
+    const clampedWatchedPercentage = Math.min(Math.max(watchedPercentage, 0), 100);
+    let clampedTotalWatchTime = Math.max(totalWatchTime, 0);
+    
+    // Duration validation
+    if (clampedTotalWatchTime > video.duration * 1.1) {
+      return res.status(400).json({
+        error: 'Total watch time cannot exceed video duration significantly.',
+        code: 'DURATION_EXCEEDED'
+      });
+    }
+    
+    // Prevent backwards progress (account for buffering issues)
+    if (existingLog && clampedTotalWatchTime < existingLog.totalWatchTime - 5) {
+      clampedTotalWatchTime = existingLog.totalWatchTime;
+    }
+
+    // Enhanced completion validation
+    const actualPercentage = (clampedTotalWatchTime / video.duration) * 100;
+    let completionStatus = isCompleted || clampedWatchedPercentage >= 95;
+    
+    // Only mark as completed if minimum threshold is met
+    if (completionStatus && actualPercentage < ANTI_GAMING_CONFIG.COMPLETION_THRESHOLD) {
+      completionStatus = false;
+    }
 
     // Update or create progress
     const progress = await prisma.watchLog.upsert({
       where: {
-        userId_videoId: {
-          userId,
-          videoId: parseInt(videoId)
-        }
+        userId_videoId: { userId, videoId: parseInt(videoId) }
       },
       update: {
-        watchedPercentage: clampedWatchedPercentage,
-        isCompleted: completionStatus,
-        totalWatchTime: clampedTotalWatchTime,
-        skipEvents,
-        pauseEvents,
-        updatedAt: new Date()
+        watchedPercentage: Math.max(clampedWatchedPercentage, existingLog?.watchedPercentage || 0),
+        isCompleted: completionStatus || existingLog?.isCompleted || false,
+        totalWatchTime: Math.max(clampedTotalWatchTime, existingLog?.totalWatchTime || 0),
+        skipEvents: [...(existingLog?.skipEvents || []), ...skipEvents].slice(-100),
+        pauseEvents: [...(existingLog?.pauseEvents || []), ...pauseEvents].slice(-100),
+        lastUpdateTime: now,
+        updatedAt: now
       },
       create: {
         userId,
@@ -256,7 +357,8 @@ const updateProgress = async (req, res) => {
         isCompleted: completionStatus,
         totalWatchTime: clampedTotalWatchTime,
         skipEvents,
-        pauseEvents
+        pauseEvents,
+        lastUpdateTime: now
       }
     });
 
@@ -271,13 +373,11 @@ const updateProgress = async (req, res) => {
   }
 };
 
-
 // Get student's overall progress for a course
 const getCourseProgress = async (req, res) => {
   try {
     const { courseId } = req.params;
     const userId = req.user.userId;
-
 
     const courseVideos = await prisma.courseVideo.findMany({
       where: { courseId: parseInt(courseId) },
@@ -292,22 +392,18 @@ const getCourseProgress = async (req, res) => {
       }
     });
 
-
     const totalVideos = courseVideos.length;
-    const completedVideos = courseVideos.filter(cv => 
+    const completedVideos = courseVideos.filter(cv =>
       cv.video.watchLogs[0]?.isCompleted
     ).length;
 
-
-    const totalWatchTime = courseVideos.reduce((sum, cv) => 
+    const totalWatchTime = courseVideos.reduce((sum, cv) =>
       sum + (cv.video.watchLogs[0]?.totalWatchTime || 0), 0
     );
 
-
-    const averageProgress = courseVideos.reduce((sum, cv) => 
+    const averageProgress = courseVideos.reduce((sum, cv) =>
       sum + (cv.video.watchLogs[0]?.watchedPercentage || 0), 0
     ) / totalVideos;
-
 
     res.json({
       success: true,
@@ -320,13 +416,11 @@ const getCourseProgress = async (req, res) => {
       }
     });
 
-
   } catch (error) {
     console.error('Error fetching course progress:', error);
     res.status(500).json({ error: 'Failed to fetch course progress' });
   }
 };
-
 
 module.exports = {
   getCourseVideos,

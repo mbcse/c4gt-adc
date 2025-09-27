@@ -13767,6 +13767,7 @@ export namespace Prisma {
     watchedPercentage: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    lastUpdateTime: Date | null
   }
 
   export type WatchLogMaxAggregateOutputType = {
@@ -13778,6 +13779,7 @@ export namespace Prisma {
     watchedPercentage: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    lastUpdateTime: Date | null
   }
 
   export type WatchLogCountAggregateOutputType = {
@@ -13791,6 +13793,7 @@ export namespace Prisma {
     pauseEvents: number
     createdAt: number
     updatedAt: number
+    lastUpdateTime: number
     _all: number
   }
 
@@ -13820,6 +13823,7 @@ export namespace Prisma {
     watchedPercentage?: true
     createdAt?: true
     updatedAt?: true
+    lastUpdateTime?: true
   }
 
   export type WatchLogMaxAggregateInputType = {
@@ -13831,6 +13835,7 @@ export namespace Prisma {
     watchedPercentage?: true
     createdAt?: true
     updatedAt?: true
+    lastUpdateTime?: true
   }
 
   export type WatchLogCountAggregateInputType = {
@@ -13844,6 +13849,7 @@ export namespace Prisma {
     pauseEvents?: true
     createdAt?: true
     updatedAt?: true
+    lastUpdateTime?: true
     _all?: true
   }
 
@@ -13944,6 +13950,7 @@ export namespace Prisma {
     pauseEvents: JsonValue
     createdAt: Date
     updatedAt: Date
+    lastUpdateTime: Date | null
     _count: WatchLogCountAggregateOutputType | null
     _avg: WatchLogAvgAggregateOutputType | null
     _sum: WatchLogSumAggregateOutputType | null
@@ -13976,6 +13983,7 @@ export namespace Prisma {
     pauseEvents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    lastUpdateTime?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -13991,6 +13999,7 @@ export namespace Prisma {
     pauseEvents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    lastUpdateTime?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -14006,6 +14015,7 @@ export namespace Prisma {
     pauseEvents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    lastUpdateTime?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["watchLog"]>
@@ -14021,9 +14031,10 @@ export namespace Prisma {
     pauseEvents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    lastUpdateTime?: boolean
   }
 
-  export type WatchLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "videoId" | "totalWatchTime" | "isCompleted" | "watchedPercentage" | "skipEvents" | "pauseEvents" | "createdAt" | "updatedAt", ExtArgs["result"]["watchLog"]>
+  export type WatchLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "videoId" | "totalWatchTime" | "isCompleted" | "watchedPercentage" | "skipEvents" | "pauseEvents" | "createdAt" | "updatedAt" | "lastUpdateTime", ExtArgs["result"]["watchLog"]>
   export type WatchLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     video?: boolean | VideoDefaultArgs<ExtArgs>
@@ -14054,6 +14065,7 @@ export namespace Prisma {
       pauseEvents: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
+      lastUpdateTime: Date | null
     }, ExtArgs["result"]["watchLog"]>
     composites: {}
   }
@@ -14489,6 +14501,7 @@ export namespace Prisma {
     readonly pauseEvents: FieldRef<"WatchLog", 'Json'>
     readonly createdAt: FieldRef<"WatchLog", 'DateTime'>
     readonly updatedAt: FieldRef<"WatchLog", 'DateTime'>
+    readonly lastUpdateTime: FieldRef<"WatchLog", 'DateTime'>
   }
     
 
@@ -18381,7 +18394,8 @@ export namespace Prisma {
     skipEvents: 'skipEvents',
     pauseEvents: 'pauseEvents',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    lastUpdateTime: 'lastUpdateTime'
   };
 
   export type WatchLogScalarFieldEnum = (typeof WatchLogScalarFieldEnum)[keyof typeof WatchLogScalarFieldEnum]
@@ -19153,6 +19167,7 @@ export namespace Prisma {
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
     updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
+    lastUpdateTime?: DateTimeNullableFilter<"WatchLog"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }
@@ -19168,6 +19183,7 @@ export namespace Prisma {
     pauseEvents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    lastUpdateTime?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     video?: VideoOrderByWithRelationInput
   }
@@ -19187,6 +19203,7 @@ export namespace Prisma {
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
     updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
+    lastUpdateTime?: DateTimeNullableFilter<"WatchLog"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     video?: XOR<VideoScalarRelationFilter, VideoWhereInput>
   }, "id" | "userId_videoId">
@@ -19202,6 +19219,7 @@ export namespace Prisma {
     pauseEvents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    lastUpdateTime?: SortOrderInput | SortOrder
     _count?: WatchLogCountOrderByAggregateInput
     _avg?: WatchLogAvgOrderByAggregateInput
     _max?: WatchLogMaxOrderByAggregateInput
@@ -19223,6 +19241,7 @@ export namespace Prisma {
     pauseEvents?: JsonWithAggregatesFilter<"WatchLog">
     createdAt?: DateTimeWithAggregatesFilter<"WatchLog"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WatchLog"> | Date | string
+    lastUpdateTime?: DateTimeNullableWithAggregatesFilter<"WatchLog"> | Date | string | null
   }
 
   export type QuizWhereInput = {
@@ -19955,6 +19974,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
     user: UserCreateNestedOneWithoutWatchLogsInput
     video: VideoCreateNestedOneWithoutWatchLogsInput
   }
@@ -19970,6 +19990,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type WatchLogUpdateInput = {
@@ -19980,6 +20001,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutWatchLogsNestedInput
     video?: VideoUpdateOneRequiredWithoutWatchLogsNestedInput
   }
@@ -19995,6 +20017,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type WatchLogCreateManyInput = {
@@ -20008,6 +20031,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type WatchLogUpdateManyMutationInput = {
@@ -20018,6 +20042,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type WatchLogUncheckedUpdateManyInput = {
@@ -20031,6 +20056,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type QuizCreateInput = {
@@ -20843,6 +20869,17 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type WatchLogUserIdVideoIdCompoundUniqueInput = {
     userId: number
     videoId: number
@@ -20859,6 +20896,7 @@ export namespace Prisma {
     pauseEvents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    lastUpdateTime?: SortOrder
   }
 
   export type WatchLogAvgOrderByAggregateInput = {
@@ -20878,6 +20916,7 @@ export namespace Prisma {
     watchedPercentage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    lastUpdateTime?: SortOrder
   }
 
   export type WatchLogMinOrderByAggregateInput = {
@@ -20889,6 +20928,7 @@ export namespace Prisma {
     watchedPercentage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    lastUpdateTime?: SortOrder
   }
 
   export type WatchLogSumOrderByAggregateInput = {
@@ -20947,6 +20987,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type QuizCountOrderByAggregateInput = {
@@ -21891,6 +21945,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type UserUpdateOneRequiredWithoutWatchLogsNestedInput = {
     create?: XOR<UserCreateWithoutWatchLogsInput, UserUncheckedCreateWithoutWatchLogsInput>
     connectOrCreate?: UserCreateOrConnectWithoutWatchLogsInput
@@ -22204,6 +22262,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -22249,6 +22318,20 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type CourseAssignmentCreateWithoutUserInput = {
@@ -22303,6 +22386,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
     video: VideoCreateNestedOneWithoutWatchLogsInput
   }
 
@@ -22316,6 +22400,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type WatchLogCreateOrConnectWithoutUserInput = {
@@ -22436,6 +22521,7 @@ export namespace Prisma {
     pauseEvents?: JsonFilter<"WatchLog">
     createdAt?: DateTimeFilter<"WatchLog"> | Date | string
     updatedAt?: DateTimeFilter<"WatchLog"> | Date | string
+    lastUpdateTime?: DateTimeNullableFilter<"WatchLog"> | Date | string | null
   }
 
   export type AnalyticsEventUpsertWithWhereUniqueWithoutUserInput = {
@@ -23343,6 +23429,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
     user: UserCreateNestedOneWithoutWatchLogsInput
   }
 
@@ -23356,6 +23443,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type WatchLogCreateOrConnectWithoutVideoInput = {
@@ -23983,6 +24071,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type AnalyticsEventCreateManyUserInput = {
@@ -24038,6 +24127,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     video?: VideoUpdateOneRequiredWithoutWatchLogsNestedInput
   }
 
@@ -24051,6 +24141,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type WatchLogUncheckedUpdateManyWithoutUserInput = {
@@ -24063,6 +24154,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AnalyticsEventUpdateWithoutUserInput = {
@@ -24418,6 +24510,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    lastUpdateTime?: Date | string | null
   }
 
   export type AnalyticsEventCreateManyVideoInput = {
@@ -24453,6 +24546,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutWatchLogsNestedInput
   }
 
@@ -24466,6 +24560,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type WatchLogUncheckedUpdateManyWithoutVideoInput = {
@@ -24478,6 +24573,7 @@ export namespace Prisma {
     pauseEvents?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUpdateTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AnalyticsEventUpdateWithoutVideoInput = {

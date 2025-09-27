@@ -38,20 +38,39 @@ export interface Tag {
 export interface Video {
   id: number;
   title: string;
+  platform: string;
   videoUrl: string;
   videoId: string;
-  platform: string;
-  duration: number; // seconds
-  order?: number; // optional for general video type
-  thumbnailUrl: string | null;
+  duration: number;
+  createdAt: string;
+  thumbnailUrl?: string;
   description?: string;
-  publishedAt?: string;
+  courseVideos?: CourseVideo[];
+  quiz?: Quiz;
+  watchLogs?: WatchLog[];
 }
 
+export interface WatchLog {
+  id: number;
+  userId: number;
+  videoId: number;
+  totalWatchTime: number;
+  isCompleted: boolean;
+  watchedPercentage: number;
+  skipEvents: unknown[];
+  pauseEvents: unknown[];
+  createdAt: string;
+  updatedAt: string;  
+  lastUpdateTime?: string; 
+  user?: User;  
+  video?: Video;
+}
+
+
 export interface CourseVideo {
-  id: number; // courseVideo id (relation id)
+  id: number;
   order: number;
-  video: Video; // nested video object
+  video: Video;
 }
 
 export interface Course {
@@ -90,8 +109,8 @@ export interface Activity {
 export interface ProgressData {
   studentId: number;
   courseId: number;
-  progress: number; // e.g., 0-100 percentage
-  timeSpent: number; // seconds or milliseconds
+  progress: number;
+  timeSpent: number; 
   lastAccessed: string;
 }
 
@@ -99,6 +118,40 @@ export interface QuizResult {
   studentId: number;
   courseId: number;
   quizId: number;
-  score: number; // percentage or points
+  score: number; 
   completedAt: string;
+}
+
+export interface QuizQuestion {
+  question: string; 
+  options: string[];  
+  correctAnswer: number;  
+  explanation?: string; 
+}
+
+export interface Quiz {
+  id: number;
+  videoId: number;           
+  questions: QuizQuestion[];  
+  generatedBy?: string;
+  createdAt: string;
+  video?: Video;     
+  attempts?: QuizAttempt[];  
+}
+
+export interface QuizAttempt {
+  id: number;
+  userId: number;
+  quizId: number;
+  score: number;
+  completedAt: string;
+  user?: User; 
+  quiz?: Quiz;  
+}
+
+export interface PaginatedResponse<T> {
+  total: number;
+  page: number;
+  totalPages: number;
+  data: T[];
 }

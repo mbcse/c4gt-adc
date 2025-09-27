@@ -203,7 +203,8 @@ exports.Prisma.WatchLogScalarFieldEnum = {
   skipEvents: 'skipEvents',
   pauseEvents: 'pauseEvents',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lastUpdateTime: 'lastUpdateTime'
 };
 
 exports.Prisma.QuizScalarFieldEnum = {
