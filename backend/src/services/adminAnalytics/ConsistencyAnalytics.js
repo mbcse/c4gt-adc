@@ -5,15 +5,16 @@ const { buildUserFilter, buildDateFilter } = require('../../utils/filterUtils');
 const {
   aggregateConsistencyByGrade,
   aggregateConsistencyBySchool,
-  aggregateConsistencyByDistrict,
-  calculateOverallConsistency
+  aggregateConsistencyByBlock,
+  calculateOverallConsistency,
 } = require('../../utils/aggregationUtils');
+const { getBlockName } = require('../../utils/aggregationUtils');
 
 class ConsistencyService {
 
-  async getConsistencyRates(filters = {}) {
+  async getConsistencyRates(filters = {}, user) {
     try {
-      const userFilter = buildUserFilter(filters);
+      const userFilter = await buildUserFilter(filters, user);
       const dateFilter = buildDateFilter(filters);
 
       const students = await prisma.user.findMany({
@@ -24,13 +25,17 @@ class ConsistencyService {
             select: { updatedAt: true, totalWatchTime: true }
           },
           grade: true,
-          school: { include: { district: true } }
+          organizationUnit: {
+            include: {
+              parent: true
+            }
+          }
         }
       });
 
       const consistencyData = students.map(student => {
         const logs = student.watchLogs;
-        
+
         // Group activity by date
         const dailyActivity = new Map();
         logs.forEach(log => {
@@ -53,8 +58,8 @@ class ConsistencyService {
           studentId: student.id,
           studentName: student.name,
           grade: student.grade?.value,
-          school: student.school?.name,
-          district: student.school?.district?.name,
+          school: student.organizationUnit?.name,
+          block: getBlockName(student),
           activeDays,
           totalDays,
           consistencyRate: Math.round(consistencyRate)
@@ -65,7 +70,7 @@ class ConsistencyService {
       return {
         byGrade: aggregateConsistencyByGrade(consistencyData),
         bySchool: aggregateConsistencyBySchool(consistencyData),
-        byDistrict: aggregateConsistencyByDistrict(consistencyData),
+        byBlock: aggregateConsistencyByBlock(consistencyData),
         overall: calculateOverallConsistency(consistencyData),
         individual: consistencyData
       };

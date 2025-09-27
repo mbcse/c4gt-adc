@@ -6,22 +6,26 @@ const { buildUserFilter, buildDateFilter, getEnrolledCoursesForStudents } = requ
 const {
   aggregateByGrade,
   aggregateBySchool,
-  aggregateByDistrict,
+  aggregateByBlock,
   calculateOverallCompletionRates
 } = require('../../utils/aggregationUtils');
 
 class CompletionService {
 
-  async getCourseCompletionRates(filters = {}) {
+  async getCourseCompletionRates(filters = {}, user) {
     try {
-      const userFilter = buildUserFilter(filters);
+      const userFilter = await buildUserFilter(filters, user);
       const dateFilter = buildDateFilter(filters);
 
       const students = await prisma.user.findMany({
         where: userFilter,
         include: {
           grade: true,
-          school: { include: { district: true } },
+          organizationUnit: {
+            include: {
+              parent: true
+            }
+          },
         },
       });
 
@@ -29,7 +33,7 @@ class CompletionService {
         return {
           byGrade: [],
           bySchool: [],
-          byDistrict: [],
+          byBlock: [],
           overall: { totalStudents: 0, avgCompletionRate: 0, completedStudents: 0, totalEnrollments: 0 }
         };
       }
@@ -68,12 +72,12 @@ class CompletionService {
           }
         })
       ]);
-      
+
       const courseStructureMap = new Map(coursesWithStructure.map(c => [c.id, c]));
 
       const studentsWithProgress = students.map(student => {
         const studentEnrolledCourses = Array.from((enrolledCoursesMap.get(student.id) || new Map()).values());
-        
+
         const courseProgress = studentEnrolledCourses.map(enrolledCourse => {
           const course = courseStructureMap.get(enrolledCourse.courseId);
           if (!course) return null;
@@ -85,7 +89,7 @@ class CompletionService {
 
           const completedVideos = watchLogs.filter(log => log.userId === student.id && courseVideoIds.has(log.videoId)).length;
           const completedQuizzes = quizAttempts.filter(att => att.userId === student.id && courseQuizIds.has(att.quizId)).length;
-          
+
           const totalVideos = courseVideoIds.size;
           const totalQuizzes = courseQuizIds.size;
 
@@ -113,7 +117,7 @@ class CompletionService {
       return {
         byGrade: aggregateByGrade(studentsWithProgress),
         bySchool: aggregateBySchool(studentsWithProgress),
-        byDistrict: aggregateByDistrict(studentsWithProgress),
+        byBlock: aggregateByBlock(studentsWithProgress),
         overall: calculateOverallCompletionRates(studentsWithProgress)
       };
 

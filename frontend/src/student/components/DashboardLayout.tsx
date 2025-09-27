@@ -41,18 +41,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const { user,logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const userName = user?.name || "User Name";
   const initials = getInitials(userName);
 
   const navigation = [
-    { name: "Dashboard", href: "/", icon: Home },
+    { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "My Courses", href: "/courses", icon: BookOpen },
     { name: "Progress", href: "/progress", icon: TrendingUp },
     { name: "Quizzes", href: "/quizzes", icon: Brain },
-    { name: "Achievements", href: "/achievements", icon: Trophy },
     { name: "Profile", href: "/profile", icon: User },
   ];
 

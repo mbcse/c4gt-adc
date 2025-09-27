@@ -59,7 +59,7 @@ function filterReducer(state, action) {
 }
 
 const getSnapshotMessage = (summary) => {
-  const hours = summary?.studyTimeThisWeek || 0;
+  const hours = parseFloat(((summary?.studyTimeThisWeek || 0) / 60).toFixed(2));
   const lessons = summary?.lessonsCompletedThisWeek || 0;
   const streak = summary?.currentStreak || 0;
 
@@ -74,7 +74,6 @@ const getSnapshotMessage = (summary) => {
     openingPhrase = "Ready to kick off your learning week?";
   }
 
-  // If there's no activity, show a simpler message
   if (hours === 0 && lessons === 0) {
     return (
       <p className="text-gray-700 text-lg leading-relaxed flex-1">
@@ -83,7 +82,6 @@ const getSnapshotMessage = (summary) => {
     );
   }
 
-  // If there is activity, show the full stats
   return (
     <p className="text-gray-700 text-lg leading-relaxed flex-1">
       {openingPhrase} You've studied for <strong className="font-bold text-emerald-600">{hours} hours</strong> and completed <strong className="font-bold text-emerald-600">{lessons} lessons</strong>. Your current streak is now <strong className="font-bold text-emerald-600">{streak} days</strong>!

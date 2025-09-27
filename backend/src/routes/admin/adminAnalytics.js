@@ -8,21 +8,27 @@ const {
   filterOptionsService
 } = require('../../services/adminAnalytics');
 
+
 const router = express.Router();
+
+const buildFiltersFromQuery = (query) => ({
+  gradeId: query.gradeId,
+  schoolId: query.schoolId,
+  blockId: query.blockId,
+  studentId: query.studentId,
+  courseId: query.courseId,
+  videoId: query.videoId,
+  startDate: query.startDate,
+  endDate: query.endDate,
+  timeframe: query.timeframe || 'weekly'
+});
 
 // Get course completion rates with filtering
 router.get('/course-completion-rates', async (req, res) => {
   try {
-    const filters = {
-      gradeId: req.query.gradeId,
-      schoolId: req.query.schoolId,
-      districtId: req.query.districtId,
-      studentId: req.query.studentId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate
-    };
+    const filters = buildFiltersFromQuery(req.query);
 
-    const data = await completionService.getCourseCompletionRates(filters);
+    const data = await completionService.getCourseCompletionRates(filters, req.user);
 
     res.json({
       success: true,
@@ -40,18 +46,8 @@ router.get('/course-completion-rates', async (req, res) => {
 // Get average quiz scores with filtering
 router.get('/quiz-scores', async (req, res) => {
   try {
-    const filters = {
-      gradeId: req.query.gradeId,
-      schoolId: req.query.schoolId,
-      districtId: req.query.districtId,
-      studentId: req.query.studentId,
-      courseId: req.query.courseId,
-      videoId: req.query.videoId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate
-    };
-
-    const data = await quizService.getAverageQuizScores(filters);
+    const filters = buildFiltersFromQuery(req.query);
+    const data = await quizService.getAverageQuizScores(filters, req.user);
 
     res.json({
       success: true,
@@ -69,17 +65,8 @@ router.get('/quiz-scores', async (req, res) => {
 // Get engagement metrics with filtering
 router.get('/engagement', async (req, res) => {
   try {
-    const filters = {
-      gradeId: req.query.gradeId,
-      schoolId: req.query.schoolId,
-      districtId: req.query.districtId,
-      studentId: req.query.studentId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate,
-      timeframe: req.query.timeframe || 'weekly'
-    };
-
-    const data = await engagementService.getEngagementMetrics(filters);
+    const filters = buildFiltersFromQuery(req.query);
+    const data = await engagementService.getEngagementMetrics(filters, req.user);
 
     res.json({
       success: true,
@@ -97,16 +84,8 @@ router.get('/engagement', async (req, res) => {
 // Get consistency rates with filtering
 router.get('/consistency-rates', async (req, res) => {
   try {
-    const filters = {
-      gradeId: req.query.gradeId,
-      schoolId: req.query.schoolId,
-      districtId: req.query.districtId,
-      studentId: req.query.studentId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate
-    };
-
-    const data = await consistencyService.getConsistencyRates(filters);
+    const filters = buildFiltersFromQuery(req.query);
+    const data = await consistencyService.getConsistencyRates(filters, req.user);
 
     res.json({
       success: true,
@@ -125,12 +104,9 @@ router.get('/consistency-rates', async (req, res) => {
 router.get('/student/:studentId', async (req, res) => {
   try {
     const { studentId } = req.params;
-    const filters = {
-      startDate: req.query.startDate,
-      endDate: req.query.endDate
-    };
+    const filters = buildFiltersFromQuery(req.query);
 
-    const data = await studentService.getIndividualStudentAnalytics(studentId, filters);
+    const data = await studentService.getIndividualStudentAnalytics(studentId, filters, req.user);
 
     res.json({
       success: true,
@@ -149,7 +125,7 @@ router.get('/student/:studentId', async (req, res) => {
 router.get('/filter-options', async (req, res) => {
   try {
 
-    const data = await filterOptionsService.getFilterOptions();
+    const data = await filterOptionsService.getFilterOptions(req.user);
 
     res.json({
       success: true,
@@ -167,17 +143,7 @@ router.get('/filter-options', async (req, res) => {
 // Get comprehensive dashboard data 
 router.get('/dashboard', async (req, res) => {
   try {
-    const filters = {
-      gradeId: req.query.gradeId,
-      schoolId: req.query.schoolId,
-      districtId: req.query.districtId,
-      studentId: req.query.studentId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate,
-      timeframe: req.query.timeframe || 'weekly'
-    };
-
-    // Get all analytics data in parallel using the individual services
+    const filters = buildFiltersFromQuery(req.query);
     const [
       courseCompletionRates,
       quizScores,
@@ -185,11 +151,11 @@ router.get('/dashboard', async (req, res) => {
       consistencyRates,
       filterOptions
     ] = await Promise.all([
-      completionService.getCourseCompletionRates(filters),
-      quizService.getAverageQuizScores(filters),
-      engagementService.getEngagementMetrics(filters),
-      consistencyService.getConsistencyRates(filters),
-      filterOptionsService.getFilterOptions()
+      completionService.getCourseCompletionRates(filters, req.user),
+      quizService.getAverageQuizScores(filters, req.user),
+      engagementService.getEngagementMetrics(filters, req.user),
+      consistencyService.getConsistencyRates(filters, req.user),
+      filterOptionsService.getFilterOptions(req.user)
     ]);
 
     res.json({

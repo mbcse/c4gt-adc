@@ -9,7 +9,7 @@ import { Inbox } from 'lucide-react';
 interface CourseCompletionChartProps {
   data: CompletionRateData[];
   overall: CourseCompletionRates['overall'];
-  dimension: 'grade' | 'school' | 'district';
+  dimension: 'grade' | 'school' | 'block';
   loading?: boolean;
 }
 
@@ -71,7 +71,7 @@ const CourseCompletionChart: React.FC<CourseCompletionChartProps> = ({
     switch (dimension) {
       case 'grade': return `Grade ${item.grade || 'N/A'}`;
       case 'school': return item.school || 'Unknown School';
-      case 'district': return item.district || 'Unknown District';
+      case 'block': return item.block || 'Unknown Block';
       default: return 'Unknown';
     }
   };
@@ -135,7 +135,7 @@ const CourseCompletionChart: React.FC<CourseCompletionChartProps> = ({
         </ResponsiveContainer>
       </div>
 
-          <div className="overflow-x-auto">
+      <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>
             <tr className="border-t border-gray-200">
@@ -153,10 +153,9 @@ const CourseCompletionChart: React.FC<CourseCompletionChartProps> = ({
                 <td className="px-4 py-2 font-medium text-gray-900">{getLabel(item)}</td>
                 <td className="px-4 py-2 text-center text-gray-700">{item.studentCount}</td>
                 <td className="px-4 py-2 text-center">
-                  <span className={`font-medium px-2 py-1 rounded-md ${
-                    item.avgCompletionRate >= 80 ? 'bg-green-100 text-green-700' :
-                    item.avgCompletionRate >= 60 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                  }`}>
+                  <span className={`font-medium px-2 py-1 rounded-md ${item.avgCompletionRate >= 80 ? 'bg-green-100 text-green-700' :
+                      item.avgCompletionRate >= 60 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                    }`}>
                     {item.avgCompletionRate}%
                   </span>
                 </td>

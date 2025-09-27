@@ -1,10 +1,10 @@
-// routes/analytics.js
 const express = require('express');
 const router = express.Router();
 const requireAuth = require('../middlewares/requireAuth');
 const analyticsService = require('../services/analyticsService');
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
+const eventLoggerService = require('../services/eventLoggerService');
 
 router.use(requireAuth);
 
@@ -60,17 +60,17 @@ router.get('/student/quiz-analytics', async (req, res) => {
 // Event logging endpoint
 router.post('/event', async (req, res) => {
   try {
-    const { eventType, videoId, userId, ...data } = req.body;
-    await prisma.analyticsEvent.create({
-      data: {
-        userId: req.user.userId,
-        videoId,
-        eventType,
-        data,
-        timestamp: new Date(),
-      },
-    });
-    res.json({ success: true });
+    const { eventType, videoId, ...data } = req.body;
+    const userId = req.user.userId;
+    const userAgent = req.headers['user-agent'];
+
+    if (!videoId || !eventType) {
+      return res.status(400).json({ error: "videoId and eventType are required." });
+    }
+    
+    await eventLoggerService.logEvent(userId, videoId, eventType, data, userAgent);
+    
+    res.status(204).send();
   } catch (err) {
     console.error("Error logging analytics event", err);
     res.status(500).json({ error: 'Failed to log analytics event' });

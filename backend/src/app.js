@@ -37,6 +37,12 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/quizzes', quizRoutes);
 
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to the Rohtak Guided Learning Tracker backend!',
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

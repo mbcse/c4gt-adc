@@ -1,17 +1,32 @@
 import api from './index';
 
 export interface FilterOptions {
-  grades: Array<{ id: number; value: string }>;
-  schools: Array<{ id: number; name: string; districtId: number; districtName: string }>;
-  districts: Array<{ id: number; name: string }>;
-  students: Array<{ id: number; name: string; email: string }>;
+  grades: Array<{
+    id: number;
+    value: string;
+  }>;
+  schools: Array<{
+    id: number;
+    name: string;
+    blockId: number;
+    blockName: string;
+  }>;
+  blocks: Array<{ id: number; name: string }>;
+  students: Array<{
+    id: number;
+    name: string;
+    email: string;
+    organizationUnitId: number;
+    schoolId: number | null;
+    blockId: number | null;
+  }>;
   courses: Array<{ id: number; title: string }>;
 }
 
 export interface AnalyticsFilters {
   gradeId?: number;
   schoolId?: number;
-  districtId?: number;
+  blockId?: number;
   studentId?: number;
   courseId?: number;
   videoId?: number;
@@ -23,7 +38,7 @@ export interface AnalyticsFilters {
 export interface CompletionRateData {
   grade?: string;
   school?: string;
-  district?: string;
+  block?: string;
   studentCount: number;
   avgCompletionRate: number;
   completedCourses: number;
@@ -33,7 +48,7 @@ export interface CompletionRateData {
 export interface CourseCompletionRates {
   byGrade: CompletionRateData[];
   bySchool: CompletionRateData[];
-  byDistrict: CompletionRateData[];
+  byBlock: CompletionRateData[];
   overall: {
     totalStudents: number;
     totalCourses: number;
@@ -47,7 +62,7 @@ export interface CourseCompletionRates {
 export interface QuizScoreData {
   grade?: string;
   school?: string;
-  district?: string;
+  block?: string;
   courseId?: number;
   courseTitle?: string;
   videoId?: number;
@@ -60,7 +75,7 @@ export interface QuizScoreData {
 export interface QuizScores {
   byGrade: QuizScoreData[];
   bySchool: QuizScoreData[];
-  byDistrict: QuizScoreData[];
+  byBlock: QuizScoreData[];
   byCourse: QuizScoreData[];
   byVideo: QuizScoreData[];
   overall: {
@@ -94,7 +109,7 @@ export interface ConsistencyData {
   studentName: string;
   grade?: string;
   school?: string;
-  district?: string;
+  block?: string;
   activeDays: number;
   totalDays: number;
   consistencyRate: number;
@@ -113,8 +128,8 @@ export interface ConsistencyRates {
     studentCount: number;
     highConsistencyStudents: number;
   }>;
-  byDistrict: Array<{
-    district: string;
+  byBlock: Array<{
+    block: string;
     avgConsistencyRate: number;
     studentCount: number;
     highConsistencyStudents: number;
@@ -135,7 +150,7 @@ export interface IndividualStudentAnalytics {
     email: string;
     grade?: string;
     school?: string;
-    district?: string;
+    block?: string;
   };
   courseProgress: Array<{
     courseId: number;
@@ -173,31 +188,31 @@ export const adminAnalyticsAPI = {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/course-completion-rates?${params.toString()}`);
     return response.data.data;
   },
 
-  getQuizScores: async (api,filters: AnalyticsFilters = {}): Promise<QuizScores> => {
+  getQuizScores: async (api, filters: AnalyticsFilters = {}): Promise<QuizScores> => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/quiz-scores?${params.toString()}`);
     return response.data.data;
   },
 
-  getEngagementMetrics: async (api,filters: AnalyticsFilters = {}): Promise<EngagementMetrics> => {
+  getEngagementMetrics: async (api, filters: AnalyticsFilters = {}): Promise<EngagementMetrics> => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/engagement?${params.toString()}`);
     return response.data.data;
   },
@@ -209,7 +224,7 @@ export const adminAnalyticsAPI = {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/consistency-rates?${params.toString()}`);
     return response.data.data;
   },
@@ -221,7 +236,7 @@ export const adminAnalyticsAPI = {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/student/${studentId}?${params.toString()}`);
     return response.data.data;
   },
@@ -231,14 +246,14 @@ export const adminAnalyticsAPI = {
     return response.data.data;
   },
 
-  getDashboardData: async (api,filters: AnalyticsFilters = {}): Promise<DashboardData> => {
+  getDashboardData: async (api, filters: AnalyticsFilters = {}): Promise<DashboardData> => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         params.append(key, value.toString());
       }
     });
-    
+
     const response = await api.get(`/analytics/dashboard?${params.toString()}`);
     return response.data.data;
   },

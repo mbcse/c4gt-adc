@@ -8,18 +8,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 
-// Student pages (pages contain internal layout)
+// Student pages 
 import Dashboard from "./student/pages/Index";
 import MyCourses from "./student/pages/Courses";
 import CoursePage from "./student/pages/CoursePage";
 import MyProgress from "./student/pages/Progress";
 import Quizzes from "./student/pages/Quizzes";
-import Achievements from "./student/pages/Achievements";
 import Profile from "./student/pages/Profile";
 import VideoPage from "./student/pages/VideoPage";
 import CourseVideoRouteHandler from "./student/components/CourseVideoRouteHandler";
 
-// Admin layout + pages (layout wraps pages via <Outlet />)
+// Admin layout + pages 
 import AdminLayout from "./admin/components/Layout";
 import AnalyticsDashboard from "./admin/pages/Analytics";
 import ManageStudents from "./admin/pages/Students";
@@ -31,6 +30,7 @@ import CourseDetailPage from "@/admin/pages/CourseDetailPage";
 import Login from "./shared/pages/Login";
 import Signup from "./shared/pages/Signup";
 import NotFound from "./shared/pages/NotFound";
+import LandingRedirect from "./shared/components/LandingRedirect";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +43,7 @@ const App: React.FC = () => {
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
+            <Route path="/" element={<LandingRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
@@ -50,7 +51,7 @@ const App: React.FC = () => {
             <Route
               path="/admin/*"
               element={
-                <ProtectedRoute allowedRoles={["ADMIN", "SUPERADMIN"]}>
+                <ProtectedRoute allowedRoles={["ADMIN", "SUPERADMIN", "INSTRUCTOR"]}>
                   <AdminLayout />
                 </ProtectedRoute>
               }
@@ -69,16 +70,14 @@ const App: React.FC = () => {
               path="/*"
               element={
                 <ProtectedRoute allowedRoles={["STUDENT"]}>
-                  {/* Wrap student routes inside another <Routes> to avoid conflicts */}
                   <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
                     <Route path="courses" element={<MyCourses />} />
                     <Route path="courses/:courseId" element={<CoursePage />} />
                     <Route path="courses/:courseId/video" element={<CourseVideoRouteHandler />} />
                     <Route path="courses/:courseId/video/:videoId" element={<VideoPage />} />
                     <Route path="progress" element={<MyProgress />} />
                     <Route path="quizzes" element={<Quizzes />} />
-                    <Route path="achievements" element={<Achievements />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

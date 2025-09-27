@@ -6,7 +6,6 @@ const usersRoutes = require('./adminUsers');
 const studentsRoutes = require('./adminStudents');
 const coursesRoutes = require('./adminCourses');
 const quizRoutes = require('./adminQuiz');
-const reportsRoutes = require('./adminReports');
 const adminMetadataRoutes = require('./adminMetadata');
 const adminAnalyticsRoutes = require('./adminAnalytics'); 
 
@@ -15,11 +14,11 @@ const router = express.Router();
 // Require authentication for all admin routes
 router.use(requireAuth);
 
-// SUPERADMIN-only user management routes
-router.use('/users',usersRoutes);
+// ADMIN and SUPERADMIN user management routes
+router.use('/users',requireRole(['ADMIN', 'SUPERADMIN']), usersRoutes);
 
-// ADMIN and SUPERADMIN student management routes
-router.use('/students', requireRole(['ADMIN', 'SUPERADMIN']), studentsRoutes);
+// INSTRUCTOR, ADMIN and SUPERADMIN student management routes
+router.use('/students', requireRole(['ADMIN', 'SUPERADMIN', 'INSTRUCTOR']), studentsRoutes);
 
 // ADMIN and SUPERADMIN courses management routes
 router.use('/courses', requireRole(['ADMIN', 'SUPERADMIN']), coursesRoutes);
@@ -30,8 +29,5 @@ router.use('/analytics', requireRole(['INSTRUCTOR', 'ADMIN', 'SUPERADMIN']), adm
 
 // ADMIN and SUPERADMIN quiz routes
 router.use('/quizzes', requireRole(['ADMIN', 'SUPERADMIN']), quizRoutes);
-
-// ADMIN and SUPERADMIN reports routes
-router.use('/reports', requireRole(['ADMIN', 'SUPERADMIN']), reportsRoutes);
 
 module.exports = router;

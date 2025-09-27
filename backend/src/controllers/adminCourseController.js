@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const { extractYouTubeVideoId, getYouTubeThumbnail } = require("../utils/video");
 const { upsertVideoWithTx, addVideosToCourseTx } = require('../helpers/videoHelper');
 const videoHelper = require('../helpers/videoHelper');
+const { buildUserFilter, getOrgUnitDescendants } = require('../utils/filterUtils');
 
 exports.listCourses = async (req, res) => {
   try {
@@ -14,15 +15,15 @@ exports.listCourses = async (req, res) => {
     // Filters
     const where = {};
 
-    if (req.query.categoryId)         where.categoryId   = Number(req.query.categoryId);
-    if (req.query.skillLevelId)       where.skillLevelId = Number(req.query.skillLevelId);
-    if (req.query.gradeId)            where.gradeId      = Number(req.query.gradeId);
-    if (req.query.languageId)         where.languageId   = Number(req.query.languageId);
+    if (req.query.categoryId) where.categoryId = Number(req.query.categoryId);
+    if (req.query.skillLevelId) where.skillLevelId = Number(req.query.skillLevelId);
+    if (req.query.gradeId) where.gradeId = Number(req.query.gradeId);
+    if (req.query.languageId) where.languageId = Number(req.query.languageId);
 
-    // Tags filtering (exact match: course must have all)
+    // Tags filtering 
     if (req.query.tagIds) {
       const tagIds = req.query.tagIds.split(',').map(id => Number(id));
-      where.tags = { some: { id: { in: tagIds } } }; 
+      where.tags = { some: { id: { in: tagIds } } };
     }
 
     // Search (title/description)
@@ -252,11 +253,35 @@ exports.deleteCourse = async (req, res) => {
 exports.assignCourse = async (req, res) => {
   try {
     const { courseId, userId } = req.body;
-    if (!courseId || !userId)
+
+    if (!courseId || !userId) {
       return res.status(400).json({ message: 'courseId and userId are required' });
+    }
+
+    const currentUser = req.user;
+
+    const filters = {};
+    const userFilter = await buildUserFilter(filters, currentUser);
+
+    const targetUser = await prisma.user.findFirst({
+      where: {
+        id: Number(userId),
+        role: 'STUDENT',
+        ...userFilter
+      }
+    });
+
+    if (!targetUser) {
+      return res.status(404).json({ message: 'Student not found or access denied' });
+    }
 
     const existing = await prisma.courseAssignment.findUnique({
-      where: { courseId_userId: { courseId: Number(courseId), userId: Number(userId) } }
+      where: {
+        courseId_userId: {
+          courseId: Number(courseId),
+          userId: Number(userId)
+        }
+      }
     });
 
     if (existing) {
@@ -268,6 +293,10 @@ exports.assignCourse = async (req, res) => {
         courseId: Number(courseId),
         userId: Number(userId),
         assignedAt: new Date(),
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        course: { select: { id: true, title: true } }
       }
     });
 
@@ -281,12 +310,38 @@ exports.assignCourse = async (req, res) => {
 exports.unassignCourse = async (req, res) => {
   try {
     const { courseId, userId } = req.body;
-    if (!courseId || !userId)
-      return res.status(400).json({ message: 'courseId and userId are required' });
 
-    await prisma.courseAssignment.deleteMany({
-      where: { courseId: Number(courseId), userId: Number(userId) }
+    if (!courseId || !userId) {
+      return res.status(400).json({ message: 'courseId and userId are required' });
+    }
+
+    const currentUser = req.user;
+
+    const filters = {};
+    const userFilter = await buildUserFilter(filters, currentUser);
+
+    const targetUser = await prisma.user.findFirst({
+      where: {
+        id: Number(userId),
+        role: 'STUDENT',
+        ...userFilter
+      }
     });
+
+    if (!targetUser) {
+      return res.status(404).json({ message: 'Student not found or access denied' });
+    }
+
+    const deleteResult = await prisma.courseAssignment.deleteMany({
+      where: {
+        courseId: Number(courseId),
+        userId: Number(userId)
+      }
+    });
+
+    if (deleteResult.count === 0) {
+      return res.status(404).json({ message: 'Assignment not found' });
+    }
 
     res.json({ message: 'Course unassigned from user' });
   } catch (error) {
@@ -295,18 +350,53 @@ exports.unassignCourse = async (req, res) => {
   }
 };
 
+
 exports.listAssignments = async (req, res) => {
   try {
     const { courseId, userId } = req.query;
-    const where = {};
+    const currentUser = req.user;
+
+    let where = {};
+
     if (courseId) where.courseId = Number(courseId);
     if (userId) where.userId = Number(userId);
+
+    if (!currentUser || currentUser.role !== 'SUPERADMIN') {
+      const filters = {};
+      const userFilter = await buildUserFilter(filters, currentUser);
+
+      if (userFilter.organizationUnitId) {
+        where.user = {
+          ...userFilter
+        };
+      }
+    }
 
     const assignments = await prisma.courseAssignment.findMany({
       where,
       include: {
-        course: true,
-        user: { select: { id: true, name: true, email: true, role: true } },
+        course: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            thumbnailUrl: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            organizationUnit: {
+              select: { id: true, name: true, type: true }
+            },
+            grade: {
+              select: { id: true, value: true }
+            }
+          }
+        },
       },
       orderBy: { assignedAt: 'desc' }
     });
@@ -315,5 +405,117 @@ exports.listAssignments = async (req, res) => {
   } catch (error) {
     console.error('Error fetching assignments:', error);
     res.status(500).json({ message: 'Failed to fetch assignments' });
+  }
+};
+
+exports.assignCourseBulk = async (req, res) => {
+  try {
+    const {
+      courseId,
+      userIds,
+      blockId,
+      schoolId,
+      gradeId
+    } = req.body;
+
+    const currentUser = req.user;
+
+    if (!courseId) {
+      return res.status(400).json({ message: 'Course ID is required' });
+    }
+
+    // Verify course exists
+    const course = await prisma.course.findUnique({
+      where: { id: Number(courseId) }
+    });
+
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    let targetUsers = [];
+
+    if (userIds && Array.isArray(userIds)) {
+      // Individual user assignment
+      const filters = {};
+      const userFilter = await buildUserFilter(filters, currentUser);
+
+      targetUsers = await prisma.user.findMany({
+        where: {
+          id: { in: userIds.map(id => Number(id)) },
+          role: 'STUDENT',
+          ...userFilter
+        },
+        select: { id: true, name: true, email: true }
+      });
+
+      if (targetUsers.length !== userIds.length) {
+        return res.status(400).json({ message: 'Some selected users are not accessible or invalid' });
+      }
+    } else {
+      // Bulk assignment by organization unit or grade
+      let filters = {};
+
+      if (blockId) {
+        filters.blockId = Number(blockId);
+      }
+      if (schoolId) {
+        filters.schoolId = Number(schoolId);
+      }
+      if (gradeId) {
+        filters.gradeId = Number(gradeId);
+      }
+
+      const userFilter = await buildUserFilter(filters, currentUser);
+
+      targetUsers = await prisma.user.findMany({
+        where: {
+          role: 'STUDENT',
+          ...userFilter
+        },
+        select: { id: true, name: true, email: true }
+      });
+
+      if (targetUsers.length === 0) {
+        return res.status(400).json({ message: 'No students found matching the criteria' });
+      }
+    }
+
+    // Check for existing assignments to avoid duplicates
+    const existingAssignments = await prisma.courseAssignment.findMany({
+      where: {
+        courseId: Number(courseId),
+        userId: { in: targetUsers.map(user => user.id) }
+      },
+      select: { userId: true }
+    });
+
+    const existingUserIds = new Set(existingAssignments.map(a => a.userId));
+    const newUsers = targetUsers.filter(user => !existingUserIds.has(user.id));
+
+    if (newUsers.length === 0) {
+      return res.status(400).json({ message: 'All selected students are already assigned to this course' });
+    }
+
+    // Create assignments for new users
+    const assignments = await prisma.courseAssignment.createMany({
+      data: newUsers.map(user => ({
+        courseId: Number(courseId),
+        userId: user.id,
+        assignedAt: new Date(),
+      })),
+      skipDuplicates: true
+    });
+
+    res.status(201).json({
+      message: 'Course assigned successfully',
+      assignedCount: assignments.count,
+      skippedCount: targetUsers.length - assignments.count,
+      totalTargeted: targetUsers.length
+    });
+
+  } catch (error) {
+    console.error('Error in bulk course assignment:', error);
+    res.status(500).json({ message: 'Failed to assign course' });
   }
 };

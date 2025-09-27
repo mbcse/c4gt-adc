@@ -1,28 +1,26 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/shared/context/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: string[]; // e.g., ['ADMIN', 'SUPERADMIN']
+  allowedRoles?: string[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-  const { user, token } = useAuth();
+export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { user, isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  // Redirect to login if not authenticated
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // If allowedRoles is specified, check if user's role is allowed
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    // Unauthorized access, redirect (example: to student dashboard or 403 page)
-    return <Navigate to="/" replace />;
+  if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
+    if (user?.role === "ADMIN" || user?.role === "SUPERADMIN" || user?.role === "INSTRUCTOR") {
+      return <Navigate to="/admin" replace />;
+    }
+    return <Navigate to="/dashboard" replace />;
   }
 
-  // Authorized or no specific roles required
   return <>{children}</>;
-};
-
-export default ProtectedRoute;
+}

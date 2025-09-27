@@ -5,9 +5,9 @@ const { buildUserFilter, buildDateFilter, getEnrolledCoursesForStudents } = requ
 
 class EngagementService {
 
-  async getEngagementMetrics(filters = {}) {
+  async getEngagementMetrics(filters = {}, user) {
     try {
-      const userFilter = buildUserFilter(filters);
+      const userFilter = await buildUserFilter(filters, user);
       const dateFilter = buildDateFilter(filters);
 
       const activeStudentsCount = await prisma.user.count({ where: { ...userFilter, watchLogs: { some: { ...(dateFilter && { updatedAt: dateFilter }) } } } });
@@ -21,7 +21,14 @@ class EngagementService {
       const totalWatchHours = Math.round(((watchLogStats._sum.totalWatchTime || 0) / 3600) * 10) / 10;
       const avgSessionDuration = watchLogStats._count.id > 0 ? Math.round(((watchLogStats._avg.totalWatchTime || 0) / 60) * 10) / 10 : 0;
 
-      const studentsForEnrollment = await prisma.user.findMany({ where: userFilter, select: { id: true, grade: { select: { value: true } }, school: { select: { name: true } } } });
+      const studentsForEnrollment = await prisma.user.findMany({ 
+        where: userFilter, 
+        select: { 
+          id: true, 
+          grade: { select: { value: true } }, 
+          organizationUnit: { select: { name: true } }
+        } 
+      });
       const studentIds = studentsForEnrollment.map(s => s.id);
       const enrolledCoursesByStudent = await getEnrolledCoursesForStudents(studentIds, dateFilter);
       const courseEnrollmentStats = this._calculateCourseEnrollmentStats(enrolledCoursesByStudent, studentsForEnrollment);
@@ -75,7 +82,7 @@ class EngagementService {
   _calculateCourseEnrollmentStats(enrolledCoursesByStudent, students) {
     const studentInfoMap = new Map(students.map(s => [s.id, {
         grade: s.grade?.value || 'No Grade',
-        school: s.school?.name || 'No School'
+        school: s.organizationUnit?.name || 'No School'
     }]));
 
     const courseMap = new Map();

@@ -2,9 +2,10 @@ const { PrismaClient } = require("../../../generated/prisma");
 const prisma = new PrismaClient();
 
 const { buildDateFilter, getEnrolledCoursesForStudents } = require('../../utils/filterUtils');
+const { getBlockName } = require('../../utils/aggregationUtils');
 
 class StudentService {
-  async getIndividualStudentAnalytics(studentId, filters = {}) {
+  async getIndividualStudentAnalytics(studentId, filters = {}, user) {
     try {
       const id = parseInt(studentId);
       const dateFilter = buildDateFilter(filters);
@@ -13,7 +14,7 @@ class StudentService {
         where: { id },
         include: {
           grade: true,
-          school: { include: { district: true } },
+          organizationUnit: { include: { parent: true } },
         },
       });
 
@@ -26,65 +27,66 @@ class StudentService {
       const courseIds = enrolledCourses.map(c => c.courseId);
 
       const watchLogs = await prisma.watchLog.findMany({
-          where: { userId: id, ...(dateFilter && { updatedAt: dateFilter }) },
+        where: { userId: id, ...(dateFilter && { updatedAt: dateFilter }) },
       });
       const quizAttempts = await prisma.quizAttempt.findMany({
-          where: { userId: id, ...(dateFilter && { completedAt: dateFilter }) },
+        where: { userId: id, ...(dateFilter && { completedAt: dateFilter }) },
       });
 
       const coursesWithStructure = await prisma.course.findMany({
-          where: { id: { in: courseIds } },
-          include: { courseVideos: { include: { video: { include: { quiz: true } } } } }
+        where: { id: { in: courseIds } },
+        include: { courseVideos: { include: { video: { include: { quiz: true } } } } }
       });
       const coursesStructureMap = new Map(coursesWithStructure.map(c => [c.id, c]));
 
       const courseProgress = enrolledCourses.map(enrolledCourse => {
-          const course = coursesStructureMap.get(enrolledCourse.courseId);
-          if (!course) return null;
+        const course = coursesStructureMap.get(enrolledCourse.courseId);
+        if (!course) return null;
 
-          const courseVideos = course.courseVideos.map(cv => cv.video);
-          const totalVideos = courseVideos.length;
-          const completedVideos = courseVideos.filter(v => 
-              watchLogs.some(log => log.videoId === v.id && log.isCompleted)
-          ).length;
+        const courseVideos = course.courseVideos.map(cv => cv.video);
+        const totalVideos = courseVideos.length;
+        const completedVideos = courseVideos.filter(v =>
+          watchLogs.some(log => log.videoId === v.id && log.isCompleted)
+        ).length;
 
-          const quizzes = courseVideos.map(v => v.quiz).filter(Boolean);
-          const totalQuizzes = quizzes.length;
-          const completedQuizzes = quizzes.filter(q => 
-              quizAttempts.some(attempt => attempt.quizId === q.id)
-          ).length;
-          
-          const relevantAttempts = quizAttempts.filter(attempt => quizzes.some(q => q.id === attempt.quizId));
-          const avgQuizScore = relevantAttempts.length > 0 ? relevantAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / relevantAttempts.length : 0;
-          const videoCompletionRate = totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;
-          const quizCompletionRate = totalQuizzes > 0 ? (completedQuizzes / totalQuizzes) * 100 : 100;
-          const overallCompletionRate = totalQuizzes > 0 ? (videoCompletionRate * 0.7) + (quizCompletionRate * 0.3) : videoCompletionRate;
+        const quizzes = courseVideos.map(v => v.quiz).filter(Boolean);
+        const totalQuizzes = quizzes.length;
+        const completedQuizzes = quizzes.filter(q =>
+          quizAttempts.some(attempt => attempt.quizId === q.id)
+        ).length;
 
-          return {
-              courseId: course.id,
-              courseTitle: course.title,
-              completionRate: Math.round(overallCompletionRate),
-              totalVideos, completedVideos, totalQuizzes, completedQuizzes,
-              avgQuizScore: Math.round(avgQuizScore * 10) / 10
-          };
-      }).filter(Boolean); 
+        const relevantAttempts = quizAttempts.filter(attempt => quizzes.some(q => q.id === attempt.quizId));
+        const avgQuizScore = relevantAttempts.length > 0 ? relevantAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / relevantAttempts.length : 0;
+        const videoCompletionRate = totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;
+        const quizCompletionRate = totalQuizzes > 0 ? (completedQuizzes / totalQuizzes) * 100 : 100;
+        const overallCompletionRate = totalQuizzes > 0 ? (videoCompletionRate * 0.7) + (quizCompletionRate * 0.3) : videoCompletionRate;
+
+        return {
+          courseId: course.id,
+          courseTitle: course.title,
+          completionRate: Math.round(overallCompletionRate),
+          totalVideos, completedVideos, totalQuizzes, completedQuizzes,
+          avgQuizScore: Math.round(avgQuizScore * 10) / 10
+        };
+      }).filter(Boolean);
 
       const totalStudyTime = Math.round((watchLogs.reduce((sum, log) => sum + log.totalWatchTime, 0) / 3600) * 10) / 10;
       const quizAnalytics = {
-          totalAttempts: quizAttempts.length,
-          avgScore: quizAttempts.length > 0 ? Math.round((quizAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / quizAttempts.length) * 10) / 10 : 0,
-          perfectScores: quizAttempts.filter(attempt => attempt.score >= 95).length
+        totalAttempts: quizAttempts.length,
+        avgScore: quizAttempts.length > 0 ? Math.round((quizAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / quizAttempts.length) * 10) / 10 : 0,
+        perfectScores: quizAttempts.filter(attempt => attempt.score >= 95).length
       };
 
       return {
         student: {
           id: student.id, name: student.name, email: student.email,
-          grade: student.grade?.value, school: student.school?.name, district: student.school?.district?.name
+          grade: student.grade?.value, school: student.organizationUnit?.type === 'SCHOOL' ? student.organizationUnit.name : null,
+          block: getBlockName(student)
         },
         courseProgress,
         totalStudyTime,
         quizAnalytics,
-        enrolledCourses: enrolledCourses.length, 
+        enrolledCourses: enrolledCourses.length,
         completedCourses: courseProgress.filter(cp => cp.completionRate >= 95).length
       };
     } catch (error) {

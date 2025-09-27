@@ -14,7 +14,6 @@ exports.addVideoToCourse = async (req, res) => {
 
     const video = await videoHelper.upsertVideo(videoInput, videoInput.useApiMetadata !== false);
 
-    // Try to create the courseVideo relation
     const maxOrder = await prisma.courseVideo.aggregate({
       where: { courseId },
       _max: { order: true }
@@ -247,37 +246,59 @@ exports.addEntirePlaylist = async (req, res) => {
 
     let allVideos = [];
     let page = 1;
-    const pageSize = 50; // YouTube max page size
+    const pageSize = 50;
+    let totalPages = 1; 
 
-    // Fetch all pages of playlist videos sequentially
-    while (true) {
-      const { videos, totalVideos } = await youtubeService.getPlaylistVideos(playlistId, page, pageSize);
+    do {
+      const { videos, totalVideos } = await youtubeService.getPlaylistVideosPaginated(
+        playlistId,
+        page,
+        pageSize
+      );
+
+      if (!totalVideos || videos.length === 0) {
+        break; 
+      }
+
       allVideos = allVideos.concat(videos);
-
-      const totalPages = Math.ceil(totalVideos / pageSize);
-      if (page >= totalPages) break;
+      totalPages = Math.ceil(totalVideos / pageSize);
       page++;
-    }
+
+    } while (page <= totalPages);
+
 
     if (allVideos.length === 0) {
-      return res.status(400).json({ message: 'Playlist is empty' });
+      return res.status(400).json({ message: 'Playlist is empty or videos could not be fetched' });
     }
 
-    const existingLinks = await prisma.courseVideo.findMany({
-      where: { courseId },
-      select: { videoId: true }
+    const existingCourseVideos = await prisma.video.findMany({
+      where: {
+        courseVideos: { some: { courseId: courseId } } 
+      },
+      select: { videoId: true } 
     });
-    const existingVideoIds = new Set(existingLinks.map(link => link.videoId));
+    const existingYouTubeIds = new Set(existingCourseVideos.map(v => v.videoId));
 
-    const newVideos = allVideos.filter(v => !existingVideoIds.has(v.videoId));
+    const newVideosFromService = allVideos.filter(v => !existingYouTubeIds.has(v.videoId));
 
-    if (newVideos.length === 0) {
-      return res.status(409).json({ message: 'All videos already exist in the course' });
+    if (newVideosFromService.length === 0) {
+      return res.status(409).json({ message: 'All videos from this playlist already exist in the course' });
     }
 
-    const addedVideos = await videoHelper.addVideosToCourse(courseId, newVideos);
+    const videosToCreate = newVideosFromService.map(video => ({
+      title: video.title,
+      description: video.description,
+      platform: 'YouTube',                
+      videoUrl: video.videoUrl,    
+      videoId: video.videoId,    
+      duration: video.duration,
+      thumbnailUrl: video.thumbnailUrl,
+      createdAt: new Date(video.publishedAt)
+    }));
 
-    // Optionally update course thumbnail if none set
+
+    const addedVideos = await videoHelper.addVideosToCourse(courseId, videosToCreate);
+
     const courseVideosCount = await prisma.courseVideo.count({ where: { courseId } });
     if (courseVideosCount === addedVideos.length) {
       await prisma.course.update({
@@ -287,7 +308,7 @@ exports.addEntirePlaylist = async (req, res) => {
     }
 
     res.status(201).json({
-      message: `Added ${addedVideos.length} videos to course`,
+      message: `Added ${addedVideos.length} new videos to course`,
       videos: addedVideos,
     });
 

@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { authAPI,User, LoginData, SignupData } from "@/api/authAPI";
+import { authAPI, LoginData, SignupData } from "@/api/authAPI";
+import { User } from "@/types";
 
 type AuthContextType = {
   user: User | null;
@@ -48,7 +49,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(data.user);
       localStorage.setItem("authToken", data.token);
     } catch (error) {
-      // Optionally: handle login errors here or rethrow for component-level handling
       throw error;
     }
   }, []);
@@ -70,7 +70,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem("authToken");
-    // Optionally redirect here if not handled globally
   }, []);
 
   return (

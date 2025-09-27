@@ -1,8 +1,19 @@
 // --- Course Completion Aggregations ---
+const getBlockName = (student) => {
+  if (!student.organizationUnit) return 'No Block';
+  if (student.organizationUnit.type === 'BLOCK') {
+    return student.organizationUnit.name;
+  }
+  // If the unit is a school, its parent is the block
+  if (student.organizationUnit.parent && student.organizationUnit.parent.type === 'BLOCK') {
+    return student.organizationUnit.parent.name;
+  }
+  return 'No Block';
+};
 
 function aggregateByGrade(studentsWithProgress) {
   const gradeMap = new Map();
-  
+
   studentsWithProgress.forEach(student => {
     const gradeValue = student.grade?.value || 'No Grade';
     if (!gradeMap.has(gradeValue)) {
@@ -14,18 +25,18 @@ function aggregateByGrade(studentsWithProgress) {
   return Array.from(gradeMap.entries()).map(([grade, data]) => {
     const studentCount = data.students.length;
     const totalEnrollments = data.students.reduce((sum, s) => sum + s.courseProgress.length, 0);
-    
+
     const completedCourses = data.students.reduce((sum, s) => {
       return sum + s.courseProgress.filter(cp => cp.isCompleted).length;
     }, 0);
 
     const avgCompletionRate = studentCount > 0
       ? data.students.reduce((sum, s) => {
-          const studentAvg = s.courseProgress.length > 0
-            ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
-            : 0;
-          return sum + studentAvg;
-        }, 0) / studentCount
+        const studentAvg = s.courseProgress.length > 0
+          ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
+          : 0;
+        return sum + studentAvg;
+      }, 0) / studentCount
       : 0;
 
     return {
@@ -39,92 +50,80 @@ function aggregateByGrade(studentsWithProgress) {
 }
 
 function aggregateBySchool(studentsWithProgress) {
-    const schoolMap = new Map();
+  const schoolMap = new Map();
 
-    studentsWithProgress.forEach(student => {
-        const schoolName = student.school?.name || 'No School';
-        if (!schoolMap.has(schoolName)) {
-            schoolMap.set(schoolName, { students: [] });
-        }
-        schoolMap.get(schoolName).students.push(student);
-    });
+  studentsWithProgress.forEach(student => {
+    const schoolName = student.organizationUnit?.name || 'No School';
+    if (!schoolMap.has(schoolName)) {
+      schoolMap.set(schoolName, { students: [] });
+    }
+    schoolMap.get(schoolName).students.push(student);
+  });
 
-    return Array.from(schoolMap.entries()).map(([school, data]) => {
-        const studentCount = data.students.length;
-        const totalEnrollments = data.students.reduce((sum, s) => sum + s.courseProgress.length, 0);
-        const completedCourses = data.students.reduce((sum, s) => sum + s.courseProgress.filter(cp => cp.isCompleted).length, 0);
+  return Array.from(schoolMap.entries()).map(([school, data]) => {
+    const studentCount = data.students.length;
+    const totalEnrollments = data.students.reduce((sum, s) => sum + s.courseProgress.length, 0);
+    const completedCourses = data.students.reduce((sum, s) => sum + s.courseProgress.filter(cp => cp.isCompleted).length, 0);
 
-        const avgCompletionRate = studentCount > 0
-            ? data.students.reduce((sum, s) => {
-                const studentAvg = s.courseProgress.length > 0
-                    ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
-                    : 0;
-                return sum + studentAvg;
-            }, 0) / studentCount
-            : 0;
+    const avgCompletionRate = studentCount > 0
+      ? data.students.reduce((sum, s) => {
+        const studentAvg = s.courseProgress.length > 0
+          ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
+          : 0;
+        return sum + studentAvg;
+      }, 0) / studentCount
+      : 0;
 
-        return {
-            school,
-            studentCount,
-            avgCompletionRate: Math.round(avgCompletionRate),
-            completedCourses,
-            totalEnrollments
-        };
-    });
+    return {
+      school,
+      studentCount,
+      avgCompletionRate: Math.round(avgCompletionRate),
+      completedCourses,
+      totalEnrollments
+    };
+  });
 }
 
 
-function aggregateByDistrict(studentsWithProgress) {
-    const districtMap = new Map();
+function aggregateByBlock(studentsWithProgress) {
+  const blockMap = new Map();
+  studentsWithProgress.forEach(student => {
+    const blockName = getBlockName(student);
+    if (!blockMap.has(blockName)) {
+      blockMap.set(blockName, { students: [] });
+    }
+    blockMap.get(blockName).students.push(student);
+  });
 
-    studentsWithProgress.forEach(student => {
-        const districtName = student.school?.district?.name || 'No District';
-        if (!districtMap.has(districtName)) {
-            districtMap.set(districtName, { students: [] });
-        }
-        districtMap.get(districtName).students.push(student);
-    });
+  return Array.from(blockMap.entries()).map(([block, data]) => {
+    const studentCount = data.students.length;
+    const totalEnrollments = data.students.reduce((sum, s) => sum + s.courseProgress.length, 0);
+    const completedCourses = data.students.reduce((sum, s) => sum + s.courseProgress.filter(cp => cp.isCompleted).length, 0);
+    const avgCompletionRate = studentCount > 0 ? data.students.reduce((sum, s) => {
+      const studentAvg = s.courseProgress.length > 0 ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length : 0;
+      return sum + studentAvg;
+    }, 0) / studentCount : 0;
 
-    return Array.from(districtMap.entries()).map(([district, data]) => {
-        const studentCount = data.students.length;
-        const totalEnrollments = data.students.reduce((sum, s) => sum + s.courseProgress.length, 0);
-        const completedCourses = data.students.reduce((sum, s) => sum + s.courseProgress.filter(cp => cp.isCompleted).length, 0);
-
-        const avgCompletionRate = studentCount > 0
-            ? data.students.reduce((sum, s) => {
-                const studentAvg = s.courseProgress.length > 0
-                    ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
-                    : 0;
-                return sum + studentAvg;
-            }, 0) / studentCount
-            : 0;
-
-        return {
-            district,
-            studentCount,
-            avgCompletionRate: Math.round(avgCompletionRate),
-            completedCourses,
-            totalEnrollments
-        };
-    });
+    return { block, studentCount, avgCompletionRate: Math.round(avgCompletionRate), completedCourses, totalEnrollments };
+  });
 }
 
 
 function calculateOverallCompletionRates(studentsWithProgress) {
   const totalStudents = studentsWithProgress.length;
   const totalEnrollments = studentsWithProgress.reduce((sum, student) => sum + student.courseProgress.length, 0);
-  
+
   const completedCourses = studentsWithProgress.reduce((sum, student) => {
     return sum + student.courseProgress.filter(cp => cp.isCompleted).length;
   }, 0);
 
   const avgCompletionRate = totalStudents > 0
     ? studentsWithProgress.reduce((sum, s) => {
-        const studentAvg = s.courseProgress.length > 0
-          ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
-          : 0;
-        return sum + studentAvg;
-      }, 0) / totalStudents
+      const studentAvg = s.courseProgress.length > 0
+        ? s.courseProgress.reduce((cSum, cp) => cSum + cp.completionRate, 0) / s.courseProgress.length
+        : 0;
+      return sum + studentAvg;
+    }, 0) / totalStudents
     : 0;
 
   return {
@@ -140,7 +139,7 @@ function calculateOverallCompletionRates(studentsWithProgress) {
 
 function aggregateQuizScoresByGrade(quizAttempts) {
   const gradeMap = new Map();
-  
+
   quizAttempts.forEach(attempt => {
     const grade = attempt.user.grade?.value || 'No Grade';
     if (!gradeMap.has(grade)) {
@@ -159,9 +158,9 @@ function aggregateQuizScoresByGrade(quizAttempts) {
 
 function aggregateQuizScoresBySchool(quizAttempts) {
   const schoolMap = new Map();
-  
+
   quizAttempts.forEach(attempt => {
-    const school = attempt.user.school?.name || 'No School';
+    const school = attempt.user.organizationUnit?.name || 'No School';
     if (!schoolMap.has(school)) {
       schoolMap.set(school, []);
     }
@@ -176,19 +175,18 @@ function aggregateQuizScoresBySchool(quizAttempts) {
   }));
 }
 
-function aggregateQuizScoresByDistrict(quizAttempts) {
-  const districtMap = new Map();
-  
+function aggregateQuizScoresByBlock(quizAttempts) {
+  const blockMap = new Map();
   quizAttempts.forEach(attempt => {
-    const district = attempt.user.school?.district?.name || 'No District';
-    if (!districtMap.has(district)) {
-      districtMap.set(district, []);
+    const block = getBlockName(attempt.user);
+    if (!blockMap.has(block)) {
+      blockMap.set(block, []);
     }
-    districtMap.get(district).push(attempt.score);
+    blockMap.get(block).push(attempt.score);
   });
 
-  return Array.from(districtMap.entries()).map(([district, scores]) => ({
-    district,
+  return Array.from(blockMap.entries()).map(([block, scores]) => ({
+    block,
     avgScore: scores.length > 0 ? Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 10) / 10 : 0,
     attemptCount: scores.length,
     perfectScores: scores.filter(score => score >= 95).length
@@ -197,12 +195,12 @@ function aggregateQuizScoresByDistrict(quizAttempts) {
 
 function aggregateQuizScoresByCourse(quizAttempts) {
   const courseMap = new Map();
-  
+
   quizAttempts.forEach(attempt => {
     const course = attempt.quiz.video.courseVideos?.[0]?.course;
     const courseTitle = course?.title || 'Unknown Course';
     const courseId = course?.id || 0;
-    
+
     if (!courseMap.has(courseId)) {
       courseMap.set(courseId, { title: courseTitle, scores: [] });
     }
@@ -220,11 +218,11 @@ function aggregateQuizScoresByCourse(quizAttempts) {
 
 function aggregateQuizScoresByVideo(quizAttempts) {
   const videoMap = new Map();
-  
+
   quizAttempts.forEach(attempt => {
     const videoId = attempt.quiz.videoId;
     const videoTitle = attempt.quiz.video.title;
-    
+
     if (!videoMap.has(videoId)) {
       videoMap.set(videoId, { title: videoTitle, scores: [] });
     }
@@ -242,8 +240,8 @@ function aggregateQuizScoresByVideo(quizAttempts) {
 
 function calculateOverallQuizScores(quizAttempts) {
   const totalAttempts = quizAttempts.length;
-  const avgScore = totalAttempts > 0 
-    ? Math.round((quizAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / totalAttempts) * 10) / 10 
+  const avgScore = totalAttempts > 0
+    ? Math.round((quizAttempts.reduce((sum, attempt) => sum + attempt.score, 0) / totalAttempts) * 10) / 10
     : 0;
   const perfectScores = quizAttempts.filter(attempt => attempt.score >= 95).length;
   const uniqueStudents = new Set(quizAttempts.map(attempt => attempt.userId)).size;
@@ -264,7 +262,7 @@ function calculateOverallQuizScores(quizAttempts) {
 
 function aggregateConsistencyByGrade(consistencyData) {
   const gradeMap = new Map();
-  
+
   consistencyData.forEach(data => {
     const grade = data.grade || 'No Grade';
     if (!gradeMap.has(grade)) {
@@ -283,7 +281,7 @@ function aggregateConsistencyByGrade(consistencyData) {
 
 function aggregateConsistencyBySchool(consistencyData) {
   const schoolMap = new Map();
-  
+
   consistencyData.forEach(data => {
     const school = data.school || 'No School';
     if (!schoolMap.has(school)) {
@@ -300,19 +298,18 @@ function aggregateConsistencyBySchool(consistencyData) {
   }));
 }
 
-function aggregateConsistencyByDistrict(consistencyData) {
-  const districtMap = new Map();
-  
+function aggregateConsistencyByBlock(consistencyData) {
+  const blockMap = new Map();
   consistencyData.forEach(data => {
-    const district = data.district || 'No District';
-    if (!districtMap.has(district)) {
-      districtMap.set(district, []);
+    const block = data.block || 'No Block';
+    if (!blockMap.has(block)) {
+      blockMap.set(block, []);
     }
-    districtMap.get(district).push(data.consistencyRate);
+    blockMap.get(block).push(data.consistencyRate);
   });
 
-  return Array.from(districtMap.entries()).map(([district, rates]) => ({
-    district,
+  return Array.from(blockMap.entries()).map(([block, rates]) => ({
+    block,
     avgConsistencyRate: rates.length > 0 ? Math.round(rates.reduce((sum, rate) => sum + rate, 0) / rates.length) : 0,
     studentCount: rates.length,
     highConsistencyStudents: rates.filter(rate => rate >= 70).length
@@ -321,7 +318,7 @@ function aggregateConsistencyByDistrict(consistencyData) {
 
 function calculateOverallConsistency(consistencyData) {
   const totalStudents = consistencyData.length;
-  const avgConsistencyRate = totalStudents > 0 
+  const avgConsistencyRate = totalStudents > 0
     ? Math.round(consistencyData.reduce((sum, data) => sum + data.consistencyRate, 0) / totalStudents)
     : 0;
   const highConsistencyStudents = consistencyData.filter(data => data.consistencyRate >= 70).length;
@@ -336,18 +333,19 @@ function calculateOverallConsistency(consistencyData) {
 
 
 module.exports = {
+  getBlockName,
   aggregateByGrade,
   aggregateBySchool,
-  aggregateByDistrict,
+  aggregateByBlock,
   calculateOverallCompletionRates,
   aggregateQuizScoresByGrade,
   aggregateQuizScoresBySchool,
-  aggregateQuizScoresByDistrict,
+  aggregateQuizScoresByBlock,
   aggregateQuizScoresByCourse,
   aggregateQuizScoresByVideo,
   calculateOverallQuizScores,
   aggregateConsistencyByGrade,
   aggregateConsistencyBySchool,
-  aggregateConsistencyByDistrict,
+  aggregateConsistencyByBlock,
   calculateOverallConsistency,
 };

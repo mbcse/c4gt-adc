@@ -1,16 +1,68 @@
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
-function buildUserFilter(filters = {}) {
-  const where = { role: 'STUDENT' };
+const getOrgUnitDescendants = async (orgUnitId) => {
+  if (!orgUnitId) return [];
+  const children = await prisma.organizationUnit.findMany({
+    where: { parentId: orgUnitId },
+    select: { id: true },
+  });
+
+  const descendantIds = children.map(c => c.id);
   
-  if (filters.gradeId) where.gradeId = parseInt(filters.gradeId);
-  if (filters.schoolId) where.schoolId = parseInt(filters.schoolId);
-  if (filters.districtId) where.districtId = parseInt(filters.districtId);
-  if (filters.studentId) where.id = parseInt(filters.studentId);
+  for (const childId of descendantIds) {
+    const grandchildrenIds = await getOrgUnitDescendants(childId);
+    descendantIds.push(...grandchildrenIds);
+  }
   
-  return where;
-}
+  return descendantIds;
+};
+
+const buildUserFilter = async (filters = {}, user) => {
+  const filterConditions = { role: "STUDENT" };
+
+  // Data Scoping
+  if (user && user.role !== 'SUPERADMIN' && user.organizationUnitId) {
+    const descendantIds = await getOrgUnitDescendants(user.organizationUnitId);
+    const accessibleOrgUnitIds = [user.organizationUnitId, ...descendantIds];
+    filterConditions.organizationUnitId = { in: accessibleOrgUnitIds };
+  }
+
+  // Apply user-selected filters on top of the security scope.
+  if (filters.schoolId) {
+    const schoolId = parseInt(filters.schoolId, 10);
+    if (filterConditions.organizationUnitId?.in) {
+      if (filterConditions.organizationUnitId.in.includes(schoolId)) {
+        filterConditions.organizationUnitId.in = [schoolId];
+      } else {
+        // schoolId not in user's accessible org units disables access
+        filterConditions.organizationUnitId.in = [];
+      }
+    } else {
+      filterConditions.organizationUnitId = { in: [schoolId] };
+    }
+  } else if (filters.blockId) {
+    const blockId = parseInt(filters.blockId, 10);
+    const descendantSchoolIds = await getOrgUnitDescendants(blockId);
+    const blockAndSchoolIds = [blockId, ...descendantSchoolIds];
+
+    if (filterConditions.organizationUnitId?.in) {
+      filterConditions.organizationUnitId.in = filterConditions.organizationUnitId.in.filter(id => blockAndSchoolIds.includes(id));
+    } else {
+      filterConditions.organizationUnitId = { in: blockAndSchoolIds };
+    }
+  }
+
+  if (filters.gradeId) {
+    filterConditions.gradeId = parseInt(filters.gradeId, 10);
+  }
+
+  if (filters.studentId) {
+    filterConditions.id = parseInt(filters.studentId, 10);
+  }
+
+  return filterConditions;
+};
 
 function buildDateFilter(filters = {}) {
   const dateFilter = {};
@@ -85,4 +137,5 @@ module.exports = {
   buildUserFilter,
   buildDateFilter,
   getEnrolledCoursesForStudents,
+  getOrgUnitDescendants,
 };

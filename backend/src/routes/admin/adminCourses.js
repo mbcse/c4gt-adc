@@ -11,6 +11,7 @@ router.put('/:id', adminCourseController.updateCourse);
 router.delete('/:id', adminCourseController.deleteCourse);
 
 router.post('/assign', adminCourseController.assignCourse);
+router.post('/assign-bulk', adminCourseController.assignCourseBulk);
 router.delete('/assign', adminCourseController.unassignCourse);
 router.get('/assignments', adminCourseController.listAssignments);
 router.get('/:id', adminCourseController.getCourse);

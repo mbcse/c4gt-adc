@@ -5,7 +5,7 @@ const { buildUserFilter, buildDateFilter } = require('../../utils/filterUtils');
 const {
   aggregateQuizScoresByGrade,
   aggregateQuizScoresBySchool,
-  aggregateQuizScoresByDistrict,
+  aggregateQuizScoresByBlock,
   aggregateQuizScoresByCourse,
   aggregateQuizScoresByVideo,
   calculateOverallQuizScores
@@ -13,9 +13,9 @@ const {
 
 class QuizService {
 
-  async getAverageQuizScores(filters = {}) {
+  async getAverageQuizScores(filters = {}, user) {
     try {
-      const userFilter = buildUserFilter(filters);
+      const userFilter = await buildUserFilter(filters, user);
       const dateFilter = buildDateFilter(filters);
 
       let quizWhereClause = {
@@ -48,7 +48,7 @@ class QuizService {
           user: {
             include: {
               grade: true,
-              school: { include: { district: true } }
+              organizationUnit: { include: { parent: true } }
             }
           },
           quiz: {
@@ -69,7 +69,7 @@ class QuizService {
       return {
         byGrade: aggregateQuizScoresByGrade(quizAttempts),
         bySchool: aggregateQuizScoresBySchool(quizAttempts),
-        byDistrict: aggregateQuizScoresByDistrict(quizAttempts),
+        byBlock: aggregateQuizScoresByBlock(quizAttempts),
         byCourse: aggregateQuizScoresByCourse(quizAttempts),
         byVideo: aggregateQuizScoresByVideo(quizAttempts),
         overall: calculateOverallQuizScores(quizAttempts)

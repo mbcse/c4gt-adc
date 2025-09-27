@@ -120,19 +120,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.DistrictScalarFieldEnum = {
+exports.Prisma.OrganizationUnitScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  type: 'type',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SchoolScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  districtId: 'districtId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  parentId: 'parentId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -142,9 +136,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   createdAt: 'createdAt',
-  gradeId: 'gradeId',
-  schoolId: 'schoolId',
-  districtId: 'districtId'
+  organizationUnitId: 'organizationUnitId',
+  gradeId: 'gradeId'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -185,6 +178,14 @@ exports.Prisma.CourseScalarFieldEnum = {
   languageId: 'languageId'
 };
 
+exports.Prisma.OrganizationAssignmentScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  organizationUnitId: 'organizationUnitId',
+  assignedAt: 'assignedAt',
+  assignedById: 'assignedById'
+};
+
 exports.Prisma.CourseAssignmentScalarFieldEnum = {
   id: 'id',
   courseId: 'courseId',
@@ -222,7 +223,9 @@ exports.Prisma.WatchLogScalarFieldEnum = {
   pauseEvents: 'pauseEvents',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  lastUpdateTime: 'lastUpdateTime'
+  lastUpdateTime: 'lastUpdateTime',
+  lastUserAgent: 'lastUserAgent',
+  lastEventType: 'lastEventType'
 };
 
 exports.Prisma.QuizScalarFieldEnum = {
@@ -240,15 +243,6 @@ exports.Prisma.QuizAttemptScalarFieldEnum = {
   score: 'score',
   answers: 'answers',
   completedAt: 'completedAt'
-};
-
-exports.Prisma.AnalyticsEventScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  videoId: 'videoId',
-  eventType: 'eventType',
-  data: 'data',
-  timestamp: 'timestamp'
 };
 
 exports.Prisma.SortOrder = {
@@ -280,6 +274,13 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.UnitType = exports.$Enums.UnitType = {
+  STATE: 'STATE',
+  DISTRICT: 'DISTRICT',
+  BLOCK: 'BLOCK',
+  SCHOOL: 'SCHOOL'
+};
+
 exports.Role = exports.$Enums.Role = {
   SUPERADMIN: 'SUPERADMIN',
   ADMIN: 'ADMIN',
@@ -288,8 +289,7 @@ exports.Role = exports.$Enums.Role = {
 };
 
 exports.Prisma.ModelName = {
-  District: 'District',
-  School: 'School',
+  OrganizationUnit: 'OrganizationUnit',
   User: 'User',
   Category: 'Category',
   SkillLevel: 'SkillLevel',
@@ -297,13 +297,13 @@ exports.Prisma.ModelName = {
   Language: 'Language',
   Tag: 'Tag',
   Course: 'Course',
+  OrganizationAssignment: 'OrganizationAssignment',
   CourseAssignment: 'CourseAssignment',
   CourseVideo: 'CourseVideo',
   Video: 'Video',
   WatchLog: 'WatchLog',
   Quiz: 'Quiz',
-  QuizAttempt: 'QuizAttempt',
-  AnalyticsEvent: 'AnalyticsEvent'
+  QuizAttempt: 'QuizAttempt'
 };
 
 /**

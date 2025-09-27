@@ -23,33 +23,27 @@ const progressUpdateLimiter = rateLimit({
 const validateSession = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const videoId = req.params.videoId;
-    const userAgent = req.headers['user-agent'];
+    const videoId = parseInt(req.params.videoId, 10);
+    const currentUserAgent = req.headers['user-agent'];
 
-    const recentSessions = await prisma.analyticsEvent.findMany({
+    const watchLog = await prisma.watchLog.findUnique({
       where: {
-        userId,
-        videoId: parseInt(videoId),
-        eventType: 'PROGRESS_UPDATE',
-        timestamp: {
-          gte: new Date(Date.now() - 30 * 60 * 1000)
-        }
+        userId_videoId: { userId, videoId }
       },
       select: {
-        data: true,
-        timestamp: true
-      },
-      orderBy: { timestamp: 'desc' },
-      take: 5
+        lastUserAgent: true,
+        lastUpdateTime: true
+      }
     });
 
-    const uniqueUserAgents = new Set(
-      recentSessions
-        .map(s => s.data?.userAgent)
-        .filter(Boolean)
-    );
+    if (!watchLog || !watchLog.lastUpdateTime || !watchLog.lastUserAgent) {
+      return next();
+    }
 
-    if (uniqueUserAgents.size > 1) {
+    const isRecent = new Date(Date.now() - 45 * 1000) < watchLog.lastUpdateTime;
+    const isDifferentDevice = watchLog.lastUserAgent !== currentUserAgent;
+
+    if (isRecent && isDifferentDevice) {
       return res.status(400).json({
         error: 'Multiple devices detected. Please complete watching on one device.',
         code: 'MULTIPLE_DEVICES'
@@ -76,7 +70,7 @@ const validateProgressData = (req, res, next) => {
 
   if (watchedPercentage !== undefined) {
     if (typeof watchedPercentage !== 'number' ||
-        watchedPercentage < 0 || watchedPercentage > 100) {
+      watchedPercentage < 0 || watchedPercentage > 100) {
       errors.push('Invalid watchedPercentage: must be a number between 0 and 100');
     }
   }
@@ -97,11 +91,11 @@ const validateProgressData = (req, res, next) => {
 
   if (Array.isArray(skipEvents)) {
     const invalidSkips = skipEvents.filter(event => {
-      return !event.timestamp || 
-             typeof event.from !== 'number' || 
-             typeof event.to !== 'number';
+      return !event.timestamp ||
+        typeof event.from !== 'number' ||
+        typeof event.to !== 'number';
     });
-    
+
     if (invalidSkips.length > 0) {
       errors.push('Invalid skip event structure: missing timestamp, from, or to values');
     }
@@ -111,7 +105,7 @@ const validateProgressData = (req, res, next) => {
     const invalidPauses = pauseEvents.filter(event => {
       return !event.timestamp || typeof event.currentTime !== 'number';
     });
-    
+
     if (invalidPauses.length > 0) {
       errors.push('Invalid pause event structure: missing timestamp or currentTime');
     }

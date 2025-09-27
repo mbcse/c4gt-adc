@@ -1,15 +1,15 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { Link, useLocation,useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { X, GraduationCap, BarChart3, Users, BookOpen, TrendingUp, ClipboardCheck, FileText, Settings, Bell, LogOut } from 'lucide-react'
 import { clsx } from 'clsx'
 import { useAuth } from '@/shared/context/AuthContext'
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: BarChart3 },
-  { name: 'Students', href: '/admin/students', icon: Users },
-  { name: 'Courses', href: '/admin/courses', icon: BookOpen },
-  { name: 'User Management', href: '/admin/users', icon: Settings },
+  { name: 'Dashboard', href: '/admin', icon: BarChart3, roles: ["SUPERADMIN", "ADMIN", "INSTRUCTOR"] },
+  { name: 'Students', href: '/admin/students', icon: Users, roles: ["SUPERADMIN", "ADMIN", "INSTRUCTOR"] },
+  { name: 'Courses', href: '/admin/courses', icon: BookOpen, roles: ["SUPERADMIN", "ADMIN"] },
+  { name: 'User Management', href: '/admin/users', icon: Settings, roles: ["SUPERADMIN", "ADMIN"] },
 ]
 
 interface SidebarProps {
@@ -20,10 +20,14 @@ interface SidebarProps {
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
   const { logout, user } = useAuth()
   const userName = user?.name || 'Admin User'
   const initials = getInitials(userName)
+
+  const filteredNavigation = navigation.filter(
+    (item) => user && item.roles.includes(user.role)
+  );
 
   const handleLogout = () => {
     logout()
@@ -40,7 +44,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
-              {navigation.map((item) => {
+              {filteredNavigation.map((item) => {
                 const isActive = location.pathname === item.href
                 return (
                   <li key={item.name}>
@@ -75,8 +79,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               </div>
               <div className="flex flex-col">
                 <span className="sr-only">Your profile</span>
-                <span aria-hidden="true">testadmin</span>
-                <span className="text-xs text-gray-400">Administrator</span>
+                <span aria-hidden="true">{userName}</span>
+                <span className="text-xs text-gray-400">{user.role}</span>
               </div>
             </div>
             <button
@@ -173,7 +177,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <ul role="list" className="flex flex-1 flex-col gap-y-1">
               <li>
                 <ul role="list" className="space-y-1">
-                  {navigation.map((item) => {
+                  {filteredNavigation.map((item) => {
                     const isActive = location.pathname === item.href
                     return (
                       <li key={item.name}>
@@ -191,8 +195,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                           <item.icon
                             className={clsx(
                               "h-6 w-6 shrink-0 transition-colors duration-200",
-                              isActive 
-                                ? 'text-white' 
+                              isActive
+                                ? 'text-white'
                                 : 'text-gray-400 group-hover:text-primary-700'
                             )}
                             aria-hidden="true"
@@ -220,8 +224,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                   </div>
                   {sidebarExpanded && (
                     <div className="flex flex-col transition-opacity duration-300">
-                      <span className="text-sm font-semibold text-gray-900">testadmin</span>
-                      <span className="text-xs text-gray-400">Administrator</span>
+                      <span className="text-sm font-semibold text-gray-900">{userName}</span>
+                      <span className="text-xs text-gray-400">{user.role}</span>
                     </div>
                   )}
                 </div>

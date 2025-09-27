@@ -1,13 +1,5 @@
-// src/api/auth/authAPI.ts
 import api from './index';
-import type { Role } from '@/types/index';
-
-export interface User {
-  id: string | number;
-  name: string;
-  email: string;
-  role: Role;
-}
+import type { Role, User, OrganizationUnit } from '@/types/index';
 
 export interface LoginData {
   email: string;
@@ -18,6 +10,8 @@ export interface SignupData {
   name: string;
   email: string;
   password: string;
+  organizationUnitId?: number;
+  gradeId?: number;
 }
 
 export const authAPI = {

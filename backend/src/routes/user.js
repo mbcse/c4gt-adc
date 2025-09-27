@@ -4,12 +4,11 @@ const requireAuth = require("../middlewares/requireAuth");
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
-// GET /profile - user profile with enriched recent activity data
+// GET /profile - user profile with recent activity data
 router.get("/profile", requireAuth, async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // Fetch basic user info with counts and quiz avg
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -18,6 +17,19 @@ router.get("/profile", requireAuth, async (req, res) => {
         email: true,
         role: true,
         createdAt: true,
+        organizationUnitId: true,
+        organizationUnit: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            parentId: true
+          }
+        },
+        gradeId: true,
+        grade: {
+          select: { id: true, value: true }
+        },
         assignments: {
           select: { courseId: true },
         },
@@ -37,16 +49,14 @@ router.get("/profile", requireAuth, async (req, res) => {
     const avgQuizScore =
       user.quizAttempts.length > 0
         ? Math.round(
-            user.quizAttempts.reduce((sum, q) => sum + q.score, 0) /
-              user.quizAttempts.length
-          )
+          user.quizAttempts.reduce((sum, q) => sum + q.score, 0) /
+          user.quizAttempts.length
+        )
         : null;
 
     // Fetch recent activity (limit to last 5):
 
     // 1. Completed assignments (courses completed)
-    // Here we consider assignments completed if watchLogs for all course videos are completed - simplified here as assignments only
-    // If you have a more detailed status, you can enhance this logic.
     const recentEnrollments = await prisma.courseAssignment.findMany({
       where: { userId },
       orderBy: { assignedAt: "desc" },
@@ -93,7 +103,6 @@ router.get("/profile", requireAuth, async (req, res) => {
       },
     });
 
-    // Build a unified recentActivity array with normalization for frontend
     const recentActivity = [];
 
     // Map enrollments to recentActivity
@@ -146,7 +155,6 @@ router.get("/profile", requireAuth, async (req, res) => {
     recentActivity.sort((a, b) => new Date(b.date) - new Date(a.date));
     const recentActivitySlice = recentActivity.slice(0, 5);
 
-    // Respond with combined data
     res.json({
       user: {
         id: user.id,
@@ -154,6 +162,10 @@ router.get("/profile", requireAuth, async (req, res) => {
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
+        organizationUnitId: user.organizationUnitId,
+        organizationUnit: user.organizationUnit,
+        gradeId: user.gradeId,
+        grade: user.grade,
         enrolledCourses: enrolledCoursesCount,
         avgQuizScore,
       },

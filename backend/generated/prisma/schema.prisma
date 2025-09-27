@@ -8,25 +8,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model District {
+model OrganizationUnit {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
-  schools   School[]
-  users     User[]
+  name      String
+  type      UnitType
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  parentId Int?
+  parent   OrganizationUnit?  @relation("Hierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children OrganizationUnit[] @relation("Hierarchy")
+
+  users                   User[]
+  availableGrades         Grade[]
+  organizationAssignments OrganizationAssignment[]
+
+  @@index([parentId])
+  @@index([type])
 }
 
-model School {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  districtId Int
-  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
-  users      User[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([districtId])
+enum UnitType {
+  STATE
+  DISTRICT
+  BLOCK
+  SCHOOL
 }
 
 model User {
@@ -37,22 +42,18 @@ model User {
   role      Role
   createdAt DateTime @default(now())
 
-  gradeId    Int?
-  schoolId   Int?
-  districtId Int?
+  organizationUnitId Int?
+  organizationUnit   OrganizationUnit? @relation(fields: [organizationUnitId], references: [id], onDelete: SetNull)
 
-  grade    Grade?    @relation(fields: [gradeId], references: [id], onDelete: SetNull)
-  school   School?   @relation(fields: [schoolId], references: [id], onDelete: SetNull)
-  district District? @relation(fields: [districtId], references: [id], onDelete: SetNull)
+  gradeId Int?
+  grade   Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)
 
-  assignments    CourseAssignment[]
-  quizAttempts   QuizAttempt[]
-  watchLogs      WatchLog[]
-  AnalyticsEvent AnalyticsEvent[]
+  assignments  CourseAssignment[]
+  quizAttempts QuizAttempt[]
+  watchLogs    WatchLog[]
 
+  @@index([organizationUnitId])
   @@index([gradeId])
-  @@index([schoolId])
-  @@index([districtId])
   @@index([role])
 }
 
@@ -69,10 +70,11 @@ model SkillLevel {
 }
 
 model Grade {
-  id      Int      @id @default(autoincrement())
-  value   String   @unique
+  id      Int                @id @default(autoincrement())
+  value   String             @unique
   courses Course[]
   users   User[]
+  schools OrganizationUnit[]
 }
 
 model Language {
@@ -88,23 +90,37 @@ model Tag {
 }
 
 model Course {
-  id           Int                @id @default(autoincrement())
-  title        String
-  description  String?
-  createdBy    String?
-  createdAt    DateTime           @default(now())
-  thumbnailUrl String?
-  category     Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId   Int?
-  skillLevel   SkillLevel?        @relation(fields: [skillLevelId], references: [id], onDelete: SetNull)
-  skillLevelId Int?
-  grade        Grade?             @relation(fields: [gradeId], references: [id], onDelete: SetNull)
-  gradeId      Int?
-  language     Language?          @relation(fields: [languageId], references: [id], onDelete: SetNull)
-  languageId   Int?
-  tags         Tag[]              @relation("CourseTags")
-  assignments  CourseAssignment[]
-  courseVideos CourseVideo[]
+  id                      Int                      @id @default(autoincrement())
+  title                   String
+  description             String?
+  createdBy               String?
+  createdAt               DateTime                 @default(now())
+  thumbnailUrl            String?
+  category                Category?                @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId              Int?
+  skillLevel              SkillLevel?              @relation(fields: [skillLevelId], references: [id], onDelete: SetNull)
+  skillLevelId            Int?
+  grade                   Grade?                   @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  gradeId                 Int?
+  language                Language?                @relation(fields: [languageId], references: [id], onDelete: SetNull)
+  languageId              Int?
+  tags                    Tag[]                    @relation("CourseTags")
+  assignments             CourseAssignment[]
+  courseVideos            CourseVideo[]
+  organizationAssignments OrganizationAssignment[]
+}
+
+model OrganizationAssignment {
+  id                 Int      @id @default(autoincrement())
+  courseId           Int
+  organizationUnitId Int
+  assignedAt         DateTime @default(now())
+  assignedById       Int? // The admin who created this assignment
+
+  course           Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  organizationUnit OrganizationUnit @relation(fields: [organizationUnitId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, organizationUnitId], name: "course_org_unique_assignment")
 }
 
 model CourseAssignment {
@@ -143,8 +159,6 @@ model Video {
   courseVideos CourseVideo[]
   quiz         Quiz?
   watchLogs    WatchLog[]
-
-  AnalyticsEvent AnalyticsEvent[]
 }
 
 model WatchLog {
@@ -161,6 +175,8 @@ model WatchLog {
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   video             Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
   lastUpdateTime    DateTime?
+  lastUserAgent     String?
+  lastEventType     String?
 
   @@unique([userId, videoId])
   @@index([userId, updatedAt(sort: Desc)])
@@ -188,20 +204,6 @@ model QuizAttempt {
   completedAt DateTime
   quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model AnalyticsEvent {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  videoId   Int
-  eventType String
-  data      Json
-  timestamp DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
-
-  @@index([videoId, eventType, timestamp(sort: Desc)])
-  @@index([userId, eventType, timestamp(sort: Desc)])
 }
 
 enum Role {

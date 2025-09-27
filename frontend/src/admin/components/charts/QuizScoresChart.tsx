@@ -17,7 +17,7 @@ import { QuizScoreData } from '@/api/adminAnalyticsAPI';
 
 interface QuizScoresChartProps {
   data: QuizScoreData[];
-  dimension: 'grade' | 'school' | 'district' | 'course' | 'video';
+  dimension: 'grade' | 'school' | 'block' | 'course' | 'video';
   chartType?: 'bar' | 'line' | 'scatter';
   loading?: boolean;
 }
@@ -78,7 +78,7 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
   const getLabel = (item: QuizScoreData) => {
     if (dimension === 'grade') return `Grade ${item.grade}`;
     if (dimension === 'school') return item.school;
-    if (dimension === 'district') return item.district;
+    if (dimension === 'block') return item.block;
     if (dimension === 'course') return item.courseTitle;
     if (dimension === 'video') return item.videoTitle;
     return 'Unknown';
@@ -105,7 +105,7 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
         return (
           <LineChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
+            <XAxis
               dataKey="name"
               stroke="#6b7280"
               fontSize={12}
@@ -114,7 +114,7 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
               textAnchor="end"
               height={80}
             />
-            <YAxis 
+            <YAxis
               stroke="#6b7280"
               fontSize={12}
               tick={{ fill: '#6b7280' }}
@@ -123,10 +123,10 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Line 
-              type="monotone" 
-              dataKey="score" 
-              stroke="#3B82F6" 
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#3B82F6"
               strokeWidth={3}
               dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }}
               activeDot={{ r: 8 }}
@@ -139,15 +139,15 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
         return (
           <ScatterChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="attempts" 
+            <XAxis
+              dataKey="attempts"
               name="Attempts"
               stroke="#6b7280"
               fontSize={12}
               tick={{ fill: '#6b7280' }}
               label={{ value: 'Total Attempts', position: 'insideBottom', offset: -10 }}
             />
-            <YAxis 
+            <YAxis
               dataKey="score"
               name="Score"
               stroke="#6b7280"
@@ -165,7 +165,7 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
         return (
           <BarChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
+            <XAxis
               dataKey="name"
               stroke="#6b7280"
               fontSize={12}
@@ -174,7 +174,7 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
               textAnchor="end"
               height={80}
             />
-            <YAxis 
+            <YAxis
               stroke="#6b7280"
               fontSize={12}
               tick={{ fill: '#6b7280' }}
@@ -183,16 +183,16 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar 
-              dataKey="score" 
+            <Bar
+              dataKey="score"
               fill="#3B82F6"
               radius={[4, 4, 0, 0]}
               stroke="#2563EB"
               strokeWidth={1}
               name="Average Score"
             />
-            <Bar 
-              dataKey="perfectRate" 
+            <Bar
+              dataKey="perfectRate"
               fill="#10B981"
               radius={[4, 4, 0, 0]}
               stroke="#059669"
@@ -276,10 +276,10 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
           <thead>
             <tr className="border-t border-gray-200">
               <th className="px-4 py-2 text-left font-medium text-gray-700">
-                {dimension === 'grade' ? 'Grade' : 
-                 dimension === 'school' ? 'School' : 
-                 dimension === 'district' ? 'District' :
-                 dimension === 'course' ? 'Course' : 'Video'}
+                {dimension === 'grade' ? 'Grade' :
+                  dimension === 'school' ? 'School' :
+                    dimension === 'block' ? 'Block' :
+                      dimension === 'course' ? 'Course' : 'Video'}
               </th>
               <th className="px-4 py-2 text-center font-medium text-gray-700">Avg Score</th>
               <th className="px-4 py-2 text-center font-medium text-gray-700">Attempts</th>
@@ -294,20 +294,18 @@ const QuizScoresChart: React.FC<QuizScoresChartProps> = ({
                   {item.name}
                 </td>
                 <td className="px-4 py-2 text-center">
-                  <span className={`font-medium ${
-                    item.score >= 85 ? 'text-green-600' :
-                    item.score >= 70 ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
+                  <span className={`font-medium ${item.score >= 85 ? 'text-green-600' :
+                      item.score >= 70 ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
                     {item.score}%
                   </span>
                 </td>
                 <td className="px-4 py-2 text-center text-gray-700">{item.attempts}</td>
                 <td className="px-4 py-2 text-center text-purple-600 font-medium">{item.perfectScores}</td>
                 <td className="px-4 py-2 text-center">
-                  <span className={`font-medium ${
-                    item.perfectRate >= 20 ? 'text-green-600' :
-                    item.perfectRate >= 10 ? 'text-yellow-600' : 'text-gray-600'
-                  }`}>
+                  <span className={`font-medium ${item.perfectRate >= 20 ? 'text-green-600' :
+                      item.perfectRate >= 10 ? 'text-yellow-600' : 'text-gray-600'
+                    }`}>
                     {item.perfectRate}%
                   </span>
                 </td>

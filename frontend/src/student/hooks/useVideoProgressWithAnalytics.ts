@@ -179,10 +179,8 @@ export function useVideoProgressWithAnalytics({
         const now = Date.now();
         if (now - lastUpdateTime.current > 5000) {
           lastUpdateTime.current = now;
-          sendAnalyticsEvent("video_progress", {
-            currentTime: playedSeconds,
-            percentWatched: watchedPercentage,
-          });
+
+          sendAnalyticsEvent("PROGRESS_UPDATE", newProgress);
 
           debouncedUpdate(newProgress);
         }
@@ -193,7 +191,7 @@ export function useVideoProgressWithAnalytics({
 
   const handlePlay = useCallback(
     (currentTime: number) => {
-      sendAnalyticsEvent("video_play", { currentTime });
+      sendAnalyticsEvent("PLAY", { currentTime });
     },
     [sendAnalyticsEvent]
   );
@@ -202,7 +200,7 @@ export function useVideoProgressWithAnalytics({
     (currentTime: number) => {
       const pauseEvent = { timestamp: Date.now(), currentTime };
       pauseEventsRef.current.push(pauseEvent);
-      sendAnalyticsEvent("video_pause", { currentTime });
+      sendAnalyticsEvent("PAUSE", { currentTime });
     },
     [sendAnalyticsEvent]
   );
@@ -215,7 +213,7 @@ export function useVideoProgressWithAnalytics({
 
       const skipEvent = { timestamp: Date.now(), from, to };
       skipEventsRef.current.push(skipEvent);
-      sendAnalyticsEvent("video_seek", { seekFrom: from, seekTo: to });
+      sendAnalyticsEvent("SEEK", { seekFrom: from, seekTo: to });
 
       const skipDistance = Math.abs(to - from);
       const isForwardSkip = to > from;
@@ -232,8 +230,8 @@ export function useVideoProgressWithAnalytics({
       ) {
         console.warn(`🚨 EXCESSIVE SKIPPING DETECTED: ${skipDistance}s skip, ${recentSkips.length} recent skips`);
         setIsViolationActive(true);
-        if (onSeekViolation) { 
-          onSeekViolation(); 
+        if (onSeekViolation) {
+          onSeekViolation();
         }
         return;
       }
@@ -259,9 +257,9 @@ export function useVideoProgressWithAnalytics({
       onBackendProgressUpdate(finalProgress);
     }
 
-    sendAnalyticsEvent("video_ended", {});
+    sendAnalyticsEvent("ENDED", {});
 
-    // **Immediately update backend on video end (no debounce)**
+    // Immediately update backend on video end
     try {
       await api.post(`/videos/${videoId}/progress`, finalProgress);
       setLastPersistedSeconds(finalProgress.totalWatchTime || duration);
@@ -313,7 +311,7 @@ export function useVideoProgressWithAnalytics({
 
   const resetViolationState = useCallback(() => {
     setIsViolationActive(false);
-    skipEventsRef.current = []; 
+    skipEventsRef.current = [];
   }, []);
 
   return {

@@ -42,12 +42,12 @@ export default function Index() {
   const [assignedCourses, setAssignedCourses] = useState<any[]>([]);
   const [loadingCourses, setLoadingCourses] = useState(true);
 
-const {
+  const {
     summary,
     activityCalendar,
-    studyTimePatterns, 
+    studyTimePatterns,
     fetchStudyTimePatterns,
-    loading: loadingAnalytics, 
+    loading: loadingAnalytics,
     error: analyticsError,
   } = useStudentAnalytics();
 
@@ -103,15 +103,13 @@ const {
     }
   }, [fetchStudyTimePatterns]);
 
- const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  
+  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
   // Create a map of the weekly pattern data for easy lookup
-  // studyTimePatterns = [{period: 'Mon', studyTime: 0.01}, {period: 'Tue', studyTime: 0.02}, ...]
   const weeklyPatternMap = new Map(
-     (studyTimePatterns || []).map(item => [item.period, item.studyTime])
+    (studyTimePatterns || []).map(item => [item.period, item.studyTime])
   );
 
-  // Build the final array for the chart, ensuring all 7 days are present in order
   const dynamicDailyData = dayLabels.map(day => {
     const hours = weeklyPatternMap.get(day) || 0;
     return {
@@ -136,154 +134,68 @@ const {
   }
 
   if (analyticsError) {
-    // Optionally handle analytics error (e.g., show a default state)
     console.error("Analytics Error:", analyticsError);
-    // You could still render the dashboard but the stats cards will show 0
   }
-
-
-  // Top 3 most recent achievements (from achievements page)
-  const recentAchievements = [
-    {
-      id: 1,
-      title: "Quick Learner",
-      description: "Complete 15 lessons in a week",
-      icon: Zap,
-      bgColor: "bg-gradient-to-r from-blue-500 to-purple-500",
-      earnedDate: "2024-02-15",
-      points: 50,
-    },
-    {
-      id: 2,
-      title: "Perfect Score",
-      description: "Get 100% on 8 quizzes",
-      icon: Star,
-      bgColor: "bg-gradient-to-r from-emerald-500 to-teal-500",
-      earnedDate: "2024-02-10",
-      points: 100,
-    },
-    {
-      id: 3,
-      title: "Quiz Master",
-      description: "Score 90%+ on 5 quizzes in a row",
-      icon: Trophy,
-      bgColor: "bg-gradient-to-r from-orange-500 to-amber-500",
-      earnedDate: "2024-02-08",
-      points: 75,
-    },
-  ];
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Dashboard Header */}
         <div className="text-center py-8 mb-6">
+          <img
+            src="/logo.jpeg"
+            alt="App Logo"
+            className="w-24 h-auto mx-auto mb-5 rounded-full shadow-md"
+            loading="lazy"
+          />
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl">
-              <GraduationCap className="h-6 w-6 md:h-8 md:w-8 text-white" />
-            </div>
+
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight pb-2">
-              Learning Dashboard
+              Rohtak Guided Learning Tracker
             </h1>
           </div>
           <p className="text-lg text-gray-600">
-            Step in • Power up • Rise high! 
+            Step in • Power up • Rise high!
           </p>
         </div>
         {/* Welcome Card */}
-        <Card className="bg-transparent text-slate-800 border-4 border-transparent bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 p-[2px] overflow-hidden relative shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl">
-          <div className="bg-gradient-to-br from-white/95 via-white/98 to-white/95 rounded-lg h-full">
+        <Card
+          className="relative flex items-center text-white overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl min-h-[400px] bg-cover bg-center"
+          style={{ backgroundImage: "url('/welcome.png')" }}
+        >
+          <div className="absolute inset-0 bg-black/50" />
+
+          <div className="relative z-10 w-full">
             <CardContent className="p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <Sparkles className="h-6 w-6 text-purple-500" />
-                    <span className="text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full">
-                      Welcome Back!
-                    </span>
-                  </div>
-                  <span className="text-4xl font-bold mb-2 bg-gradient-to-r from-violet-600 to-purple-700 bg-clip-text text-transparent">
-                    Hello, {user?.name || 'User'}!
+              <div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <Sparkles className="h-6 w-6 text-white" />
+                  <span className="text-sm bg-white/20 text-white px-3 py-1 rounded-full backdrop-blur-md">
+                    Welcome Back!
                   </span>
-                  <p className="text-xl text-slate-600 mb-6">
-                    Ready to unlock new skills today? You're on fire! <Flame className="h-5 w-5 text-orange-500" />
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button
-                      onClick={() => {
-                        const coursesSection = document.getElementById('courses-section');
-                        coursesSection?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg px-6 py-3 rounded-xl"
-                    >
-                      <Play className="h-5 w-5 mr-2" />
-                      Keep Going
-                    </Button>
-                  </div>
                 </div>
-                <div className="relative ml-8 hidden lg:block">
-                  <div className="w-32 h-32 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center shadow-inner">
-                    <svg className="w-16 h-16 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 9.99 5.16-.25 9-4.44 9-9.99V7l-10-5z" />
-                      <path d="M12 8.5L8.5 12L12 15.5L15.5 12L12 8.5z" fill="white" />
-                    </svg>
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl flex items-center justify-center shadow-lg">
-                    <Zap className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-green-400 to-teal-400 rounded-full shadow-lg"></div>
+                <span className="text-4xl font-bold mb-2 text-white drop-shadow-lg">
+                  Hello, {user?.name || 'User'}!
+                </span>
+                <p className="text-xl text-white/90 mb-6 flex items-center gap-2">
+                  Ready to unlock new skills today? You're on fire! <Flame className="h-5 w-5 text-orange-400" />
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button
+                    onClick={() => {
+                      const coursesSection = document.getElementById('courses-section');
+                      coursesSection?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="bg-white/10 hover:bg-white/20 backdrop-blur-lg border border-white/20 text-white shadow-lg px-6 py-3 rounded-xl"
+                  >
+                    <Play className="h-5 w-5 mr-2" />
+                    Keep Going
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </div>
         </Card>
-
-        {/* Achievement Badges Row */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-amber-500" />
-              <h2 className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Your Achievements
-              </h2>
-            </div>
-            <Link
-              to="/achievements"
-              className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center"
-            >
-              View More <ChevronRight className="h-4 w-4 ml-1" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {recentAchievements.map((badge) => (
-              <Card
-                key={badge.id}
-                className={`${badge.bgColor} text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer hover:scale-105`}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <badge.icon className="h-6 w-6 text-white/80" />
-                    <Trophy className="h-4 w-4 text-white/60" />
-                  </div>
-                  <div className="text-lg font-bold text-white mb-1">
-                    {badge.title}
-                  </div>
-                  <p className="text-xs text-white/80 mb-2">{badge.description}</p>
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span className="flex items-center">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {new Date(badge.earnedDate).toLocaleDateString()}
-                    </span>
-                    <span className="flex items-center">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      {badge.points} pts
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
 
         {/* Mixed Layout Section */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -368,7 +280,6 @@ const {
 
           {/* Side Panel - Weekly Progress */}
           <div className="space-y-4">
-            {/* 6. Replace hardcoded data with summary hook data */}
             <Card className="relative overflow-hidden bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-500 shadow-xl border-4 border-blue-200">
               {/* Decorative elements */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50"></div>
@@ -398,11 +309,10 @@ const {
                   <Clock className="h-6 w-6 text-white mx-auto mb-2 drop-shadow-lg" />
                 </div>
                 <div className="text-xl font-bold text-white mb-1 drop-shadow-md">
-                  {summary?.studyTimeThisWeek || 0}h
+                  {parseFloat(((summary?.studyTimeThisWeek || 0) / 60).toFixed(2))}h
                 </div>
                 <p className="text-white/90 font-medium text-sm drop-shadow-sm">This Week</p>
 
-                {/* Replaced Progress bar with dynamic lesson count, since target isn't available */}
                 <div className="border-t border-white/20 mt-2 pt-2">
                   <p className="text-sm font-semibold text-white/90">
                     {summary?.lessonsCompletedThisWeek || 0} Lessons
@@ -458,7 +368,7 @@ const {
                         ? "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg border-emerald-300"
                         : "bg-emerald-100 hover:bg-emerald-200 border-emerald-200",
                     )}
-                    title={`${day.hours} hours studied`} // Added a title for accessibility
+                    title={`${day.hours} hours studied`}
                   >
                     {day.completed && (
                       <CheckCircle className="h-6 w-6 text-white" />

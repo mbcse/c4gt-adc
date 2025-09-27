@@ -1,3 +1,10 @@
+export interface OrganizationUnit {
+  id: number;
+  name: string;
+  type: 'STATE' | 'DISTRICT' | 'BLOCK' | 'SCHOOL';
+  parentId?: number | null;
+}
+
 export type Role = 'STUDENT' | 'INSTRUCTOR' | 'ADMIN' | 'SUPERADMIN';
 
 export interface User {
@@ -6,6 +13,10 @@ export interface User {
   email: string;
   role: Role;
   createdAt?: string;
+  organizationUnitId?: number;
+  organizationUnit?: OrganizationUnit;
+  gradeId?: number;
+  grade?: Grade;
   assignments?: CourseAssignment[];
   quizAttempts?: QuizAttempt[];
   watchLogs?: WatchLog[];
@@ -130,7 +141,7 @@ export interface QuizAttempt {
   quizId: number;
   score: number;
   completedAt: string;
-  answers?: any; 
+  answers?: any;
   user?: User;
   quiz?: Quiz;
 }
