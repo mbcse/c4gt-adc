@@ -1,0 +1,8 @@
+const ROLES = {
+  SUPERADMIN: "SUPERADMIN",
+  ADMIN: "ADMIN",
+  INSTRUCTOR: "INSTRUCTOR",
+  STUDENT: "STUDENT",
+};
+
+module.exports = ROLES;

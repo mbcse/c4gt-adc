@@ -18,11 +18,19 @@ model User {
   id           Int                @id @default(autoincrement())
   name         String
   email        String             @unique
-  role         String
-  createdAt    DateTime
+  password     String
+  role         Role
+  createdAt    DateTime           @default(now())
   assignments  ModuleAssignment[]
   quizAttempts QuizAttempt[]
   watchLogs    WatchLog[]
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  INSTRUCTOR
+  STUDENT
 }
 
 model Module {

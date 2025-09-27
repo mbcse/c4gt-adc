@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.11.1
- * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
+ * Prisma Client JS version: 6.12.0
+ * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
  */
 Prisma.prismaVersion = {
-  client: "6.11.1",
-  engine: "f40f79ec31188888a2e33acda0ecc8fd10a853a9"
+  client: "6.12.0",
+  engine: "8047c96bbd92db98a2abc7c9323ce77c02c89dbc"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -123,14 +123,70 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  email: 'email'
+  email: 'email',
+  password: 'password',
+  role: 'role',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.CourseScalarFieldEnum = {
+exports.Prisma.ModuleScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  progress: 'progress',
-  userId: 'userId'
+  description: 'description',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ModuleAssignmentScalarFieldEnum = {
+  id: 'id',
+  moduleId: 'moduleId',
+  userId: 'userId',
+  assignedAt: 'assignedAt'
+};
+
+exports.Prisma.ModuleVideoScalarFieldEnum = {
+  id: 'id',
+  moduleId: 'moduleId',
+  videoId: 'videoId',
+  order: 'order'
+};
+
+exports.Prisma.VideoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  platform: 'platform',
+  videoUrl: 'videoUrl',
+  videoId: 'videoId',
+  duration: 'duration',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WatchLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  totalWatchTime: 'totalWatchTime',
+  isCompleted: 'isCompleted',
+  watchedPercentage: 'watchedPercentage',
+  skipEvents: 'skipEvents',
+  pauseEvents: 'pauseEvents',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.QuizScalarFieldEnum = {
+  id: 'id',
+  videoId: 'videoId',
+  generatedBy: 'generatedBy',
+  createdAt: 'createdAt',
+  questions: 'questions'
+};
+
+exports.Prisma.QuizAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  quizId: 'quizId',
+  score: 'score',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -138,15 +194,41 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.Role = exports.$Enums.Role = {
+  SUPERADMIN: 'SUPERADMIN',
+  ADMIN: 'ADMIN',
+  INSTRUCTOR: 'INSTRUCTOR',
+  STUDENT: 'STUDENT'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Course: 'Course'
+  Module: 'Module',
+  ModuleAssignment: 'ModuleAssignment',
+  ModuleVideo: 'ModuleVideo',
+  Video: 'Video',
+  WatchLog: 'WatchLog',
+  Quiz: 'Quiz',
+  QuizAttempt: 'QuizAttempt'
 };
 
 /**

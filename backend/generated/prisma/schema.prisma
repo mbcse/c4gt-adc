@@ -15,16 +15,95 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String
-  email   String   @unique
-  courses Course[] // 1:N relation
+  id           Int                @id @default(autoincrement())
+  name         String
+  email        String             @unique
+  password     String
+  role         Role
+  createdAt    DateTime           @default(now())
+  assignments  ModuleAssignment[]
+  quizAttempts QuizAttempt[]
+  watchLogs    WatchLog[]
 }
 
-model Course {
+enum Role {
+  SUPERADMIN
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+model Module {
+  id           Int                @id @default(autoincrement())
+  title        String
+  description  String?
+  createdBy    Int
+  createdAt    DateTime
+  assignments  ModuleAssignment[]
+  moduleVideos ModuleVideo[]
+}
+
+model ModuleAssignment {
+  id         Int      @id @default(autoincrement())
+  module     Module   @relation(fields: [moduleId], references: [id])
+  moduleId   Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  assignedAt DateTime
+}
+
+model ModuleVideo {
   id       Int    @id @default(autoincrement())
-  title    String
-  progress Int    @default(0)
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  module   Module @relation(fields: [moduleId], references: [id])
+  moduleId Int
+  video    Video  @relation(fields: [videoId], references: [id])
+  videoId  Int
+  order    Int
+}
+
+model Video {
+  id           Int           @id @default(autoincrement())
+  title        String
+  platform     String
+  videoUrl     String
+  videoId      String
+  duration     Int
+  createdAt    DateTime
+  moduleVideos ModuleVideo[]
+  watchLogs    WatchLog[]
+  quiz         Quiz?
+}
+
+model WatchLog {
+  id                Int      @id @default(autoincrement())
+  user              User     @relation(fields: [userId], references: [id])
+  userId            Int
+  video             Video    @relation(fields: [videoId], references: [id])
+  videoId           Int
+  totalWatchTime    Int
+  isCompleted       Boolean
+  watchedPercentage Float
+  skipEvents        Json
+  pauseEvents       Json
+  createdAt         DateTime
+}
+
+model Quiz {
+  id          Int           @id @default(autoincrement())
+  video       Video         @relation(fields: [videoId], references: [id])
+  videoId     Int           @unique
+  generatedBy String
+  createdAt   DateTime
+  questions   Json
+  attempts    QuizAttempt[]
+}
+
+model QuizAttempt {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  quiz        Quiz     @relation(fields: [quizId], references: [id])
+  quizId      Int
+  score       Float
+  completedAt DateTime
 }
