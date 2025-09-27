@@ -5,11 +5,10 @@ const requireRole = require('../../middlewares/requireRole');
 const usersRoutes = require('./adminUsers');
 const studentsRoutes = require('./adminStudents');
 const coursesRoutes = require('./adminCourses');
-const progressRoutes = require('./adminProgress');
 const quizRoutes = require('./adminQuiz');
 const reportsRoutes = require('./adminReports');
-const notificationsRoutes = require('./adminNotifications.js');
 const adminMetadataRoutes = require('./adminMetadata');
+const adminAnalyticsRoutes = require('./adminAnalytics'); 
 
 const router = express.Router();
 
@@ -27,15 +26,12 @@ router.use('/courses', requireRole(['ADMIN', 'SUPERADMIN']), coursesRoutes);
 router.use('/metadata', requireRole(['ADMIN', 'SUPERADMIN']), adminMetadataRoutes);
 
 // INSTRUCTOR, ADMIN and SUPERADMIN progress tracking routes
-router.use('/progress', requireRole(['INSTRUCTOR', 'ADMIN', 'SUPERADMIN']), progressRoutes);
+router.use('/analytics', requireRole(['INSTRUCTOR', 'ADMIN', 'SUPERADMIN']), adminAnalyticsRoutes);
 
 // ADMIN and SUPERADMIN quiz routes
 router.use('/quizzes', requireRole(['ADMIN', 'SUPERADMIN']), quizRoutes);
 
 // ADMIN and SUPERADMIN reports routes
 router.use('/reports', requireRole(['ADMIN', 'SUPERADMIN']), reportsRoutes);
-
-// ADMIN and SUPERADMIN notifications routes
-router.use('/notifications', requireRole(['ADMIN', 'SUPERADMIN']), notificationsRoutes);
 
 module.exports = router;

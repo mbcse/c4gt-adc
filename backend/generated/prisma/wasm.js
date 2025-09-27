@@ -120,13 +120,31 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.DistrictScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SchoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  districtId: 'districtId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
   password: 'password',
   role: 'role',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  gradeId: 'gradeId',
+  schoolId: 'schoolId',
+  districtId: 'districtId'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -270,6 +288,8 @@ exports.Role = exports.$Enums.Role = {
 };
 
 exports.Prisma.ModelName = {
+  District: 'District',
+  School: 'School',
   User: 'User',
   Category: 'Category',
   SkillLevel: 'SkillLevel',

@@ -4,9 +4,10 @@ import { useApi } from "@/api/index";
 interface UseVideoProgressWithAnalyticsProps {
   videoId: number;
   duration: number;
-  playbackRate: number; 
+  playbackRate: number;
   onBackendProgressUpdate?: (progress: any) => void;
   onSpeedViolation?: (speed: number) => void;
+  onSeekViolation?: () => void;
 }
 
 const MAX_EVENTS = 100;
@@ -18,6 +19,7 @@ export function useVideoProgressWithAnalytics({
   playbackRate,
   onBackendProgressUpdate,
   onSpeedViolation,
+  onSeekViolation,
 }: UseVideoProgressWithAnalyticsProps) {
   const api = useApi();
 
@@ -89,11 +91,11 @@ export function useVideoProgressWithAnalytics({
           retryAttempts.current = 0;
         } catch (err: any) {
           console.error("Progress update failed:", err);
-          
+
           if (err.response?.status === 400) {
             const errorCode = err.response.data?.code;
             const errorData = err.response.data?.details || {};
-            
+
             switch (errorCode) {
               case 'SPEED_VIOLATION':
                 if (onSpeedViolation) {
@@ -101,29 +103,29 @@ export function useVideoProgressWithAnalytics({
                 }
                 setError('Please watch videos at normal speed for effective learning.');
                 break;
-                
+
               case 'EXCESSIVE_SKIPPING':
-                if (onSpeedViolation) {
-                  onSpeedViolation(1.0); 
+                if (onSeekViolation) {
+                  onSeekViolation();
                 }
                 setError('Excessive skipping detected. Please watch sequentially.');
                 break;
-                
+
               case 'DURATION_OVERFLOW':
               case 'DURATION_EXCEEDED':
                 setError('Watch time error. Please refresh and watch normally.');
                 break;
-                
+
               case 'INVALID_INPUT':
                 setError('Invalid progress data. Please refresh the page.');
                 break;
-                
+
               default:
                 setError(err.response.data?.error || 'Failed to save progress');
             }
             return;
-          } 
-          
+          }
+
           if (retryAttempts.current < 3) {
             retryAttempts.current++;
             const delay = Math.pow(2, retryAttempts.current) * 1000;
@@ -132,7 +134,7 @@ export function useVideoProgressWithAnalytics({
             setError("Failed to save progress. Please refresh and try again.");
           }
         }
-      }, 10000);
+      }, 5000);
     },
     [api, videoId, onSpeedViolation]
   );
@@ -214,29 +216,29 @@ export function useVideoProgressWithAnalytics({
       const skipEvent = { timestamp: Date.now(), from, to };
       skipEventsRef.current.push(skipEvent);
       sendAnalyticsEvent("video_seek", { seekFrom: from, seekTo: to });
-      
+
       const skipDistance = Math.abs(to - from);
       const isForwardSkip = to > from;
-      
+
       const now = Date.now();
-      const recentSkips = skipEventsRef.current.filter(event => 
+      const recentSkips = skipEventsRef.current.filter(event =>
         now - event.timestamp < 30000 &&
         Math.abs(event.to - event.from) >= 5
       );
-      
+
       if (
-        (isForwardSkip && skipDistance > 60) || 
+        (isForwardSkip && skipDistance > 30) ||
         recentSkips.length > 5
       ) {
         console.warn(`🚨 EXCESSIVE SKIPPING DETECTED: ${skipDistance}s skip, ${recentSkips.length} recent skips`);
         setIsViolationActive(true);
-        if (onSpeedViolation) {
-          onSpeedViolation(1.0);
+        if (onSeekViolation) { 
+          onSeekViolation(); 
         }
         return;
       }
     },
-    [sendAnalyticsEvent, onSpeedViolation, isViolationActive]
+    [sendAnalyticsEvent, onSpeedViolation, isViolationActive, onSeekViolation]
   );
 
   // **Handle video ended event with immediate backend sync**
@@ -248,7 +250,7 @@ export function useVideoProgressWithAnalytics({
       skipEvents: skipEventsRef.current,
       pauseEvents: pauseEventsRef.current,
     };
-    
+
     maxWatchedTimeRef.current = duration;
     setProgress((prev) => ({ ...prev, ...finalProgress }));
 
@@ -311,6 +313,7 @@ export function useVideoProgressWithAnalytics({
 
   const resetViolationState = useCallback(() => {
     setIsViolationActive(false);
+    skipEventsRef.current = []; 
   }, []);
 
   return {
@@ -323,7 +326,7 @@ export function useVideoProgressWithAnalytics({
     handlePause,
     handleSeek,
     handleEnded,
-    setPlayerRef, 
+    setPlayerRef,
     resetViolationState,
   };
 }

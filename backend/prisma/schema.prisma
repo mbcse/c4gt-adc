@@ -8,6 +8,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model District {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  schools   School[]
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model School {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  districtId Int
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  users      User[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([districtId])
+}
+
 model User {
   id           Int                @id @default(autoincrement())
   name         String
@@ -15,11 +36,25 @@ model User {
   password     String
   role         Role
   createdAt    DateTime           @default(now())
+  
+  gradeId      Int?
+  schoolId     Int?
+  districtId   Int?
+
+  grade        Grade?             @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  school       School?            @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  district     District?          @relation(fields: [districtId], references: [id], onDelete: SetNull)
+
   assignments  CourseAssignment[]
   quizAttempts QuizAttempt[]
   watchLogs    WatchLog[]
-
   AnalyticsEvent AnalyticsEvent[]
+
+  @@index([gradeId])
+  @@index([schoolId])
+  @@index([districtId])
+  @@index([role])
+
 }
 
 model Category {
@@ -38,6 +73,7 @@ model Grade {
   id       Int      @id @default(autoincrement())
   value    String   @unique
   courses  Course[]
+  users    User[]  
 }
 
 model Language {

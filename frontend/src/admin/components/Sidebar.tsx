@@ -9,8 +9,6 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: BarChart3 },
   { name: 'Students', href: '/admin/students', icon: Users },
   { name: 'Courses', href: '/admin/courses', icon: BookOpen },
-  { name: 'Progress', href: '/admin/progress', icon: TrendingUp },
-  { name: 'Reports', href: '/admin/reports', icon: FileText },
   { name: 'User Management', href: '/admin/users', icon: Settings },
 ]
 

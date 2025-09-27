@@ -28,7 +28,7 @@ async getVideoMetadata(videoId) {
       throw new Error('Video not found');
     }
 
-    const video = response.data.items[0];  // <-- Access first video object (not the array)
+    const video = response.data.items[0]; 
 
     // Safely parse duration string
     const durationStr = video.contentDetails?.duration || 'PT0S';

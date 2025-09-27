@@ -35,6 +35,7 @@ export function VideoPlayer({
   const [actualDuration, setActualDuration] = useState(duration);
   const [hasSeeked, setHasSeeked] = useState(false);
   const [showSpeedWarning, setShowSpeedWarning] = useState(false);
+  const [showSeekWarning, setShowSeekWarning] = useState(false);
   const [detectedSpeed, setDetectedSpeed] = useState<number>(1);
   const [playbackRate, setPlaybackRate] = useState(1);
 
@@ -61,6 +62,12 @@ export function VideoPlayer({
     setIsPlaying(false); // Pause the video
   }, [setIsPlaying, showSpeedWarning]);
 
+  const handleSeekViolation = useCallback(() => {
+  console.warn("Seek violation callback triggered");
+  setShowSeekWarning(true);
+  setIsPlaying(false); // Pause the video
+}, [setIsPlaying]);
+
   const {
     progress,
     error,
@@ -79,6 +86,7 @@ export function VideoPlayer({
     playbackRate,
     onBackendProgressUpdate: onProgressUpdate,
     onSpeedViolation: handleSpeedViolation,
+    onSeekViolation: handleSeekViolation,
   });
 
   const handlePlayerReady = useCallback(() => {
@@ -304,33 +312,71 @@ useEffect(() => {
     }
   }, [setIsPlaying]);
 
-const handleSpeedWarningClose = useCallback(() => {
-  setShowSpeedWarning(false);
+// const handleSpeedWarningClose = useCallback(() => {
+//   setShowSpeedWarning(false);
 
-  if (resetViolationState) {
-    resetViolationState();
-  }
+//   if (resetViolationState) {
+//     resetViolationState();
+//   }
 
-  const seekToSeconds = Math.max(0, Math.min(lastPersistedSeconds, actualDuration));
+//   const seekToSeconds = Math.max(0, Math.min(lastPersistedSeconds, actualDuration));
 
-  hasSeekedOnceRef.current = true;
-  setHasSeeked(true);
+//   hasSeekedOnceRef.current = true;
+//   setHasSeeked(true);
   
-  const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
-  if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
-    internalPlayer.currentTime = seekToSeconds;
-    setCurrentTime(seekToSeconds);
-    setLastValidPosition(seekToSeconds);
-  } else if (typeof playerRef.current.seekTo === 'function') {
-    playerRef.current.seekTo(seekToSeconds, 'seconds');
-    setCurrentTime(seekToSeconds);
-    setLastValidPosition(seekToSeconds);
-  }
-   setPlaybackRate(1);
-  setTimeout(() => {
-    setIsPlaying(true);
-  }, 100);
-}, [setIsPlaying, lastPersistedSeconds, actualDuration, resetViolationState]);
+//   const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
+//   if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
+//     internalPlayer.currentTime = seekToSeconds;
+//     setCurrentTime(seekToSeconds);
+//     setLastValidPosition(seekToSeconds);
+//   } else if (typeof playerRef.current.seekTo === 'function') {
+//     playerRef.current.seekTo(seekToSeconds, 'seconds');
+//     setCurrentTime(seekToSeconds);
+//     setLastValidPosition(seekToSeconds);
+//   }
+//    setPlaybackRate(1);
+//   setTimeout(() => {
+//     setIsPlaying(true);
+//   }, 100);
+// }, [setIsPlaying, lastPersistedSeconds, actualDuration, resetViolationState]);
+
+  const resetAndResumePlayer = useCallback(() => {
+    if (resetViolationState) {
+      resetViolationState();
+    }
+
+    const seekToSeconds = Math.max(0, Math.min(lastPersistedSeconds, actualDuration));
+
+    hasSeekedOnceRef.current = true;
+    setHasSeeked(true);
+    
+    const internalPlayer = playerRef.current.getInternalPlayer?.() || playerRef.current;
+    if (internalPlayer && typeof internalPlayer.currentTime === 'number') {
+      internalPlayer.currentTime = seekToSeconds;
+      setCurrentTime(seekToSeconds);
+      setLastValidPosition(seekToSeconds);
+    } else if (typeof playerRef.current.seekTo === 'function') {
+      playerRef.current.seekTo(seekToSeconds, 'seconds');
+      setCurrentTime(seekToSeconds);
+      setLastValidPosition(seekToSeconds);
+    }
+    
+    setPlaybackRate(1);
+    setTimeout(() => {
+      setIsPlaying(true);
+    }, 100);
+  }, [resetViolationState, lastPersistedSeconds, actualDuration, setIsPlaying]);
+
+    const handleSpeedWarningClose = useCallback(() => {
+    setShowSpeedWarning(false); // 1. Close the speed modal
+    resetAndResumePlayer();     // 2. Run the reset logic
+  }, [resetAndResumePlayer]);
+
+  // NEW: Handler for the SEEK modal button
+  const handleSeekWarningClose = useCallback(() => {
+    setShowSeekWarning(false); // 1. Close the seek modal
+    resetAndResumePlayer();    // 2. Run the same reset logic
+  }, [resetAndResumePlayer]);
 
 
   if (isLoading) {
@@ -376,9 +422,12 @@ const handleSpeedWarningClose = useCallback(() => {
         />
       </div>
 
-      {/* Speed Warning Modal */}
+{/* --- MODAL RENDERING --- */}
+
+      {/* MODAL 1: Playback Speed Warning */}
       {showSpeedWarning && (
-        <Modal open={showSpeedWarning} onOpenChange={handleSpeedWarningClose}>
+        <Modal open={showSpeedWarning} onOpenChange={() => {}}>
+          {/* No onOpenChange prop, so it can only be closed by the button below */}
           <div className="text-center p-6">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -387,26 +436,17 @@ const handleSpeedWarningClose = useCallback(() => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3 text-red-600">
-                {detectedSpeed > 1.5 ? 'Playback Speed Warning' : 'Watch Behavior Notice'}
+                Playback Speed Warning
               </h3>
             </div>
             
             <div className="text-left space-y-3 mb-6">
-              {detectedSpeed > 1.5 ? (
-                <p className="text-gray-700">
-                  <strong>Speed detected:</strong> {detectedSpeed.toFixed(2)}x<br />
-                  <strong>Maximum allowed:</strong> 1.5x
-                </p>
-              ) : (
-                <p className="text-gray-700">
-                  <strong>Issue:</strong> Excessive video skipping detected
-                </p>
-              )}
+              <p className="text-gray-700">
+                <strong>Speed detected:</strong> {detectedSpeed.toFixed(2)}x<br />
+                <strong>Maximum allowed:</strong> 1.5x
+              </p>
               <p className="text-gray-600">
-                {detectedSpeed > 1.5 
-                  ? "Our system detected that you may be watching this video at an unusually high speed."
-                  : "Please watch videos sequentially without excessive skipping to ensure proper learning."
-                }
+                Our system detected that you may be watching this video at an unusually high speed.
               </p>
               <p className="text-gray-600">
                 For effective learning and proper progress tracking, please watch at normal speed and avoid large skips.
@@ -423,7 +463,54 @@ const handleSpeedWarningClose = useCallback(() => {
             </div>
             
             <button
-              onClick={handleSpeedWarningClose}
+              onClick={handleSpeedWarningClose} 
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              I Understand - Resume Normal Playback
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* MODAL 2: Excessive Seek/Skip Warning */}
+      {showSeekWarning && (
+        <Modal open={showSeekWarning} onOpenChange={() => {}}>
+          {/* No onOpenChange prop, so it can only be closed by the button below */}
+          <div className="text-center p-6">
+            <div className="mb-4">
+              <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-red-600">
+                Watch Behavior Notice
+              </h3>
+            </div>
+            
+            <div className="text-left space-y-3 mb-6">
+              <p className="text-gray-700">
+                <strong>Issue:</strong> Excessive video skipping detected
+              </p>
+              <p className="text-gray-600">
+                Please watch videos sequentially without excessive skipping to ensure proper learning.
+              </p>
+              <p className="text-gray-600">
+                For effective learning and proper progress tracking, please watch at normal speed and avoid large skips.
+              </p>
+            </div>
+            
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 text-left">
+              <p className="text-sm text-blue-800">
+                <strong>What happens now?</strong><br />
+                • The video has been paused<br />
+                • You will be returned to the last valid position<br />
+                • Please resume watching at normal speed
+              </p>
+            </div>
+            
+            <button
+              onClick={handleSeekWarningClose} 
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               I Understand - Resume Normal Playback
