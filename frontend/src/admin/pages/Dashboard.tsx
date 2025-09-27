@@ -1,8 +1,9 @@
-import { Users, BookOpen, TrendingUp, Trophy, Plus, UserPlus, Download, Bell } from 'lucide-react'
+import { Users, BookOpen, TrendingUp, Trophy, Plus, UserPlus, Download, Bell, BarChart2 } from 'lucide-react'
 import MetricCard from '../components/MetricCard'
 import RecentActivity from '../components/RecentActivity'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Metrics, Activity } from '../types'
+import { useNavigate } from "react-router-dom";
 
 // Dashboard-specific data
 const metrics: Metrics = {
@@ -15,11 +16,11 @@ const metrics: Metrics = {
 }
 
 const recentActivity: Activity[] = [
-  {type: "enrollment", message: "5 new students enrolled in Web Development", timestamp: "2024-08-07T09:30:00", icon: "UserPlus", color: "bg-blue-100 text-blue-600"},
-  {type: "completion", message: "Lisa completed React.js Advanced course", timestamp: "2024-08-06T15:20:00", icon: "CheckCircle", color: "bg-green-100 text-green-600"},
-  {type: "quiz", message: "Tom scored 88% on Database Design quiz", timestamp: "2024-08-07T11:10:00", icon: "Trophy", color: "bg-yellow-100 text-yellow-600"},
-  {type: "course", message: "New course 'Python for Beginners' was added", timestamp: "2024-08-06T12:15:00", icon: "Book", color: "bg-purple-100 text-purple-600"},
-  {type: "assignment", message: "Database Design assigned to 15 students", timestamp: "2024-08-05T14:30:00", icon: "ClipboardList", color: "bg-orange-100 text-orange-600"}
+  // {type: "enrollment", message: "5 new students enrolled in Web Development", timestamp: "2024-08-07T09:30:00", icon: "UserPlus", color: "bg-blue-100 text-blue-600"},
+  // {type: "completion", message: "Lisa completed React.js Advanced course", timestamp: "2024-08-06T15:20:00", icon: "CheckCircle", color: "bg-green-100 text-green-600"},
+  // {type: "quiz", message: "Tom scored 88% on Database Design quiz", timestamp: "2024-08-07T11:10:00", icon: "Trophy", color: "bg-yellow-100 text-yellow-600"},
+  // {type: "course", message: "New course 'Python for Beginners' was added", timestamp: "2024-08-06T12:15:00", icon: "Book", color: "bg-purple-100 text-purple-600"},
+  // {type: "assignment", message: "Database Design assigned to 15 students", timestamp: "2024-08-05T14:30:00", icon: "ClipboardList", color: "bg-orange-100 text-orange-600"}
 ]
 
 const chartData = [
@@ -37,6 +38,7 @@ const progressData = [
 ]
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -115,7 +117,7 @@ export default function Dashboard() {
           <div className="mt-4 flex justify-center space-x-6">
             {progressData.map((item) => (
               <div key={item.name} className="flex items-center">
-                <div 
+                <div
                   className="h-3 w-3 rounded-full mr-2"
                   style={{ backgroundColor: item.color }}
                 />
@@ -153,21 +155,33 @@ export default function Dashboard() {
         <div className="card p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="space-y-3">
-            <button className="btn btn-primary w-full justify-start">
+            <button
+              className="btn btn-primary w-full justify-start"
+              onClick={() => navigate('/admin/courses')}
+            >
               <Plus className="w-4 h-4 mr-2" />
-              Add New Course
+              Manage Courses
             </button>
-            <button className="btn btn-secondary w-full justify-start">
+            <button
+              className="btn btn-secondary w-full justify-start"
+              onClick={() => navigate('/admin/users')}
+            >
               <UserPlus className="w-4 h-4 mr-2" />
-              Enroll Students
+              Manage Users
             </button>
-            <button className="btn btn-outline w-full justify-start">
+            <button
+              className="btn btn-outline w-full justify-start"
+              onClick={() => navigate('/admin/reports')}
+            >
               <Download className="w-4 h-4 mr-2" />
               Generate Report
             </button>
-            <button className="btn btn-outline w-full justify-start">
-              <Bell className="w-4 h-4 mr-2" />
-              Send Announcement
+            <button
+              className="btn btn-outline w-full justify-start"
+              onClick={() => navigate('/admin/progress')}
+            >
+              <BarChart2 className="w-4 h-4 mr-2" />
+              View Detailed Progress
             </button>
           </div>
         </div>

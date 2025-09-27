@@ -11,7 +11,7 @@ export default function AdminLayout() {
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
       {/* Main content container */}
-      <div className="flex-1 flex flex-col lg:pl-16">
+      <div className="flex-1 flex flex-col lg:pl-16 min-w-0">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 py-8 overflow-auto">

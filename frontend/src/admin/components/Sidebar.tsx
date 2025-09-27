@@ -10,10 +10,8 @@ const navigation = [
   { name: 'Students', href: '/admin/students', icon: Users },
   { name: 'Courses', href: '/admin/courses', icon: BookOpen },
   { name: 'Progress', href: '/admin/progress', icon: TrendingUp },
-  { name: 'Quiz Analytics', href: '/admin/quiz-analytics', icon: ClipboardCheck },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
   { name: 'User Management', href: '/admin/users', icon: Settings },
-  { name: 'Notifications', href: '/admin/notifications', icon: Bell },
 ]
 
 interface SidebarProps {
@@ -26,6 +24,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate() 
   const { logout, user } = useAuth()
+  const userName = user?.name || 'Admin User'
+  const initials = getInitials(userName)
 
   const handleLogout = () => {
     logout()
@@ -34,9 +34,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
   const MobileSidebarContent = () => (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-      <div className="flex h-16 shrink-0 items-center">
+      <div className="flex h-16 shrink-0 items-center mt-6">
         <GraduationCap className="h-8 w-8 text-primary-600" />
-        <span className="ml-2 text-xl font-bold text-gray-900">CourseTracker</span>
+        <span className="ml-2 text-xl font-bold text-gray-900">Rohtak Guided Learning Tracker</span>
       </div>
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -73,7 +73,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           <li className="mt-auto space-y-2">
             <div className="flex items-center gap-x-4 px-2 py-3 text-sm font-semibold leading-6 text-gray-900">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-white text-sm font-medium">
-                JA
+                {initials}
               </div>
               <div className="flex flex-col">
                 <span className="sr-only">Your profile</span>
@@ -164,7 +164,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               <GraduationCap className="h-8 w-8 text-primary-600 flex-shrink-0" />
               {sidebarExpanded && (
                 <span className="text-xl font-bold text-gray-900 transition-opacity duration-300">
-                  CourseTracker
+                  Rohtak Guided Learning Tracker
                 </span>
               )}
             </div>
@@ -218,7 +218,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                   sidebarExpanded ? "gap-x-4 px-3 py-3" : "justify-center px-3 py-3"
                 )}>
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-white text-sm font-medium flex-shrink-0">
-                    JA
+                    {initials}
                   </div>
                   {sidebarExpanded && (
                     <div className="flex flex-col transition-opacity duration-300">
@@ -256,4 +256,10 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       </div>
     </>
   )
+}
+
+function getInitials(name: string) {
+  const names = name.trim().split(' ')
+  if (names.length === 1) return names[0].charAt(0).toUpperCase()
+  return (names[0].charAt(0) + names[1].charAt(0)).toUpperCase()
 }
