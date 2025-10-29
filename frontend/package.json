@@ -14,7 +14,8 @@
     "dev": "vite",
     "build": "npm run build:client",
     "build:client": "vite build",
-    "start": "vite",
+    "start": "vite preview --host :: --port 8080",
+    "preview": "vite preview",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"

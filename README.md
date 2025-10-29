@@ -34,6 +34,7 @@ The Rohtak Guided Learning Tracker is a modern educational platform built with a
 
 ### System Architecture Overview
 
+#### Development Architecture
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Frontend (React SPA)                     │
@@ -71,6 +72,36 @@ The Rohtak Guided Learning Tracker is a modern educational platform built with a
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+#### Production Architecture (with Caddy Reverse Proxy)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Caddy Reverse Proxy                          │
+│                    (gyanseturohtak.in)                          │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │  /api/* → Backend Container (coursetracker_backend:5000)    ││
+│  │  /* → Frontend Container (coursetracker_frontend:8080)      ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    Docker Network (caddy_net)                    │
+│  ┌─────────────────┐              ┌─────────────────────────────┐│
+│  │   Frontend      │              │        Backend              ││
+│  │   (React SPA)   │◄────────────►│   (Node.js/Express)         ││
+│  │   :8080         │              │   :5000                     ││
+│  └─────────────────┘              └─────────────────────────────┘│
+└──────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    External Database                            │
+│  ┌─────────────────────────────────────────────────────────────┐│
+│  │          MySQL (External Production Database)               ││
+│  └─────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ### Technology Stack
 
 **Backend:**
@@ -94,7 +125,15 @@ The Rohtak Guided Learning Tracker is a modern educational platform built with a
 c4gt-adc/
 ├── backend/          # Node.js/Express API server
 ├── frontend/         # React/TypeScript web application
+├── docker-compose.yml # Main application deployment
 └── README.md         # This file
+```
+Reverse proxy:
+
+```
+├── caddy/            # Caddy reverse proxy configuration
+│   ├── Caddyfile     # Reverse proxy configuration
+│   └── docker-compose.yml  # Caddy deployment
 ```
 
 ### Backend (`/backend`)
@@ -168,6 +207,36 @@ c4gt-adc/
    - Backend API: http://localhost:5000
 
 Note: The compose file expects an external database via `DATABASE_URL`. Provide valid credentials in `backend/.env` or compose `environment`.
+
+### Production Deployment with Caddy Reverse Proxy
+
+For production deployment with reverse proxy:
+
+1. **Setup Caddy Network** (run once):
+   ```bash
+   docker network create caddy_net
+   ```
+
+2. **Deploy Caddy Reverse Proxy**:
+   ```bash
+   cd caddy
+   docker compose up -d
+   ```
+
+3. **Deploy Main Application**:
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. **Access Production Site**:
+   - Main site: https://gyanseturohtak.in
+   - API endpoints: https://gyanseturohtak.in/api/*
+
+The Caddy configuration automatically handles:
+- SSL/TLS certificates via Let's Encrypt
+- Reverse proxy routing (`/api/*` → backend, `/*` → frontend)
+- Gzip compression
+- Production-ready security headers
 
 ## 🔧 Environment Configuration
 

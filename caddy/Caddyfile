@@ -1,0 +1,12 @@
+gyanseturohtak.in {
+    encode gzip
+
+    route /api/* {
+        reverse_proxy coursetracker_backend:5000
+    }
+
+    route {
+        reverse_proxy coursetracker_frontend:8080
+    }
+
+}

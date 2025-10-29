@@ -44,6 +44,11 @@ frontend/
    npm run dev
    ```
 
+4. **Start Production Preview** (for testing production build)
+   ```bash
+   npm run start
+   ```
+
 The application will start on `http://localhost:8080` by default.
 
 ## 🔧 Environment Configuration
@@ -65,6 +70,12 @@ VITE_API_URL=http://localhost:5000
 VITE_ENVIRONMENT=production
 ```
 and use the root `docker-compose.yml` to build and run both services.
+
+For production deployment with Caddy reverse proxy:
+```env
+VITE_API_URL=https://gyanseturohtak.in
+VITE_ENVIRONMENT=production
+```
 
 ## Technology Stack
 
