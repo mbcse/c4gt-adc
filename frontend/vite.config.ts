@@ -8,7 +8,17 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["gyanseturohtak.in", "localhost"],
   },
+  preview: {
+    host: "::",
+    port: 8080, 
+  },
+  
+  optimizeDeps: {
+    include: ['react-player'],
+  },
+
   build: {
     outDir: "dist/spa",
   },

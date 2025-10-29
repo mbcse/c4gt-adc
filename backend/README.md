@@ -658,6 +658,8 @@ The backend includes a `Dockerfile` for containerized deployment:
 
 Alternatively, use the root `docker-compose.yml` to run backend and frontend together. Ensure `backend/.env` contains a valid `DATABASE_URL` and production-ready settings.
 
+For production deployment with Caddy reverse proxy, see the main README for complete deployment instructions including the Caddy setup.
+
 ## Data Seeding via Admin APIs
 
 Scripts in `scripts/` help bootstrap metadata, org units, and courses. Replace `admin_token_here` with a valid Admin JWT before running.
